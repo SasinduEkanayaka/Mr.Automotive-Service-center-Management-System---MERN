@@ -4,17 +4,17 @@ import { motion } from "framer-motion";
 import { FaBars } from "react-icons/fa";
 import Header from "./Header";
 import { Route, Routes } from "react-router-dom";
-import ManageParts from "./ManageParts";
+
 import DashboardOverview from "./DashboardOverview";
-import AddSparePartPage from "./AddSparePartPage";
-import CreatePackage from "../packageManagement/CreatePackage";
+import AddSupplierPage from "./AddSupplierPage";
+import ManageSupplier from "./ManageSupplier";
 
 const contentVariants = {
   open: { marginLeft: 250, transition: { type: "spring", stiffness: 50 } },
   closed: { marginLeft: 0, transition: { type: "spring", stiffness: 50 } },
 };
 
-export default function DashboardLayout() {
+export default function DashboardLayouSt() {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -43,16 +43,11 @@ export default function DashboardLayout() {
         {/* Routes for Dashboard Components */}
         <Routes>
           <Route path="/" element={<DashboardOverview />} />
-          <Route path="/add-parts" element={<AddSparePartPage />} />
-
+          <Route path="/add-supplier" element={<AddSupplierPage />} />
           <Route
-            path="/inventory-management/manage-parts"
-            element={<ManageParts />}
+            path="/manage-supplier"
+            element={<ManageSupplier />}
           />
-          <Route path="/create-pkg" element={<CreatePackage />} />
-
-          <Route path="/manage-parts" element={<ManageParts />} />
-
         </Routes>
       </motion.main>
     </div>

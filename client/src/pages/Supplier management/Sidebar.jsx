@@ -34,25 +34,25 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items configuration
   const menuItems = [
-    { name: "Dashboard", path: "/inventory-management", icon: <FaChartLine /> },
+    { name: "Dashboard", path: "/Supplier-management", icon: <FaChartLine /> },
     {
-      name: "Add Spare Parts",
-      path: "/inventory-management/add-parts",
+      name: "Add supplier",
+      path: "/Supplier-management/add-supplier",
       icon: <FaBox />,
     },
     {
-      name: "Manage Spare Parts",
-      path: "/inventory-management/manage-parts",
+      name: "Manage Suppliers",
+      path: "/Supplier-management/manage-supplier",
       icon: <FaClipboardList />,
     },
     {
       name: "Generate Reports",
-      path: "/inventory-management/create-pkg",
+      path: "/manager/discount-management",
       icon: <FaTags />,
     },
     {
-      name: "Request Spare Parts",
-      path: "/manager/sales-forecasting",
+      name: "Request Item",
+      path: "/Supplier-management/add-supplier",
       icon: <FaChartLine />,
     },
     { name: "Profile", path: "/manager/profile", icon: <FaUserCircle /> },
