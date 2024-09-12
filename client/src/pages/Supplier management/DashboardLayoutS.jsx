@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import { motion } from "framer-motion";
 import { FaBars } from "react-icons/fa";
-import Header from "../inventory management/Header";
+import Header from "./Header";
 import { Route, Routes } from "react-router-dom";
-import ManageParts from "./ManageParts";
+
 import DashboardOverview from "./DashboardOverview";
 import AddSupplierPage from "./AddSupplierPage";
+import ManageSupplier from "./ManageSupplier";
 
 const contentVariants = {
   open: { marginLeft: 250, transition: { type: "spring", stiffness: 50 } },
@@ -43,10 +44,10 @@ export default function DashboardLayouSt() {
         <Routes>
           <Route path="/" element={<DashboardOverview />} />
           <Route path="/add-supplier" element={<AddSupplierPage />} />
-          {/* <Route
-            path="/Supplier-management/manage-supplier"
-            element={<ManageParts />}
-          /> */}
+          <Route
+            path="/manage-supplier"
+            element={<ManageSupplier />}
+          />
         </Routes>
       </motion.main>
     </div>
