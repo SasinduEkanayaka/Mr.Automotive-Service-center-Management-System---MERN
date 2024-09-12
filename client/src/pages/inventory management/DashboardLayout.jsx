@@ -7,6 +7,7 @@ import { Route, Routes } from "react-router-dom";
 import ManageParts from "./ManageParts";
 import DashboardOverview from "./DashboardOverview";
 import AddSparePartPage from "./AddSparePartPage";
+import CreatePackage from "../packageManagement/CreatePackage";
 
 const contentVariants = {
   open: { marginLeft: 250, transition: { type: "spring", stiffness: 50 } },
@@ -43,7 +44,15 @@ export default function DashboardLayout() {
         <Routes>
           <Route path="/" element={<DashboardOverview />} />
           <Route path="/add-parts" element={<AddSparePartPage />} />
+
+          <Route
+            path="/inventory-management/manage-parts"
+            element={<ManageParts />}
+          />
+          <Route path="/create-pkg" element={<CreatePackage />} />
+
           <Route path="/manage-parts" element={<ManageParts />} />
+
         </Routes>
       </motion.main>
     </div>
