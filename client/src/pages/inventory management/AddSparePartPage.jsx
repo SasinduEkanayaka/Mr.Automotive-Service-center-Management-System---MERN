@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 import { storage, ref, uploadBytes, getDownloadURL } from "./../../firebase"; // Import from updated firebase.js
 import axios from "axios"; // Import axios
+import { useNavigate } from "react-router-dom";
 
 const AddSparePartPage = () => {
   const [partName, setPartName] = useState("");
@@ -18,6 +19,7 @@ const AddSparePartPage = () => {
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddFeature = () => {
     setFeatures([...features, { id: uuidv4(), key: "", value: "" }]);
@@ -81,6 +83,7 @@ const AddSparePartPage = () => {
         text: "Spare part added successfully.",
         icon: "success",
       });
+      navigate(`/inventory-management/manage-parts`);
     } catch (error) {
       Swal.fire({
         title: "Error!",

@@ -42,7 +42,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     },
     {
       name: "Manage Spare Parts",
-      path: "/manager/order-management",
+      path: "/inventory-management/manage-parts",
       icon: <FaClipboardList />,
     },
     {
