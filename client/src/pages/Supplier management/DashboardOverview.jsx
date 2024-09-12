@@ -4,55 +4,54 @@ import { motion } from "framer-motion";
 import { FaBox, FaChartLine } from "react-icons/fa";
 
 const ShowSupplier = () => {
-  const [suppliers, setSupplier] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setLoading(true);
     axios
       .get('http://localhost:3000/suppliers')
       .then((response) => {
-        setSupplier(response.data.data);
+        setSuppliers(response.data.data);
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        setError("Error fetching suppliers");
         setLoading(false);
       });
   }, []);
 
-  // Handle Approve and Decline
-  const handleApprove = (id) => {
-    const supplierToApprove = suppliers.find((supplier) => supplier._id === id);
+  const handleApprove = async (id) => {
+    try {
+      const supplierToApprove = suppliers.find((supplier) => supplier._id === id);
 
-    // Update the supplier's status locally
-    setSupplier((prevSuppliers) =>
-      prevSuppliers.map((supplier) =>
-        supplier._id === id ? { ...supplier, status: "approved" } : supplier
-      )
-    );
+      if (supplierToApprove) {
+        await axios.put(`http://localhost:3000/suppliers/${id}`, {
+          status: 'approved'
+        });
 
-    // Post the approved supplier to the server
-    axios
-      .post('http://localhost:3000/suppliers/approve', {
-        SupplierID: supplierToApprove.SupplierID,
-        SupplierName: supplierToApprove.SupplierName,
-        status: "approved",
-      })
-      .then((response) => {
-        console.log("Supplier approved successfully:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error approving supplier:", error);
-      });
+        setSuppliers((prevSuppliers) =>
+          prevSuppliers.map((supplier) =>
+            supplier._id === id ? { ...supplier, status: 'approved' } : supplier
+          )
+        );
+      }
+    } catch (error) {
+      setError("Error approving supplier");
+    }
   };
 
-  const handleDecline = (id) => {
-    setSupplier((prevSuppliers) =>
-      prevSuppliers.map((supplier) =>
-        supplier._id === id ? { ...supplier, status: "declined" } : supplier
-      )
-    );
+  const handleDecline = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/suppliers/${id}`);
+
+      setSuppliers((prevSuppliers) =>
+        prevSuppliers.filter((supplier) => supplier._id !== id)
+      );
+    } catch (error) {
+      setError("Error declining supplier");
+    }
   };
 
   const cardVariants = {
@@ -118,6 +117,8 @@ const ShowSupplier = () => {
       {/* Loading State */}
       {loading ? (
         <div className="text-center mt-6 text-DarkColor">Loading...</div>
+      ) : error ? (
+        <div className="text-center mt-6 text-red-500">{error}</div>
       ) : (
         <div className="mt-12 bg-SecondaryColor p-6 rounded-lg shadow-lg">
           <h2 className="text-xl font-bold text-ExtraDarkColor mb-6">

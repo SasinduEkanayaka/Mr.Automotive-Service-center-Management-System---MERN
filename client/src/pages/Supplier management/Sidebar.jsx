@@ -41,8 +41,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       icon: <FaBox />,
     },
     {
-      name: "Manage Supplier Parts",
-      path: "/manager/order-management",
+      name: "Manage Suppliers",
+      path: "/Supplier-management/manage-supplier",
       icon: <FaClipboardList />,
     },
     {
@@ -51,8 +51,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       icon: <FaTags />,
     },
     {
-      name: "Request Spare Parts",
-      path: "/manager/sales-forecasting",
+      name: "Request Item",
+      path: "/Supplier-management/add-supplier",
       icon: <FaChartLine />,
     },
     { name: "Profile", path: "/manager/profile", icon: <FaUserCircle /> },

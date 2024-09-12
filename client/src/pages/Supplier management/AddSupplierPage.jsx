@@ -53,7 +53,7 @@ const AddSupplierPage = () => {
   return (
     <div className="bg-primary min-h-screen flex justify-center items-center p-4">
       <div className="bg-secondary p-8 rounded-lg shadow-lg max-w-2xl w-full">
-        <h2 className="text-dark text-2xl font-bold mb-6">Add Supplier</h2>
+        <h2 className="text-dark text-3xl font-bold mb-6 bg-gray-800 text-white"> Supplier Registration</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="text-dark block mb-2">Supplier Name</label>
@@ -65,7 +65,7 @@ const AddSupplierPage = () => {
               required
             />
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="text-dark block mb-2">Item Number</label>
             <input
               type="text"
@@ -74,7 +74,7 @@ const AddSupplierPage = () => {
               onChange={(e) => setItemNo(e.target.value)}
               required
             />
-          </div>
+          </div> */}
           <div className="mb-4">
             <label className="text-dark block mb-2">Item Name</label>
             <input
