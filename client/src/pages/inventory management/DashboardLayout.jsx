@@ -43,10 +43,7 @@ export default function DashboardLayout() {
         <Routes>
           <Route path="/" element={<DashboardOverview />} />
           <Route path="/add-parts" element={<AddSparePartPage />} />
-          <Route
-            path="/inventory-management/manage-parts"
-            element={<ManageParts />}
-          />
+          <Route path="/manage-parts" element={<ManageParts />} />
         </Routes>
       </motion.main>
     </div>
