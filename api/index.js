@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import cors from "cors";
+import sparePartRoutes from "./routes/SparePart.route.js";
 
 dotenv.config();
 
@@ -19,6 +21,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
+
+app.use("/api/spareparts", sparePartRoutes);
 
 app.listen(3000, () => {
   console.log("Server listening on port 3000!!!");
