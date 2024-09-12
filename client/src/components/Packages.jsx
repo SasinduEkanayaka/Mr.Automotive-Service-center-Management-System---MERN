@@ -1,53 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import img from "../assets/EventCalender.png";
-
-const packages = [
-  {
-    title: "Full Service",
-    description:
-      "A vehicle full service is a comprehensive maintenance procedure designed to ensure your car operates at its best...",
-    price: "Rs.30000",
-    image: img,
-  },
-  {
-    title: "Master Mileage Pack",
-    description:
-      "The Mileage Master Package is ideal for vehicles that have clocked significant miles.",
-    price: "Rs.10000",
-    image: img,
-  },
-  {
-    title: "Engine Repair",
-    description:
-      "Engine repair involves diagnosing and fixing issues within a vehicle’s engine, addressing problems like overheating, misfiring, or mechanical failures...",
-    price: "Rs.10000",
-    image: img,
-  },
-  {
-    title: "Wheel Alignment",
-    description:
-      "Wheel alignment adjusts the angles of a vehicle’s wheels to the manufacturer’s specifications, ensuring they are parallel and properly aligned with the road...",
-    price: "Rs.4500",
-    image: img,
-  },
-  {
-    title: "Engine Tune Up",
-    description:
-      "An engine tune-up involves inspecting and adjusting key engine components, such as spark plugs, filters, and ignition systems, to ensure optimal performance...",
-    price: "Rs.3000",
-    image: img,
-  },
-  {
-    title: "AC Repair",
-    description:
-      "AC repair involves diagnosing and fixing issues in a vehicle’s air conditioning system, such as refrigerant leaks, faulty compressors, or clogged filters...",
-    price: "Rs.6000",
-    image: img,
-  },
-];
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const Packages = () => {
+  const [maintancePkgs, setmaintancePkgs] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchMaintaincePkgs = async () => {
+      try {
+        const pkgs = await axios.get("http://localhost:3030/api/maintance/get");
+        setmaintancePkgs(pkgs.data);
+      } catch (error) {
+        console.error("Error fetching repair estimates:", error);
+      }
+    };
+    fetchMaintaincePkgs();
+  }, []);
+
   const handleClickCard = () => {};
+  const handleBooking = (id) => {
+    navigate(`/book/add/${id}`);
+  };
   return (
     <section className="bg-gray-100 py-10 px-6 pt-28">
       <div className="text-center mb-10">
@@ -58,22 +34,28 @@ const Packages = () => {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ml-20 mr-20">
-        {packages.map((pkg, index) => (
+        {maintancePkgs.map((pkg, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-md overflow-hidden"
+            className="bg-white rounded-2xl shadow-md overflow-hidden"
             onClick={handleClickCard}
           >
             <img
-              src={pkg.image}
+              src={pkg.imageURL}
               alt={pkg.title}
               className="w-full h-48 object-cover"
             />
             <div className="p-6">
-              <h3 className="text-xl font-semibold mb-2">{pkg.title}</h3>
-              <p className="text-gray-700 mb-4">{pkg.description}</p>
-              <button className="bg-yellow-400 text-white font-bold py-2 px-4 rounded-lg">
-                {pkg.price}
+              <h3 className="text-xl font-semibold mb-2">{pkg.pkgName}</h3>
+              <p className="text-gray-700 mb-4">{pkg.pkgDes}</p>
+              <button className="bg-yellow-400 text-white font-bold py-2 px-4 rounded-lg mr-5">
+                {pkg.pkgPrice}
+              </button>
+              <button
+                className="bg-green-400 text-white font-bold py-2 px-4 rounded-lg"
+                onClick={() => handleBooking(pkg._id)}
+              >
+                Book Now
               </button>
             </div>
           </div>

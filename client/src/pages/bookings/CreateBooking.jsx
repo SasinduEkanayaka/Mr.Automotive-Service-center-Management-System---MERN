@@ -61,16 +61,16 @@ const CreateBooking = () => {
           <form>
             <div className=" bg-slate-200 p-4 rounded-2xl shadow-sm">
               <h2 className="text-2xl font-bold mb-5">
-                Section 1: Customer Information
+                Section 1: Genaral Information
               </h2>
 
               <div className="flex items-center justify-between mb-4 ">
-                <div className="flex flex-col w-1/4">
+                <div className="flex flex-col w-2/4">
                   <label className="block text-gray-700 required">Name:</label>
                   <input
                     type="text"
                     name="cusName"
-                    className="border border-gray-300 rounded-md p-2 mr-10"
+                    className="border border-gray-300 rounded-md p-2 mr-5"
                     required
                   />
                 </div>
@@ -79,7 +79,7 @@ const CreateBooking = () => {
                   <input
                     type="email"
                     name="cusEmail"
-                    className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-10"
+                    className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-5"
                     required
                   />
                 </div>
@@ -92,18 +92,20 @@ const CreateBooking = () => {
                     required
                   />
                 </div>
+              </div>
+
+              <div className="flex items-center justify-between mb-4">
                 <div className="flex flex-col w-1/4">
-                  <label className="block text-gray-700 required">Exp:</label>
+                  <label className="block text-gray-700 required">
+                    Vehicle No:
+                  </label>
                   <input
-                    type="date"
+                    type="text"
                     name="exp"
                     className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-10"
                     required
                   />
                 </div>
-              </div>
-
-              <div className="flex items-center justify-between mb-4">
                 <div className="flex flex-col w-1/4">
                   <label className="block text-gray-700 required">Price:</label>
                   <input
@@ -125,15 +127,6 @@ const CreateBooking = () => {
                       required
                     />
                   </div>
-                </div>
-                <div className="flex flex-col w-1/4">
-                  <label className="block text-gray-700 required">Image:</label>
-                  <input
-                    type="file"
-                    name="image"
-                    className="border border-gray-300 rounded-md p-2 bg-gray-100"
-                    required
-                  />
                 </div>
               </div>
             </div>
