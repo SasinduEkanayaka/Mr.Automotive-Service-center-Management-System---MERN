@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -10,8 +10,10 @@ import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import Car from "../../assets/carbg2.png";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const CreateBooking = () => {
+  const [maintancePkg, setmaintancePkg] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [bookingData, setBookingData] = useState({
     package: {
@@ -29,6 +31,22 @@ const CreateBooking = () => {
     time: "",
     note: "",
   });
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchMaintaincePkgs = async () => {
+      try {
+        const pkgs = await axios.get(
+          `http://localhost:3000/api/maintance/get/${id}`
+        );
+        setmaintancePkg(pkgs.data);
+      } catch (error) {
+        console.error("Error fetching repair estimates:", error);
+      }
+    };
+    fetchMaintaincePkgs();
+  }, []);
 
   const handleBookingChange = (e) => {
     const { name, value } = e.target;
@@ -58,6 +76,20 @@ const CreateBooking = () => {
         </div>
 
         <div className=" pt-28 pr-10">
+          <div className="ml-20 mb-10 flex">
+            <div className="bg-lime-300 rounded-2xl shadow-md overflow-hidden flex h-40">
+              <img src={maintancePkg.imageURL} className="h-48 object-cover" />
+              <div className="p-3">
+                <h3 className="text-xl font-semibold mb-2">
+                  {maintancePkg.pkgName}
+                </h3>
+                <p className="text-gray-700 mb-2">{maintancePkg.pkgDes}</p>
+                <button className="bg-yellow-400 text-white font-bold py-2 px-4 rounded-lg mr-5">
+                  {maintancePkg.pkgPrice}
+                </button>
+              </div>
+            </div>
+          </div>
           <form>
             <div className=" bg-slate-200 p-4 rounded-2xl shadow-sm">
               <h2 className="text-2xl font-bold mb-5">

@@ -21,7 +21,7 @@ const ShowAllPackages = () => {
   useEffect(() => {
     const fetchMaintaincePkgs = async () => {
       try {
-        const pkgs = await axios.get("http://localhost:3030/api/maintance/get");
+        const pkgs = await axios.get("http://localhost:3000/api/maintance/get");
         setmaintancePkgs(pkgs.data);
       } catch (error) {
         console.error("Error fetching repair estimates:", error);
