@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import sparePartRoutes from "./routes/SparePart.route.js";
 import Supplier_Route from "./routes/Supplier.route.js";
+import Request_router from "./routes/RequestItem_route.js";
 dotenv.config();
 
 mongoose
@@ -25,6 +26,8 @@ app.use(cors());
 
 app.use("/api/spareparts", sparePartRoutes);
 app.use('/suppliers', Supplier_Route);
+
+app.use("/requestItems", Request_router);
 app.listen(3000, () => {
   console.log("Server listening on port 3000!!!");
 });
