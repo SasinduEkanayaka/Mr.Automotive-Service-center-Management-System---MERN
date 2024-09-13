@@ -5,17 +5,19 @@ import DashboardLayouSt from "./pages/Supplier management/DashboardLayoutS";
 import Sidebar from "./pages/inventory management/Sidebar";
 import Home from "./pages/Home";
 
+
 import AddSparePartPage from "./pages/inventory management/AddSparePartPage";
 import BookingPage from "./pages/bookings/BookingPage";
 import CreateBooking from "./pages/bookings/CreateBooking";
 import ShowAllPackages from "./pages/packageManagement/ShowAllPackages";
 
-// import AddSparePartPage from "./pages/inventory management/AddSparePartPage";
+
 import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
 
 export default function App() {
   return (
     <BrowserRouter>
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
@@ -23,9 +25,12 @@ export default function App() {
         <Route path="/book/add/:id" element={<CreateBooking />} />
         <Route path="/pkg" element={<ShowAllPackages />} />
 
-        {/* <Routes>
+
+
+
+
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
-      </Routes> */}
+
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
       </Routes>

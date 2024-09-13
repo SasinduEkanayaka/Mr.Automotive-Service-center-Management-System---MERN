@@ -52,8 +52,13 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     },
     {
       name: "Request Item",
-      path: "/Supplier-management/add-supplier",
+      path: "/Supplier-management/add-request-item",
       icon: <FaChartLine />,
+    },
+    {
+      name: "Manage Request Item",
+      path: "/Supplier-management/manage-request-item",
+      icon: <FaClipboardList />,
     },
     { name: "Profile", path: "/manager/profile", icon: <FaUserCircle /> },
   ];
