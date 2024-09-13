@@ -62,27 +62,35 @@ router.get('/:id', async (req, res) => {
   }
 });
 // Route for Update a Supplier's status
+// Route for Update a Supplier's details (not just status)
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { SupplierName, ItemNo, ItemName, ContactNo, Email, Address } = req.body;
 
-    if (!status) {
-      return res.status(400).send({ message: 'Status is required' });
+    // Check if all fields are provided
+    if (!SupplierName || !ItemName || !ContactNo || !Email || !Address) {
+      return res.status(400).send({ message: 'All fields are required' });
     }
 
-    const updatedSupplier = await Supplier.findByIdAndUpdate(id, { status }, { new: true });
+    // Find and update the supplier
+    const updatedSupplier = await Supplier.findByIdAndUpdate(
+      id,
+      { SupplierName, ItemNo, ItemName, ContactNo, Email, Address },
+      { new: true } // Return the updated document
+    );
 
     if (!updatedSupplier) {
       return res.status(404).send({ message: 'Supplier not found' });
     }
 
-    res.status(200).send(updatedSupplier);
+    return res.status(200).send(updatedSupplier);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send({ message: error.message });
+    return res.status(500).send({ message: 'Server error' });
   }
 });
+
 
 // Route for Delete a Supplier
 router.delete('/:id', async (req, res) => {

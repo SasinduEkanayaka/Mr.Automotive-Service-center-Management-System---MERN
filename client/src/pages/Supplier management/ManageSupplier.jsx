@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import UpdateSupplierPopup from './UpdateSupplier'; // Placeholder for edit popup
 
 const ManageSupplier = () => {
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedSupplier, setSelectedSupplier] = useState(null); // For overview and edit
+  const [showUpdatePopup, setShowUpdatePopup] = useState(false); // For edit popup
+  const [searchTerm, setSearchTerm] = useState(''); // Search term state
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -31,6 +35,22 @@ const ManageSupplier = () => {
     }
   };
 
+  const handleOverview = (supplier) => {
+    setSelectedSupplier(supplier); // Set selected supplier for overview
+  };
+
+  const handleUpdate = (supplier) => {
+    setSelectedSupplier(supplier); // Set selected supplier for edit
+    setShowUpdatePopup(true);
+  };
+
+  // Filter suppliers based on the search term
+  const filteredSuppliers = suppliers.filter((supplier) =>
+    supplier.SupplierName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    supplier.ItemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    supplier.ContactNo.includes(searchTerm)
+  );
+
   if (loading) {
     return <div className="text-center mt-6">Loading...</div>;
   }
@@ -38,6 +58,18 @@ const ManageSupplier = () => {
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-8">Approved Suppliers</h1>
+
+      {/* Search input */}
+      <div className="mb-4">
+        <input
+          type="text"
+          className="w-full p-2 border border-gray-400 rounded-lg"
+          placeholder="Search by supplier name, item name, or contact number..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-800 text-white">
@@ -48,53 +80,106 @@ const ManageSupplier = () => {
               <th className="py-3 px-5 text-left">Contact number</th>
               <th className="py-3 px-5 text-left">Email</th>
               <th className="py-3 px-5 text-left">Address</th>
-
               <th className="py-3 px-5 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {suppliers.map((supplier) => (
-              <tr
-                key={supplier._id}
-                className="border-b hover:bg-gray-100 transition-colors duration-300"
-              >
-                <td className="py-3 px-5">{supplier.SupplierID}</td>
-                <td className="py-3 px-5">{supplier.SupplierName}</td>
-                <td className="py-3 px-5">{supplier.ItemName}</td>
-                <td className="py-3 px-5">{supplier.ContactNo}</td>
-                <td className="py-3 px-5">{supplier.Email}</td>
-                <td className="py-3 px-5">{supplier.Address}</td>
-                <td className="py-3 px-5">
-                  <div className="flex items-center">
-                    <Link
-                      to={`/supplier/${supplier._id}`} // Assuming a route exists for viewing supplier details
-                      className="text-blue-500 hover:text-blue-700 mr-2"
-                    // title="Show Details"
-                    >
-                      <FaEye />
-                    </Link>
-                    <Link
-                      to={`/edit-supplier/${supplier._id}`} // Assuming a route exists for editing supplier
-                      className="text-green-500 hover:text-green-700 mr-2"
-                    // title="Edit Supplier"
-                    >
-                      <FaEdit />
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(supplier._id)}
-                      className="text-red-500 hover:text-red-700"
-                    // title="Delete Supplier"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
+            {filteredSuppliers.length > 0 ? (
+              filteredSuppliers.map((supplier) => (
+                <motion.tr
+                  key={supplier._id}
+                  className="border-b hover:bg-gray-100 transition-colors duration-300"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <td className="py-3 px-5">{supplier.SupplierID}</td>
+                  <td className="py-3 px-5">{supplier.SupplierName}</td>
+                  <td className="py-3 px-5">{supplier.ItemName}</td>
+                  <td className="py-3 px-5">{supplier.ContactNo}</td>
+                  <td className="py-3 px-5">{supplier.Email}</td>
+                  <td className="py-3 px-5">{supplier.Address}</td>
+                  <td className="py-3 px-5">
+                    <div className="flex items-center">
+                      <button
+                        onClick={() => handleOverview(supplier)}
+                        className="text-blue-500 hover:text-blue-700 mr-2"
+                      >
+                        <FaEye />
+                      </button>
+                      <button
+                        onClick={() => handleUpdate(supplier)}
+                        className="text-green-500 hover:text-green-700 mr-2"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(supplier._id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </td>
+                </motion.tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="py-3 px-5 text-center">
+                  No suppliers found
                 </td>
-
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
+
+      {/* Supplier Overview Popup */}
+      <AnimatePresence>
+        {selectedSupplier && !showUpdatePopup && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedSupplier(null)}
+          >
+            <motion.div
+              className="bg-white rounded-lg p-8 max-w-3xl w-full shadow-2xl relative"
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-2xl text-gray-800 mb-6 font-bold border-b border-gray-300 pb-2">
+                {selectedSupplier.SupplierName}
+              </h2>
+              <div className="flex flex-col space-y-4">
+                <p><strong>Supplier ID:</strong> {selectedSupplier.SupplierID}</p>
+                <p><strong>Contact:</strong> {selectedSupplier.ContactNo}</p>
+                <p><strong>Email:</strong> {selectedSupplier.Email}</p>
+                <p><strong>Address:</strong> {selectedSupplier.Address}</p>
+              </div>
+              <button
+                className="absolute top-2 right-2 text-2xl text-gray-500 hover:text-gray-800"
+                onClick={() => setSelectedSupplier(null)}
+              >
+                &times;
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Update Supplier Popup */}
+      <AnimatePresence>
+        {showUpdatePopup && (
+          <UpdateSupplierPopup
+            isOpen={showUpdatePopup}
+            onClose={() => setShowUpdatePopup(false)}
+            supplierData={selectedSupplier} // Ensure prop name matches the popup
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
