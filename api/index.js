@@ -5,8 +5,14 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cors from "cors";
 import sparePartRoutes from "./routes/SparePart.route.js";
+
+import bookingRoutes from "./routes/Booking.route.js";
+import maintancePkgRoutes from "./routes/MaintancePkg.route.js";
+
 import Supplier_Route from "./routes/Supplier.route.js";
+
 import Request_router from "./routes/RequestItem_route.js";
+
 dotenv.config();
 
 mongoose
@@ -25,9 +31,16 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/spareparts", sparePartRoutes);
-app.use('/suppliers', Supplier_Route);
+
 
 app.use("/requestItems", Request_router);
+
+
+app.use("/api/booking", bookingRoutes);
+app.use("/api/maintance", maintancePkgRoutes);
+
+app.use("/suppliers", Supplier_Route);
+
 app.listen(3000, () => {
   console.log("Server listening on port 3000!!!");
 });

@@ -47,7 +47,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     },
     {
       name: "Generate Reports",
-      path: "/manager/discount-management",
+      path: "/inventory-management/create-pkg",
       icon: <FaTags />,
     },
     {
