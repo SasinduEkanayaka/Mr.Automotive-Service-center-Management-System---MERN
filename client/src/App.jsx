@@ -13,11 +13,9 @@ import ShowAllPackages from "./pages/packageManagement/ShowAllPackages";
 // import AddSparePartPage from "./pages/inventory management/AddSparePartPage";
 import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
 
-
 export default function App() {
   return (
     <BrowserRouter>
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
@@ -25,13 +23,11 @@ export default function App() {
         <Route path="/book/add/:id" element={<CreateBooking />} />
         <Route path="/pkg" element={<ShowAllPackages />} />
 
-      {/* <Routes>
+        {/* <Routes>
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
       </Routes> */}
 
-      <Routes>
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
-
       </Routes>
     </BrowserRouter>
   );

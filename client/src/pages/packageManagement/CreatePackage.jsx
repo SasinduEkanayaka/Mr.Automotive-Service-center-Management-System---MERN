@@ -66,7 +66,7 @@ const CreatePackage = () => {
       }
 
       // Send form data to backend API
-      await axios.post("http://localhost:3030/api/maintance/add", {
+      await axios.post("http://localhost:3000/api/maintance/add", {
         pkgID,
         pkgName,
         pkgDes,
