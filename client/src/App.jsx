@@ -14,6 +14,12 @@ import ShowAllPackages from "./pages/packageManagement/ShowAllPackages";
 
 import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
 
+import CreatePayment from "./pages/Payments/CreatePayment";
+import DeletePayment from "./pages/Payments/DeletePayment";
+import EditPayment from "./pages/Payments/EditPayment";
+import ReadOnePayment from "./pages/Payments/ReadOnePayment";
+import ShowPayment from "./pages/Payments/ShowPayment";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -33,6 +39,13 @@ export default function App() {
 
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
+
+        <Route path='/payments/allPayments' element={<ShowPayment />}></Route>
+      <Route path='/payments/detail/:id' element={<ReadOnePayment />}></Route>
+      <Route path='/payments/create' element={<CreatePayment />}></Route>
+       <Route path='/payments/edit/:id' element={<EditPayment />}></Route>
+      <Route path='/payments/delete/:id' element={<DeletePayment />}></Route>
+
       </Routes>
     </BrowserRouter>
   );

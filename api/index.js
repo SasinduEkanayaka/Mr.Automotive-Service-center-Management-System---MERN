@@ -12,6 +12,7 @@ import maintancePkgRoutes from "./routes/MaintancePkg.route.js";
 import Supplier_Route from "./routes/Supplier.route.js";
 
 import Request_router from "./routes/RequestItem_route.js";
+import Payment_Route from "./routes/Payment_Route.js";
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use("/api/booking", bookingRoutes);
 app.use("/api/maintance", maintancePkgRoutes);
 
 app.use("/suppliers", Supplier_Route);
+app.use("/payments", Payment_Route);
 
 app.listen(3000, () => {
   console.log("Server listening on port 3000!!!");
