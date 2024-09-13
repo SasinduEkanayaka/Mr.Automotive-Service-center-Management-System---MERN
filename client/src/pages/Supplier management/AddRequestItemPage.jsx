@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -9,7 +9,35 @@ const AddRequestItemPage = () => {
   const [itemName, setItemName] = useState("");
   const [brand, setBrand] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [suppliers, setSuppliers] = useState([]);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/suppliers');
+        setSuppliers(response.data.data.filter(supplier => supplier.status === 'approved'));
+      } catch (error) {
+        console.error('Error fetching suppliers:', error);
+      }
+    };
+
+    const fetchParts = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get("http://localhost:3000/api/spareparts");
+        setItems(response.data);
+      } catch (error) {
+        console.error("Error fetching parts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSuppliers();
+    fetchParts();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,13 +97,19 @@ const AddRequestItemPage = () => {
           </div>
           <div className="mb-4">
             <label className="text-dark block mb-2">Supplier Name</label>
-            <input
-              type="text"
+            <select
               className="w-full p-2 border border-dark rounded"
               value={supplierName}
               onChange={(e) => setSupplierName(e.target.value)}
               required
-            />
+            >
+              <option value="" disabled>Select Supplier</option>
+              {suppliers.map((supplier) => (
+                <option key={supplier._id} value={supplier.SupplierName}>
+                  {supplier.SupplierName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label className="text-dark block mb-2">Request Date</label>
@@ -89,13 +123,19 @@ const AddRequestItemPage = () => {
           </div>
           <div className="mb-4">
             <label className="text-dark block mb-2">Item Name</label>
-            <input
-              type="text"
+            <select
               className="w-full p-2 border border-dark rounded"
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
               required
-            />
+            >
+              <option value="" disabled>Select Item</option>
+              {items.map((item) => (
+                <option key={item._id} value={item.itemName}>
+                  {item.partName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label className="text-dark block mb-2">Brand</label>
