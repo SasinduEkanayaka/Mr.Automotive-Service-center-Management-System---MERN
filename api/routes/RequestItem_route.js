@@ -54,6 +54,33 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+router.put('/:id/status', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const validStatuses = ['processing', 'received', 'failed'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ message: 'Invalid status value. Allowed values are: processing, received, failed.' });
+        }
+
+        const updatedRequestItem = await RequestItem.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
+
+        if (!updatedRequestItem) {
+            return res.status(404).json({ message: 'Request item not found' });
+        }
+
+        res.status(200).json({ message: `Request item status updated to ${status}`, requestItem: updatedRequestItem });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Error updating request item status' });
+    }
+});
+
 // Delete a request item by ID
 router.delete('/:id', async (req, res) => {
     try {

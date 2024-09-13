@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { motion } from "framer-motion";
-import { FaBox, FaChartLine } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaBox, FaChartLine, FaEdit } from "react-icons/fa";
+import UpdateRequestItemPopup from './UpdateReqItemPopup'; // Make sure path is correct
 
 const ShowSupplier = () => {
   const [suppliers, setSuppliers] = useState([]);
   const [requestItems, setRequestItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showUpdatePopup, setShowUpdatePopup] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null); // Added state for selected item
 
   useEffect(() => {
     setLoading(true);
     axios
       .get('http://localhost:3000/suppliers')
       .then((response) => {
-        setSuppliers(response.data.data);
+        setSuppliers(response.data.data || []);
         setLoading(false);
       })
       .catch((error) => {
@@ -22,22 +25,23 @@ const ShowSupplier = () => {
         setLoading(false);
       });
   }, []);
-  
+
   useEffect(() => {
     const fetchRequestItems = async () => {
       try {
         const response = await axios.get('http://localhost:3000/requestItems');
-        setRequestItems(response.data); // No filtering by status
+        setRequestItems(response.data || []); // Ensure requestItems is an array
         setLoading(false);
       } catch (error) {
         console.error('Error fetching request items:', error);
+        setError("Error fetching request items");
         setLoading(false);
       }
     };
 
     fetchRequestItems();
   }, []);
-  
+
   const handleApprove = async (id) => {
     try {
       const supplierToApprove = suppliers.find((supplier) => supplier._id === id);
@@ -70,6 +74,27 @@ const ShowSupplier = () => {
     }
   };
 
+  const handleUpdate = (item) => {
+    setSelectedItem(item);
+    setShowUpdatePopup(true);
+  };
+
+  const handleStatusChange = async (itemId, newStatus) => {
+    try {
+      await axios.put(`http://localhost:3000/requestItems/${itemId}/status`, {
+        status: newStatus
+      });
+
+      setRequestItems((prevItems) =>
+        prevItems.map((item) =>
+          item._id === itemId ? { ...item, status: newStatus } : item
+        )
+      );
+    } catch (error) {
+      setError("Error updating request item status");
+    }
+  };
+
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
@@ -80,8 +105,13 @@ const ShowSupplier = () => {
     (supplier) => supplier.status === "approved"
   );
 
+  // Filter request items with status "processing"
+  const processingItems = requestItems.filter(
+    (item) => item.status === "processing"
+  );
+
   // Calculate the number of request items
-  const requestItemCount = requestItems.length;
+  const requestItemCount = processingItems.length;
 
   return (
     <div className="p-8">
@@ -208,10 +238,11 @@ const ShowSupplier = () => {
                   <th className="py-3 px-5 text-left">Item Name</th>
                   <th className="py-3 px-5 text-left">Brand</th>
                   <th className="py-3 px-5 text-left">Quantity</th>
+                  <th className="py-3 px-5 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {requestItems.map((item) => (
+                {processingItems.map((item) => (
                   <tr
                     key={item._id}
                     className="border-b hover:bg-PrimaryColor transition-colors duration-300"
@@ -231,6 +262,26 @@ const ShowSupplier = () => {
                     <td className="py-3 px-5 text-ExtraDarkColor">
                       {item.quantity}
                     </td>
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      <button
+                        className="bg-green-500 text-white px-3 py-1 rounded-md mr-2"
+                        onClick={() => handleStatusChange(item._id, 'received')}
+                      >
+                        Received
+                      </button>
+                      <button
+                        className="bg-red-500 text-white px-3 py-1 rounded-md"
+                        onClick={() => handleStatusChange(item._id, 'failed')}
+                      >
+                        Failed
+                      </button>
+                      <button
+                        onClick={() => handleUpdate(item)}
+                        className="text-green-500 hover:text-green-700 mr-2"
+                      >
+                        <FaEdit />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -238,6 +289,17 @@ const ShowSupplier = () => {
           </div>
         </>
       )}
+
+      {/* Update Item Popup */}
+      <AnimatePresence>
+        {showUpdatePopup && selectedItem && (
+          <UpdateRequestItemPopup
+            isOpen={showUpdatePopup}
+            onClose={() => setShowUpdatePopup(false)}
+            requestItemData={selectedItem}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
