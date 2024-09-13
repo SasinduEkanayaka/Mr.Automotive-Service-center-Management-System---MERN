@@ -7,7 +7,8 @@ import UpdateRequestItemPopup from './UpdateReqItemPopup'; // Make sure path is 
 
 const ManageRequestItem = () => {
   const [requestItems, setRequestItems] = useState([]);
-  const [filteredItems, setFilteredItems] = useState([]);
+  const [receivedItems, setReceivedItems] = useState([]);
+  const [failedItems, setFailedItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -22,7 +23,9 @@ const ManageRequestItem = () => {
     try {
       const response = await axios.get('http://localhost:3000/requestItems');
       setRequestItems(response.data);
-      setFilteredItems(response.data); // Initialize filteredItems
+      // Initialize filtered items
+      setReceivedItems(response.data.filter(item => item.status === 'received'));
+      setFailedItems(response.data.filter(item => item.status === 'failed'));
     } catch (error) {
       console.error('Error fetching request items:', error);
     } finally {
@@ -34,16 +37,26 @@ const ManageRequestItem = () => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = requestItems.filter((item) =>
-      item.requestID.toLowerCase().includes(query) ||
-      // item.quantity.toLowerCase().includes(query) ||
+    const filteredReceived = requestItems.filter((item) =>
+      item.status === 'received' &&
+      (item.requestID.toLowerCase().includes(query) ||
       item.supplierName.toLowerCase().includes(query) ||
       item.itemName.toLowerCase().includes(query) ||
       item.brand?.toLowerCase().includes(query) ||
-      new Date(item.requestDate).toLocaleDateString().toLowerCase().includes(query)
+      new Date(item.requestDate).toLocaleDateString().toLowerCase().includes(query))
     );
 
-    setFilteredItems(filtered);
+    const filteredFailed = requestItems.filter((item) =>
+      item.status === 'failed' &&
+      (item.requestID.toLowerCase().includes(query) ||
+      item.supplierName.toLowerCase().includes(query) ||
+      item.itemName.toLowerCase().includes(query) ||
+      item.brand?.toLowerCase().includes(query) ||
+      new Date(item.requestDate).toLocaleDateString().toLowerCase().includes(query))
+    );
+
+    setReceivedItems(filteredReceived);
+    setFailedItems(filteredFailed);
   };
 
   const handleDelete = async (id) => {
@@ -60,7 +73,8 @@ const ManageRequestItem = () => {
         try {
           await axios.delete(`http://localhost:3000/requestItems/${id}`);
           setRequestItems(prevItems => prevItems.filter(item => item._id !== id));
-          setFilteredItems(prevItems => prevItems.filter(item => item._id !== id)); // Update filteredItems
+          setReceivedItems(prevItems => prevItems.filter(item => item._id !== id && item.status === 'received'));
+          setFailedItems(prevItems => prevItems.filter(item => item._id !== id && item.status === 'failed'));
           Swal.fire('Deleted!', 'Request item has been deleted.', 'success');
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete request item.', 'error');
@@ -93,7 +107,9 @@ const ManageRequestItem = () => {
         onChange={handleSearch}
       />
 
-      <div className="bg-white p-6 rounded-lg shadow-lg">
+      {/* Received Items Table */}
+      <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <h2 className="text-xl font-bold mb-4">Received Items</h2>
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-800 text-white">
             <tr>
@@ -107,7 +123,64 @@ const ManageRequestItem = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredItems.map((item) => (
+            {receivedItems.map((item) => (
+              <motion.tr
+                key={item._id}
+                className="border-b hover:bg-gray-100 transition-colors duration-300"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                <td className="py-3 px-5">{item.requestID}</td>
+                <td className="py-3 px-5">{item.supplierName}</td>
+                <td className="py-3 px-5">{item.itemName}</td>
+                <td className="py-3 px-5">{item.brand}</td>
+                <td className="py-3 px-5">{item.quantity}</td>
+                <td className="py-3 px-5">{new Date(item.requestDate).toLocaleDateString()}</td>
+                <td className="py-3 px-5">
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => handleOverview(item)}
+                      className="text-blue-500 hover:text-blue-700 mr-2"
+                    >
+                      <FaEye />
+                    </button>
+                    <button
+                      onClick={() => handleUpdate(item)}
+                      className="text-green-500 hover:text-green-700 mr-2"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Failed Items Table */}
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-xl font-bold mb-4">Failed Items</h2>
+        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+          <thead className="bg-gray-800 text-white">
+            <tr>
+              <th className="py-3 px-5 text-left">Request ID</th>
+              <th className="py-3 px-5 text-left">Supplier Name</th>
+              <th className="py-3 px-5 text-left">Item Name</th>
+              <th className="py-3 px-5 text-left">Brand</th>
+              <th className="py-3 px-5 text-left">Quantity</th>
+              <th className="py-3 px-5 text-left">Req Date</th>
+              <th className="py-3 px-5 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {failedItems.map((item) => (
               <motion.tr
                 key={item._id}
                 className="border-b hover:bg-gray-100 transition-colors duration-300"

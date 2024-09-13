@@ -26,6 +26,11 @@ const requestItemSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ['processing', 'received', 'failed'],
+      default: 'processing'
+  }
   },
   { timestamps: true } // Enable createdAt and updatedAt fields
 );
