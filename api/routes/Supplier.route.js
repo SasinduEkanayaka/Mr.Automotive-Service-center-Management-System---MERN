@@ -91,6 +91,39 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+router.put('/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params; // Supplier ID from the URL parameters
+    const { status } = req.body; // New status from the request body
+
+    // Validate the status field
+    const validStatuses = ['pending', 'approved', 'declined'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).send({ message: 'Invalid status value. Allowed values: pending, approved, declined.' });
+    }
+
+    // Find and update the supplier's status
+    const updatedSupplier = await Supplier.findByIdAndUpdate(
+      id,
+      { status }, // Update only the status field
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedSupplier) {
+      return res.status(404).send({ message: 'Supplier not found' });
+    }
+
+    return res.status(200).send({
+      message: `Supplier status updated to ${status}`,
+      supplier: updatedSupplier
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: 'Server error' });
+  }
+});
+
+
 
 // Route for Delete a Supplier
 router.delete('/:id', async (req, res) => {

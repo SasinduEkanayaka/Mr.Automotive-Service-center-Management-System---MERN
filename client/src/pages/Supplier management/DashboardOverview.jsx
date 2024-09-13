@@ -43,7 +43,7 @@ const ShowSupplier = () => {
       const supplierToApprove = suppliers.find((supplier) => supplier._id === id);
 
       if (supplierToApprove) {
-        await axios.put(`http://localhost:3000/suppliers/${id}`, {
+        await axios.put(`http://localhost:3000/suppliers/${id}/status`, {
           status: 'approved'
         });
 
