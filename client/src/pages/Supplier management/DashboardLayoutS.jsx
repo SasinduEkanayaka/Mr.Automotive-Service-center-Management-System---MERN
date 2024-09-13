@@ -8,6 +8,8 @@ import { Route, Routes } from "react-router-dom";
 import DashboardOverview from "./DashboardOverview";
 import AddSupplierPage from "./AddSupplierPage";
 import ManageSupplier from "./ManageSupplier";
+import AddRequestItemPage from "./AddRequestItemPage";
+import ManageRequestItem from "./ManageRequestItem";
 
 const contentVariants = {
   open: { marginLeft: 250, transition: { type: "spring", stiffness: 50 } },
@@ -44,6 +46,8 @@ export default function DashboardLayouSt() {
         <Routes>
           <Route path="/" element={<DashboardOverview />} />
           <Route path="/add-supplier" element={<AddSupplierPage />} />
+          <Route path="/add-request-item" element={<AddRequestItemPage />} />
+          <Route path="/manage-request-item" element={<ManageRequestItem />} />
           <Route
             path="/manage-supplier"
             element={<ManageSupplier />}

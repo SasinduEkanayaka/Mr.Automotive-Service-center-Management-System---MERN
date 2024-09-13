@@ -5,6 +5,7 @@ import { FaBox, FaChartLine } from "react-icons/fa";
 
 const ShowSupplier = () => {
   const [suppliers, setSuppliers] = useState([]);
+  const [requestItems, setRequestItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -21,7 +22,22 @@ const ShowSupplier = () => {
         setLoading(false);
       });
   }, []);
+  
+  useEffect(() => {
+    const fetchRequestItems = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/requestItems');
+        setRequestItems(response.data); // No filtering by status
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching request items:', error);
+        setLoading(false);
+      }
+    };
 
+    fetchRequestItems();
+  }, []);
+  
   const handleApprove = async (id) => {
     try {
       const supplierToApprove = suppliers.find((supplier) => supplier._id === id);
@@ -63,6 +79,9 @@ const ShowSupplier = () => {
   const approvedSuppliers = suppliers.filter(
     (supplier) => supplier.status === "approved"
   );
+
+  // Calculate the number of request items
+  const requestItemCount = requestItems.length;
 
   return (
     <div className="p-8">
@@ -108,8 +127,8 @@ const ShowSupplier = () => {
         >
           <FaChartLine className="text-3xl text-DarkColor" />
           <div>
-            <h2 className="text-lg font-bold text-ExtraDarkColor">Low Stock</h2>
-            <p className="text-2xl font-semibold text-DarkColor">12 Parts</p>
+            <h2 className="text-lg font-bold text-ExtraDarkColor">Request Items</h2>
+            <p className="text-2xl font-semibold text-DarkColor">{requestItemCount}</p>
           </div>
         </motion.div>
       </div>
@@ -120,59 +139,104 @@ const ShowSupplier = () => {
       ) : error ? (
         <div className="text-center mt-6 text-red-500">{error}</div>
       ) : (
-        <div className="mt-12 bg-SecondaryColor p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-bold text-ExtraDarkColor mb-6">
-            Supplier Details
-          </h2>
-          <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-            <thead className="bg-DarkColor text-white">
-              <tr>
-                <th className="py-3 px-5 text-left">Supplier ID</th>
-                <th className="py-3 px-5 text-left">Supplier Name</th>
-                <th className="py-3 px-5 text-left">Status</th>
-                <th className="py-3 px-5 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {suppliers.map((supplier) => (
-                <tr
-                  key={supplier._id}
-                  className="border-b hover:bg-PrimaryColor transition-colors duration-300"
-                >
-                  <td className="py-3 px-5 text-ExtraDarkColor">
-                    {supplier.SupplierID}
-                  </td>
-                  <td className="py-3 px-5 text-ExtraDarkColor">
-                    {supplier.SupplierName}
-                  </td>
-                  <td className="py-3 px-5 text-ExtraDarkColor">
-                    {supplier.status || "Pending"}
-                  </td>
-                  <td className="py-3 px-5 text-ExtraDarkColor">
-                    {supplier.status === "approved" || supplier.status === "declined" ? (
-                      <span>{supplier.status}</span>
-                    ) : (
-                      <>
-                        <button
-                          className="bg-green-500 text-white px-3 py-1 rounded-md mr-2"
-                          onClick={() => handleApprove(supplier._id)}
-                        >
-                          Approve
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-3 py-1 rounded-md"
-                          onClick={() => handleDecline(supplier._id)}
-                        >
-                          Decline
-                        </button>
-                      </>
-                    )}
-                  </td>
+        <>
+          {/* Supplier Details */}
+          <div className="mt-12 bg-SecondaryColor p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold text-ExtraDarkColor mb-6">
+              Supplier Details
+            </h2>
+            <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+              <thead className="bg-DarkColor text-white">
+                <tr>
+                  <th className="py-3 px-5 text-left">Supplier ID</th>
+                  <th className="py-3 px-5 text-left">Supplier Name</th>
+                  <th className="py-3 px-5 text-left">Status</th>
+                  <th className="py-3 px-5 text-left">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {suppliers.map((supplier) => (
+                  <tr
+                    key={supplier._id}
+                    className="border-b hover:bg-PrimaryColor transition-colors duration-300"
+                  >
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {supplier.SupplierID}
+                    </td>
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {supplier.SupplierName}
+                    </td>
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {supplier.status || "Pending"}
+                    </td>
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {supplier.status === "approved" || supplier.status === "declined" ? (
+                        <span>{supplier.status}</span>
+                      ) : (
+                        <>
+                          <button
+                            className="bg-green-500 text-white px-3 py-1 rounded-md mr-2"
+                            onClick={() => handleApprove(supplier._id)}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="bg-red-500 text-white px-3 py-1 rounded-md"
+                            onClick={() => handleDecline(supplier._id)}
+                          >
+                            Decline
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Request Item Details */}
+          <div className="mt-12 bg-SecondaryColor p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold text-ExtraDarkColor mb-6">
+              Request Item Details
+            </h2>
+            <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+              <thead className="bg-DarkColor text-white">
+                <tr>
+                  <th className="py-3 px-5 text-left">Request ID</th>
+                  <th className="py-3 px-5 text-left">Supplier Name</th>
+                  <th className="py-3 px-5 text-left">Item Name</th>
+                  <th className="py-3 px-5 text-left">Brand</th>
+                  <th className="py-3 px-5 text-left">Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {requestItems.map((item) => (
+                  <tr
+                    key={item._id}
+                    className="border-b hover:bg-PrimaryColor transition-colors duration-300"
+                  >
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {item.requestID}
+                    </td>
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {item.supplierName}
+                    </td>
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {item.itemName}
+                    </td>
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {item.brand}
+                    </td>
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {item.quantity}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </div>
   );
