@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./pages/inventory management/DashboardLayout";
 import DashboardLayouSt from "./pages/Supplier management/DashboardLayoutS";
+import DashboardLayoutP from "./pages/Payment management/DashboardLayoutP";
+
 import Sidebar from "./pages/inventory management/Sidebar";
 import Home from "./pages/Home";
 
@@ -39,6 +41,9 @@ export default function App() {
 
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
+
+        <Route path="/payment-management/*" element={<DashboardLayoutP />} />
+
 
         <Route path='/payments/allPayments' element={<ShowPayment />}></Route>
       <Route path='/payments/detail/:id' element={<ReadOnePayment />}></Route>
