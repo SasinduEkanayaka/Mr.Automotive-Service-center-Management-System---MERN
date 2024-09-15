@@ -14,6 +14,8 @@ import Supplier_Route from "./routes/Supplier.route.js";
 import Request_router from "./routes/RequestItem_route.js";
 import Payment_Route from "./routes/Payment_Route.js";
 
+import Customer_Route from "./routes/Customer_Route.js";
+
 dotenv.config();
 
 mongoose
@@ -34,6 +36,7 @@ app.use(cors());
 app.use("/api/spareparts", sparePartRoutes);
 
 app.use("/requestItems", Request_router);
+app.use("/Customer", Customer_Route);
 
 app.use("/api/booking", bookingRoutes);
 app.use("/api/maintance", maintancePkgRoutes);

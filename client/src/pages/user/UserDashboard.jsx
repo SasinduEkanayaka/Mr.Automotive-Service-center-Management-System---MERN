@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import AdminSidebar from "../../components/AdminSidebar";
 import CountUp from "react-countup";
+import { Routes, Route } from "react-router-dom"; // Importing Routes and Route
+
+import DashboardOverview from "./DashboardOverview";
+import AddSupplierPage from "../Supplier management/AddSupplierPage";
+import CustomerProfile from "./Customerprofile";
+import AddRequestItemPage from "../Supplier management/AddRequestItemPage";
+import ManageRequestItem from "../Supplier management/ManageRequestItem";
 
 const UserDashboard = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -17,9 +24,9 @@ const UserDashboard = () => {
         style={{
           marginLeft: isSidebarCollapsed ? "60px" : "220px",
           transition: "margin-left 0.3s",
-          //   width: isSidebarCollapsed
-          //     ? "calc(100% - 70px)"
-          //     : "calc(100% - 280px)",
+            // width: isSidebarCollapsed
+            //   ? "calc(100% - 70px)"
+            //   : "calc(100% - 280px)",
         }}
         className=" bg-white min-h-screen rounded-2xl"
       >
@@ -57,6 +64,16 @@ const UserDashboard = () => {
             </p>
           </div>
         </div>
+        <Routes>
+          <Route path="/" element={<DashboardOverview />} />
+          <Route path="/add-supplier" element={<AddSupplierPage />} />
+          <Route path="/add-request-item" element={<AddRequestItemPage />} />
+          <Route path="/manage-request-item" element={<ManageRequestItem />} />
+          <Route
+            path="/customer/:customerId"
+            element={<CustomerProfile />}
+          />
+        </Routes>
       </main>
     </div>
   );

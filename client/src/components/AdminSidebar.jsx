@@ -99,7 +99,7 @@ const AdminSidebar = ({ onCollapseChange }) => {
         {/* Menu Items */}
         <Menu>
           <SubMenu
-            label={isCollapsed ? "" : "Vehicle"}
+            label={isCollapsed ? "" : "Profile"}
             icon={<FaChartBar />}
             rootStyles={{
               color: "#fff",
@@ -111,10 +111,10 @@ const AdminSidebar = ({ onCollapseChange }) => {
             className="sidebar-submenu"
           >
             <MenuItem suffix={<span className="badge red">6</span>}>
-              Pie charts
+              Details
             </MenuItem>
-            <MenuItem>Line charts</MenuItem>
-            <MenuItem>Bar charts</MenuItem>
+            {/* <MenuItem>Line charts</MenuItem>
+            <MenuItem>Bar charts</MenuItem> */}
           </SubMenu>
 
           <SubMenu
