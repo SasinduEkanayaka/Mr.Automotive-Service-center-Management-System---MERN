@@ -13,7 +13,7 @@ import CreateBooking from "./pages/bookings/CreateBooking";
 import ShowAllPackages from "./pages/packageManagement/ShowAllPackages";
 
 import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
-
+import AdminSidebar from "./components/AdminSidebar";
 
 export default function App() {
   return (
@@ -30,9 +30,7 @@ export default function App() {
 
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
 
-
-        
-
+        <Route path="/side" element={<AdminSidebar />} />
       </Routes>
     </BrowserRouter>
   );
