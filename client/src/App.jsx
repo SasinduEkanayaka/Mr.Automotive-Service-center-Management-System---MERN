@@ -18,6 +18,7 @@ import AdminSidebar from "./components/AdminSidebar";
 import UserDashboard from "./pages/user/UserDashboard";
 import DashboardOverview from "./pages/user/DashboardOverview";
 import CustomerProfile from "./pages/user/Customerprofile";
+import CreateCustomer from "./pages/user/CreateCustomer";
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
 
         <Route path="/side" element={<AdminSidebar />} />
         <Route path="/user-manage/*" element={<UserDashboard />} />
+        <Route path="/signup" element={<CreateCustomer />} />
       </Routes>
     </BrowserRouter>
   );
