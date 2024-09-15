@@ -32,9 +32,7 @@ app.use(cors());
 
 app.use("/api/spareparts", sparePartRoutes);
 
-
 app.use("/requestItems", Request_router);
-
 
 app.use("/api/booking", bookingRoutes);
 app.use("/api/maintance", maintancePkgRoutes);

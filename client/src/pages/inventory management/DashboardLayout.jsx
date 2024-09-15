@@ -8,6 +8,9 @@ import ManageParts from "./ManageParts";
 import DashboardOverview from "./DashboardOverview";
 import AddSparePartPage from "./AddSparePartPage";
 import CreatePackage from "../packageManagement/CreatePackage";
+import ShowAllPackages from "../packageManagement/ShowAllPackages";
+import UpdatePackage from "../packageManagement/UpdatePackage";
+import BookingManagement from "../bookings/BookingManagement";
 
 const contentVariants = {
   open: { marginLeft: 250, transition: { type: "spring", stiffness: 50 } },
@@ -49,10 +52,12 @@ export default function DashboardLayout() {
             path="/inventory-management/manage-parts"
             element={<ManageParts />}
           />
+          <Route path="/pkg" element={<ShowAllPackages />} />
           <Route path="/create-pkg" element={<CreatePackage />} />
+          <Route path="/upd/:id" element={<UpdatePackage />} />
 
+          <Route path="/bmng" element={<BookingManagement />} />
           <Route path="/manage-parts" element={<ManageParts />} />
-
         </Routes>
       </motion.main>
     </div>

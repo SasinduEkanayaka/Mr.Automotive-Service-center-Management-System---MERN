@@ -13,7 +13,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const CreateBooking = () => {
-  const [maintancePkg, setmaintancePkg] = useState({});
+  const [maintancePkg, setMaintancePkg] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [bookingData, setBookingData] = useState({
     package: {
@@ -40,20 +40,47 @@ const CreateBooking = () => {
         const pkgs = await axios.get(
           `http://localhost:3000/api/maintance/get/${id}`
         );
-        setmaintancePkg(pkgs.data);
+        setMaintancePkg(pkgs.data);
       } catch (error) {
         console.error("Error fetching repair estimates:", error);
       }
     };
     fetchMaintaincePkgs();
-  }, []);
+  }, [id]);
 
   const handleBookingChange = (e) => {
     const { name, value } = e.target;
-    setBookingData((perv) => ({
-      ...perv,
+    setBookingData((prev) => ({
+      ...prev,
       [name]: value,
     }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Add selected date and time to bookingData before sending
+      const updatedBookingData = {
+        ...bookingData,
+        package: maintancePkg,
+        date: selectedDate ? selectedDate.format("YYYY-MM-DD") : "",
+        time: selectedDate ? selectedDate.format("HH:mm") : "",
+      };
+
+      // Send the booking data to the backend API
+      const response = await axios.post(
+        "http://localhost:3000/api/booking/add",
+        updatedBookingData
+      );
+      console.log(updatedBookingData);
+      // Handle success
+      alert("Booking created successfully!");
+      console.log("Booking Response:", response.data);
+    } catch (error) {
+      console.log(bookingData);
+      alert("Failed to create booking. Please try again.");
+    }
   };
 
   const disabledDates = [
@@ -67,6 +94,7 @@ const CreateBooking = () => {
       dayjs(date).isSame(disabledDate, "day")
     );
   };
+
   return (
     <div>
       <NavBar />
@@ -75,7 +103,7 @@ const CreateBooking = () => {
           <img src={Car} alt="" className="" style={{ width: "700px" }} />
         </div>
 
-        <div className=" pt-28 pr-10">
+        <div className="pt-28 pr-10">
           <div className="ml-20 mb-10 flex">
             <div className="bg-lime-300 rounded-2xl shadow-md overflow-hidden flex h-40">
               <img src={maintancePkg.imageURL} className="h-48 object-cover" />
@@ -90,19 +118,22 @@ const CreateBooking = () => {
               </div>
             </div>
           </div>
-          <form>
+
+          <form onSubmit={handleSubmit}>
             <div className=" bg-slate-200 p-4 rounded-2xl shadow-sm">
               <h2 className="text-2xl font-bold mb-5">
-                Section 1: Genaral Information
+                Section 1: General Information
               </h2>
 
-              <div className="flex items-center justify-between mb-4 ">
+              <div className="flex items-center justify-between mb-4">
                 <div className="flex flex-col w-2/4">
                   <label className="block text-gray-700 required">Name:</label>
                   <input
                     type="text"
                     name="cusName"
                     className="border border-gray-300 rounded-md p-2 mr-5"
+                    value={bookingData.cusName}
+                    onChange={handleBookingChange}
                     required
                   />
                 </div>
@@ -112,6 +143,8 @@ const CreateBooking = () => {
                     type="email"
                     name="cusEmail"
                     className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-5"
+                    value={bookingData.cusEmail}
+                    onChange={handleBookingChange}
                     required
                   />
                 </div>
@@ -121,6 +154,8 @@ const CreateBooking = () => {
                     type="text"
                     name="cusMobile"
                     className="border border-gray-300 rounded-md p-2 bg-gray-100"
+                    value={bookingData.cusMobile}
+                    onChange={handleBookingChange}
                     required
                   />
                 </div>
@@ -133,35 +168,29 @@ const CreateBooking = () => {
                   </label>
                   <input
                     type="text"
-                    name="exp"
+                    name="vehNum"
                     className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-10"
-                    required
-                  />
-                </div>
-                <div className="flex flex-col w-1/4">
-                  <label className="block text-gray-700 required">Price:</label>
-                  <input
-                    type="number"
-                    name="price"
-                    className="border border-gray-300 rounded-md p-2  bg-gray-100  mr-10"
+                    value={bookingData.vehNum}
+                    onChange={handleBookingChange}
                     required
                   />
                 </div>
                 <div className="flex flex-col w-1/4">
                   <label className="block text-gray-700 required">
-                    Quantity:
+                    Mileage:
                   </label>
-                  <div className="flex items-center border border-gray-300 rounded-lg h-10 p-1 bg-gray-100 mr-4">
-                    <input
-                      type="number"
-                      name="quantity"
-                      className="h-9 p-1  bg-gray-100"
-                      required
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    name="milage"
+                    className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-10"
+                    value={bookingData.milage}
+                    onChange={handleBookingChange}
+                    required
+                  />
                 </div>
               </div>
             </div>
+
             <div className="mt-10 bg-slate-200 p-6 rounded-2xl shadow-sm">
               <h2 className="text-2xl font-bold mb-5">
                 Section 2: Vehicle Information
@@ -172,16 +201,17 @@ const CreateBooking = () => {
                   value={selectedDate}
                   onChange={(newValue) => setSelectedDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
-                  shouldDisableDate={shouldDisableDate} // Disable specific dates
+                  shouldDisableDate={shouldDisableDate}
                 />
               </LocalizationProvider>
             </div>
+
             <div className="flex justify-center">
               <button
-                type="button"
+                type="submit"
                 className="bg-lime-500 text-black text-xl px-4 py-2 rounded-md mt-5 mb-10"
               >
-                Next
+                Submit
               </button>
             </div>
           </form>
