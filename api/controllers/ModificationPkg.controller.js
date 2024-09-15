@@ -1,34 +1,36 @@
-import MaintancePkgModel from "../model/MaintancePkg.model.js";
+import ModiificationModel from "../model/Modiification.model";
 import mongoose from "mongoose";
 
-export const createMaintancePkg = async (req, res) => {
+export const createModificationPkg = async (req, res) => {
   try {
-    const mainPkg = new MaintancePkgModel(req.body);
+    const mainPkg = new ModiificationModel(req.body);
     await mainPkg.save();
-    res.status(201).json({ message: "Maintance Pkg Created successfully" });
+    res.status(201).json({ message: "Modification Pkg Created successfully" });
   } catch (error) {
     res.status(500).json({
-      message: "Failed to Create a  new Maintance Pkg",
+      message: "Failed to Create a  new Modification Pkg",
       error: error.message,
     });
   }
 };
 
-export const getAllMaintancePkg = async (req, res) => {
+export const getAllModificationPkg = async (req, res) => {
   try {
-    const mainPkgs = await MaintancePkgModel.find();
+    const mainPkgs = await ModiificationModel.find();
     res.status(200).json(mainPkgs);
   } catch (error) {
-    res.status(500).json({ message: "Error Fetching mainPkgs Data", error });
+    res
+      .status(500)
+      .json({ message: "Error Fetching ModificationPkg Data", error });
   }
 };
 
-export const getMaintancePkg = async (req, res) => {
+export const getModificationPkg = async (req, res) => {
   try {
     const { id } = req.params;
 
     if (mongoose.Types.ObjectId.isValid(id)) {
-      const mainPkg = await MaintancePkgModel.findById(id);
+      const mainPkg = await ModiificationModel.findById(id);
       if (mainPkg) {
         return res.status(200).json(mainPkg);
       }
@@ -42,23 +44,27 @@ export const getMaintancePkg = async (req, res) => {
   }
 };
 
-export const deleteMaintancePkg = async (req, res) => {
+export const deleteModificationPkg = async (req, res) => {
   const { id } = req.params;
   try {
-    await MaintancePkgModel.findByIdAndDelete(id);
+    await ModiificationModel.findByIdAndDelete(id);
     res.status(200).json({ message: "Maintance PKG Sucessfully Deleated" });
   } catch (error) {
     res.status(500).json({ message: "Error Deleating Maintance PKG" });
   }
 };
 
-export const updateMaintancePkg = async (req, res) => {
+export const updateModificationPkg = async (req, res) => {
   const { id } = req.params;
   const updatedData = req.body;
   try {
-    const mainPkg = await MaintancePkgModel.findByIdAndUpdate(id, updatedData, {
-      new: true,
-    });
+    const mainPkg = await ModiificationModel.findByIdAndUpdate(
+      id,
+      updatedData,
+      {
+        new: true,
+      }
+    );
     res.status(200).json(mainPkg);
   } catch (error) {
     res.status(500).json({ message: "Error Updating Maintance Log", error });
