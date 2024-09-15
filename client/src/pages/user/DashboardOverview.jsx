@@ -16,7 +16,7 @@ const ShowCustomer = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/bookings');
+        const response = await axios.get('http://localhost:3000/api/booking');
         setBookings(response.data || []); // Ensure bookings is an array
         setLoading(false);
       } catch (error) {

@@ -16,6 +16,8 @@ import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
 import AdminSidebar from "./components/AdminSidebar";
 
 import UserDashboard from "./pages/user/UserDashboard";
+import DashboardOverview from "./pages/user/DashboardOverview";
+import CustomerProfile from "./pages/user/Customerprofile";
 
 export default function App() {
   return (
@@ -31,9 +33,10 @@ export default function App() {
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
 
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
+        {/* <Route path="/das/*" element={< CustomerProfile/>} /> */}
 
         <Route path="/side" element={<AdminSidebar />} />
-        <Route path="/userside" element={<UserDashboard />} />
+        <Route path="/user-manage/*" element={<UserDashboard />} />
       </Routes>
     </BrowserRouter>
   );

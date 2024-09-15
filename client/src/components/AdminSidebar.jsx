@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import { Link } from "react-router-dom";
 import {
   FaChartBar,
   FaGlobe,
@@ -12,10 +13,10 @@ import {
 } from "react-icons/fa";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
-import "./style.css";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Avatar from "@mui/material/Avatar";
+import "./style.css";
 
 const AdminSidebar = ({ onCollapseChange }) => {
   const [isCollapsed, setCollapsed] = useState(false);
@@ -41,7 +42,7 @@ const AdminSidebar = ({ onCollapseChange }) => {
           },
         }}
       >
-        <Fab color="primary" aria-label="add" onClick={handleCollapse}>
+        <Fab color="primary" aria-label="collapse" onClick={handleCollapse}>
           {!isCollapsed ? <ArrowBackIosIcon /> : <ArrowForwardIosIcon />}
         </Fab>
       </Box>
@@ -75,7 +76,7 @@ const AdminSidebar = ({ onCollapseChange }) => {
                 textAlign: "center",
               }}
             >
-              Herbal Folw
+              Mr.Automotive
             </h4>
           </div>
         ) : (
@@ -103,48 +104,41 @@ const AdminSidebar = ({ onCollapseChange }) => {
             icon={<FaChartBar />}
             rootStyles={{
               color: "#fff",
-
               "&:hover": {
                 color: "black",
               },
             }}
-            className="sidebar-submenu"
           >
-            <MenuItem suffix={<span className="badge red">6</span>}>
-              Details
+            <MenuItem>
+             
+              <Link to="/user-manage/manage/:id">Customer Profile</Link> 
             </MenuItem>
-            {/* <MenuItem>Line charts</MenuItem>
-            <MenuItem>Bar charts</MenuItem> */}
           </SubMenu>
 
           <SubMenu
-            label={isCollapsed ? "" : "Customer"}
+            label={isCollapsed ? "" : "Booking"}
             icon={<FaGlobe />}
             rootStyles={{
               color: "#fff",
-
               "&:hover": {
                 color: "black",
               },
             }}
           >
-            <MenuItem>Google Maps</MenuItem>
-            <MenuItem>OpenStreetMap</MenuItem>
+           <Link to="/user-manage/booking">Customer booking</Link> 
           </SubMenu>
 
           <SubMenu
-            label={isCollapsed ? "" : "Bookings"}
+            label={isCollapsed ? "" : "Payments"}
             icon={<FaPaintBrush />}
             rootStyles={{
               color: "#fff",
-
               "&:hover": {
                 color: "black",
               },
             }}
           >
-            <MenuItem>Dark Mode</MenuItem>
-            <MenuItem>Light Mode</MenuItem>
+          <Link to="/user-manage/payment">Payments</Link> 
           </SubMenu>
 
           <SubMenu
@@ -152,7 +146,6 @@ const AdminSidebar = ({ onCollapseChange }) => {
             icon={<FaBox />}
             rootStyles={{
               color: "#fff",
-
               "&:hover": {
                 color: "black",
               },
@@ -162,27 +155,14 @@ const AdminSidebar = ({ onCollapseChange }) => {
             <MenuItem>Cards</MenuItem>
           </SubMenu>
 
-          <SubMenu
-            label={isCollapsed ? "" : "Inquiry"}
-            icon={<FaShoppingCart />}
-            rootStyles={{
-              color: "#fff",
+         
 
-              "&:hover": {
-                color: "black",
-              },
-            }}
-          >
-            <MenuItem>Products</MenuItem>
-            <MenuItem>Orders</MenuItem>
-          </SubMenu>
 
           <SubMenu
             label={isCollapsed ? "" : "Repair Estimate"}
             icon={<FaCalendarAlt />}
             rootStyles={{
               color: "#fff",
-
               "&:hover": {
                 color: "black",
               },
@@ -195,27 +175,28 @@ const AdminSidebar = ({ onCollapseChange }) => {
             icon={<FaBook />}
             rootStyles={{
               color: "#fff",
-
               "&:hover": {
                 color: "black",
               },
             }}
           >
-            {isCollapsed ? <FaBook /> : "Feedback"}
+            <Link to="/feedback">{isCollapsed ? <FaBook /> : "Feedback"}</Link>
           </MenuItem>
+
           <MenuItem
             icon={<FaHeart />}
             rootStyles={{
               color: "#fff",
-
               "&:hover": {
                 color: "black",
               },
             }}
           >
-            {isCollapsed ? <FaHeart /> : "Service"}
+            <Link to="/service">{isCollapsed ? <FaHeart /> : "Service"}</Link>
           </MenuItem>
         </Menu>
+
+        {/* Sidebar Footer */}
         <div className="sidebar-footer bg-blue-900">
           {!isCollapsed ? (
             <div className="flex gap-3 text-center p-2.5">
