@@ -7,7 +7,7 @@ import { Modal } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
 const ShowModRequest = () => {
@@ -90,7 +90,7 @@ const ShowModRequest = () => {
       };
 
       await axios.put(
-        `http://localhost:3000/api/mod/update/${selectedRequest._id}`,
+        `http://localhost:3000/api/mod/updateMod/${selectedRequest._id}`,
         updatedRequest
       );
 
@@ -130,7 +130,7 @@ const ShowModRequest = () => {
               className="bg-white shadow-lg rounded-lg p-6 hover:shadow-2xl transition-shadow duration-300"
             >
               <h3 className="text-xl font-semibold mb-2">
-                {request.modificationType}
+                Modification Type: {request.modificationType}
               </h3>
               <p className="text-gray-600 mb-2">
                 <strong>Customer Name:</strong> {request.customerName}
@@ -161,10 +161,11 @@ const ShowModRequest = () => {
         <div className="bg-white p-6 rounded-lg max-w-md mx-auto mt-20 shadow-lg">
           <h2 className="text-xl font-semibold mb-4">Update Request</h2>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
+            <DatePicker
               label="Select New Date"
               value={updatedDate}
               onChange={(newValue) => setUpdatedDate(newValue)}
+              minDate={dayjs().startOf("day")} // Restrict to future dates only
               renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>

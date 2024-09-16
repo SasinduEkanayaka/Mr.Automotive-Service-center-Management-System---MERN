@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { StaticDateTimePicker } from "@mui/x-date-pickers/StaticDateTimePicker";
 import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
 import NavBar from "../../components/NavBar";
@@ -19,6 +17,7 @@ const CreateBooking = () => {
   const uName = localStorage.getItem("name");
   const [maintancePkg, setMaintancePkg] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
   const [bookingData, setBookingData] = useState({
     package: {
       pkgName: "",
@@ -50,8 +49,45 @@ const CreateBooking = () => {
     fetchMaintaincePkgs();
   }, [id]);
 
+  // Validation Functions
+  const validatePhoneNumber = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+  };
+
+  const validateVehicleNumber = (vehNum) => {
+    const vehRegex = /^(?:[A-Z]{3}-\d{4}|[A-Z]{2}-\d{4})$/;
+    return vehRegex.test(vehNum);
+  };
+
+  const validateMileage = (milage) => {
+    return milage > 0;
+  };
+
   const handleBookingChange = (e) => {
     const { name, value } = e.target;
+
+    // Validation logic
+    let errors = { ...formErrors };
+    if (name === "cusMobile" && !validatePhoneNumber(value)) {
+      errors.cusMobile = "Phone number must be 10 digits long";
+    } else {
+      errors.cusMobile = "";
+    }
+
+    if (name === "vehNum" && !validateVehicleNumber(value)) {
+      errors.vehNum = "Invalid vehicle number format";
+    } else {
+      errors.vehNum = "";
+    }
+
+    if (name === "milage" && !validateMileage(value)) {
+      errors.milage = "Mileage must be a positive number";
+    } else {
+      errors.milage = "";
+    }
+
+    setFormErrors(errors);
     setBookingData((prev) => ({
       ...prev,
       [name]: value,
@@ -60,6 +96,16 @@ const CreateBooking = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if there are any validation errors
+    if (Object.values(formErrors).some((error) => error !== "")) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please fix the validation errors before submitting.",
+        icon: "error",
+      });
+      return;
+    }
 
     try {
       const updatedBookingData = {
@@ -75,20 +121,16 @@ const CreateBooking = () => {
         "http://localhost:3000/api/booking/add",
         updatedBookingData
       );
-      console.log(updatedBookingData);
-
       Swal.fire({
         title: "Success!",
         text: "Booking Successfully Created.",
         icon: "success",
       });
       navigate("/bookings");
-      console.log("Booking Response:", response.data);
     } catch (error) {
-      console.log(bookingData);
       Swal.fire({
         title: "Error!",
-        text: "Failed to create booking. Please try again",
+        text: "Failed to create booking. Please try again.",
         icon: "error",
       });
       navigate("/Booking");
@@ -123,19 +165,21 @@ const CreateBooking = () => {
             >
               <img src={maintancePkg.imageURL} className="h-48 object-cover" />
               <div className="p-3">
-                <h3 className="text-xl font-semibold mb-2">
+                <h4 className="text-xl font-semibold mb-2">
                   {maintancePkg.pkgName}
-                </h3>
-
-                <button className="bg-yellow-400 text-white font-bold py-2 px-4 rounded-lg mr-5">
-                  {maintancePkg.pkgPrice}
+                </h4>
+                <p className=" " style={{ fontSize: "13px" }}>
+                  {maintancePkg.pkgDes}
+                </p>
+                <button className="bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg mr-5 mt-2">
+                  Rs.{maintancePkg.pkgPrice}
                 </button>
               </div>
             </div>
           </div>
           <div className="flex justify-end">
             <form onSubmit={handleSubmit} className="w-5/6 rigth-0">
-              <div className=" bg-slate-200 p-4 rounded-2xl shadow-sm  ">
+              <div className=" bg-slate-200 p-4 rounded-2xl shadow-sm">
                 <h2 className="text-2xl font-bold mb-5">
                   Section 1: General Information
                 </h2>
@@ -182,6 +226,11 @@ const CreateBooking = () => {
                       onChange={handleBookingChange}
                       required
                     />
+                    {formErrors.cusMobile && (
+                      <span className="text-red-500 text-sm">
+                        {formErrors.cusMobile}
+                      </span>
+                    )}
                   </div>
                   <div className="flex flex-col w-1/4">
                     <label className="block text-gray-700 required">
@@ -195,44 +244,67 @@ const CreateBooking = () => {
                       onChange={handleBookingChange}
                       required
                     />
+                    {formErrors.vehNum && (
+                      <span className="text-red-500 text-sm">
+                        {formErrors.vehNum}
+                      </span>
+                    )}
                   </div>
                   <div className="flex flex-col w-1/4">
                     <label className="block text-gray-700 required">
-                      Mileage:
+                      Milage:
                     </label>
                     <input
                       type="number"
                       name="milage"
-                      className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-10"
+                      className="border border-gray-300 rounded-md p-2 bg-gray-100"
                       value={bookingData.milage}
                       onChange={handleBookingChange}
                       required
                     />
+                    {formErrors.milage && (
+                      <span className="text-red-500 text-sm">
+                        {formErrors.milage}
+                      </span>
+                    )}
                   </div>
+                </div>
+
+                <div className="flex flex-col w-full">
+                  <label className="block text-gray-700">Special Notes:</label>
+                  <textarea
+                    name="note"
+                    className="border border-gray-300 rounded-md p-2 bg-gray-100"
+                    value={bookingData.note}
+                    onChange={handleBookingChange}
+                  />
                 </div>
               </div>
 
-              <div className="mt-10 bg-slate-200 p-6 rounded-2xl shadow-sm">
+              <div className=" bg-slate-200 p-4 rounded-2xl shadow-sm mt-5">
                 <h2 className="text-2xl font-bold mb-5">
-                  Section 2: Vehicle Information
+                  Section 2: Time and Date Selection
                 </h2>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateTimePicker
-                    label="Select a Date"
-                    value={selectedDate}
-                    onChange={(newValue) => setSelectedDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
+                    label="Pick a date and time"
+                    disablePast
                     shouldDisableDate={shouldDisableDate}
+                    value={selectedDate}
+                    onChange={setSelectedDate}
+                    renderInput={(params) => (
+                      <TextField {...params} className="w-full" />
+                    )}
                   />
                 </LocalizationProvider>
               </div>
 
-              <div className="flex justify-center">
+              <div className="flex justify-center mt-10">
                 <button
                   type="submit"
-                  className="bg-lime-500 text-black text-xl px-4 py-2 rounded-md mt-5 mb-10"
+                  className="bg-yellow-400 text-black font-bold py-2 px-10 rounded-lg mb-20"
                 >
-                  Submit
+                  Confirm Booking
                 </button>
               </div>
             </form>

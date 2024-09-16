@@ -1,81 +1,86 @@
-import React, { useState } from "react";
+import React from "react";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import modBack from "../../assets/rim.png";
 import { motion } from "framer-motion";
-import axios from "axios"; // Import axios
+import axios from "axios";
 import Per from "../../assets/performanceimg.jpeg";
 import Style from "../../assets/stylevehimg.jpeg";
 import Effi from "../../assets/efficencyimg.jpeg";
 import Mod from "../../assets/repairveh.jpeg";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import dayjs from "dayjs";
+import { getTodayDate } from "@mui/x-date-pickers/internals";
+
+const validationSchema = yup.object({
+  customerName: yup.string().required("Customer Name is required"),
+  customerEmail: yup
+    .string()
+    .email("Invalid email format")
+    .required("Customer Email is required"),
+  vehicleModel: yup.string().required("Vehicle Model is required"),
+  vehicleNumber: yup.string().required("Vehicle Number is required"),
+  modificationType: yup
+    .string()
+    .oneOf(["engine", "exhaust", "suspension"])
+    .required("Modification Type is required"),
+  date: yup.date().required("Preferred Date is required"),
+});
 
 const CustomModification = () => {
+  const getTodayDate = new Date().toISOString().split("T")[0];
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
   const email = localStorage.getItem("email");
   const uid = localStorage.getItem("uid");
-  const [formData, setFormData] = useState({
-    customerId: uid,
-    customerName: name,
-    customerEmail: email,
-    vehicleModel: "",
-    vehicleNumber: "",
-    modificationType: "engine",
-    additionalNotes: "",
-    date: "",
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const formik = useFormik({
+    initialValues: {
+      customerId: uid || "",
+      customerName: name || "",
+      customerEmail: email || "",
+      vehicleModel: "",
+      vehicleNumber: "",
+      modificationType: "engine",
+      additionalNotes: "",
+      date: "",
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/mod/addMod",
+          values
+        );
+        if (response.status === 201) {
+          Swal.fire({
+            title: "Success!",
+            text: "Modification Appointment Created Successfully.",
+            icon: "success",
+          });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/mod/addMod",
-        formData
-      );
-      console.log(formData);
-      if (response.status === 201) {
+          formik.resetForm();
+          navigate("/modreq");
+        } else {
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to submit the request. Please try again.",
+            icon: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
         Swal.fire({
-          title: "Success!",
-          text: "Modification Appointment Created Successfully.",
-          icon: "success",
+          title: "Error!",
+          text: "Failed to Create Modification Appointment.",
+          icon: "error",
         });
-
-        setFormData({
-          customerId: "",
-          customerName: "",
-          customerEmail: "",
-          vehicleModel: "",
-          vehicleNumber: "",
-          modificationType: "engine",
-          additionalNotes: "",
-          date: "",
-        });
-        navigate("/modreq");
-      } else {
-        alert("Failed to submit the request. Please try again.");
-        console.log(formData);
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      Swal.fire({
-        title: "Error!",
-        text: "Failed to Create Modification Appointment.",
-        icon: "error",
-      });
-      console.log(formData);
-    }
-  };
+    },
+  });
 
   return (
     <div>
@@ -84,7 +89,7 @@ const CustomModification = () => {
       {/* Section 1: Introduction with Background Image and Scroll Effect */}
       <motion.div
         id="introduction"
-        className="bg-center min-h-screen flex  justify-center pt-40"
+        className="bg-center min-h-screen flex justify-center pt-40"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
@@ -97,9 +102,9 @@ const CustomModification = () => {
           <h2 className="text-yellow-500 bg-black bg-opacity-40 text-5xl -z-10 font-extrabold fixed left-1/3">
             Modify Your Vehicle
           </h2>
-          <div className=" mt-24  left-32 right-32 overflow-hidden fixed -z-10">
+          <div className="mt-24 left-32 right-32 overflow-hidden fixed -z-10">
             <motion.p
-              className="text-white  overflow-hidden "
+              className="text-white overflow-hidden"
               initial={{ y: 100 }}
               animate={{ y: -100 }}
               transition={{
@@ -108,18 +113,6 @@ const CustomModification = () => {
                 style: { zIndex: -1 },
               }}
             >
-              Boost your vehicle's performance with top-tier engine
-              modifications. Experience unmatched horsepower, enhanced fuel
-              efficiency, and smoother rides. Our expert modifications not only
-              optimize speed and acceleration but also extend engine longevity,
-              ensuring that your vehicle performs at its best. Whether you're
-              looking for performance enhancements for daily driving or
-              preparing for high-speed races, our engine upgrades are designed
-              to meet your needs. Elevate your driving experience with precision
-              tuning, cutting-edge technology, and premium parts that redefine
-              what your engine is capable of. <br />
-              <br />
-              <br />
               Boost your vehicle's performance with top-tier engine
               modifications. Experience unmatched horsepower, enhanced fuel
               efficiency, and smoother rides. Our expert modifications not only
@@ -186,8 +179,7 @@ const CustomModification = () => {
                 </h3>
                 <p className="text-gray-600">
                   Boost your vehicle's performance with top-tier engine
-                  modifications.Boost your vehicle's performance with top-tier
-                  engine modifications.
+                  modifications.
                 </p>
               </div>
             </div>
@@ -204,8 +196,7 @@ const CustomModification = () => {
                 </h3>
                 <p className="text-gray-600">
                   Customize your vehicle's appearance with exterior and interior
-                  upgrades.Customize your vehicle's appearance with exterior and
-                  interior upgrades.
+                  upgrades.
                 </p>
               </div>
             </div>
@@ -221,8 +212,6 @@ const CustomModification = () => {
                   Efficiency Improvements
                 </h3>
                 <p className="text-gray-600">
-                  Increase your vehicle's fuel efficiency and reduce emissions.
-                  Increase your vehicle's fuel efficiency and reduce emissions.
                   Increase your vehicle's fuel efficiency and reduce emissions.
                 </p>
               </div>
@@ -265,42 +254,43 @@ const CustomModification = () => {
                 perfect modification plan. Our goal is to ensure your vision is
                 brought to life with precision and excellence.
               </p>
-              <button className="bg-black text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-600">
-                Explore
-              </button>
+              <a href="#" className="text-blue-500 hover:underline">
+                Learn More
+              </a>
             </motion.div>
             {/* Step 2 */}
             <motion.div
               className="flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl p-5 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 1 }}
             >
               <img
-                src={Effi}
-                alt="Planning"
+                src={Style}
+                alt="Design"
                 className="w-20 h-20 object-cover rounded-full mb-4"
               />
-              <h3 className="text-xl font-semibold mb-2">Step 2: Planning</h3>
+              <h3 className="text-xl font-semibold mb-2">Step 2: Design</h3>
               <p className="text-gray-600 mb-4">
-                Our team crafts a detailed modification plan based on your
-                consultation. We outline modification plan based each step of
-                the process, from technical specifications to timelines,
-                ensuring a smooth and transparent precision.
+                Once we understand your vision, our design team creates a
+                detailed modification plan. We use advanced tools and
+                technologies to ensure that every design aspect aligns with your
+                requirements, guaranteeing an enhanced vehicle appearance and
+                performance.
               </p>
-              <button className="bg-black text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-600">
-                Explore
-              </button>
+              <a href="#" className="text-blue-500 hover:underline">
+                Learn More
+              </a>
             </motion.div>
             {/* Step 3 */}
             <motion.div
               className="flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl p-5 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 1.2 }}
             >
               <img
-                src={Mod}
+                src={Effi}
                 alt="Modification"
                 className="w-20 h-20 object-cover rounded-full mb-4"
               />
@@ -308,37 +298,37 @@ const CustomModification = () => {
                 Step 3: Modification
               </h3>
               <p className="text-gray-600 mb-4">
-                Our skilled technicians perform the modifications with the
-                utmost care and precision. We use high-quality materials and
-                advanced techniques to ensure the modification plan based
-                highest standards modification plan based are met.
+                Our skilled technicians execute the modification plan with
+                utmost care. Using high-quality parts and equipment, we ensure
+                that every modification is performed to the highest standards,
+                enhancing your vehicle's performance and appearance.
               </p>
-              <button className="bg-black text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-600">
-                Explore
-              </button>
+              <a href="#" className="text-blue-500 hover:underline">
+                Learn More
+              </a>
             </motion.div>
             {/* Step 4 */}
             <motion.div
-              className="flex flex-col items-center transition-transform duration-300 hover:shadow-2xl  p-5 shadow-lg"
+              className="flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl p-5 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 1.4 }}
             >
               <img
-                src={Per}
-                alt="Delivery"
+                src={Mod}
+                alt="Review"
                 className="w-20 h-20 object-cover rounded-full mb-4"
               />
-              <h3 className="text-xl font-semibold mb-2">Step 4: Delivery</h3>
+              <h3 className="text-xl font-semibold mb-2">Step 4: Review</h3>
               <p className="text-gray-600 mb-4">
-                Once the modifications are complete, we schedule a delivery to
-                your location. Enjoy your modifications are complete enhanced
-                vehicle, and let us know how we modifications are complete did
-                Enjoy your modifications!
+                After modification, we conduct a thorough review to ensure
+                everything meets our quality standards. We test the
+                modifications to guarantee optimal performance and reliability
+                before handing back your vehicle.
               </p>
-              <button className="bg-black text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-600">
-                Explore
-              </button>
+              <a href="#" className="text-blue-500 hover:underline">
+                Learn More
+              </a>
             </motion.div>
           </div>
         </div>
@@ -359,7 +349,7 @@ const CustomModification = () => {
             <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
               Custom Modification Request Form
             </h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={formik.handleSubmit} className="space-y-4">
               {/* Row 1 */}
               <div className="flex flex-wrap -mx-2 mb-4">
                 <div className="w-full sm:w-1/3 px-2 mb-4 sm:mb-0">
@@ -367,8 +357,8 @@ const CustomModification = () => {
                   <input
                     type="text"
                     name="customerId"
-                    value={formData.customerId}
-                    onChange={handleChange}
+                    value={formik.values.customerId}
+                    onChange={formik.handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                     required
                     readOnly
@@ -379,54 +369,76 @@ const CustomModification = () => {
                   <input
                     type="text"
                     name="customerName"
-                    value={formData.customerName}
-                    onChange={handleChange}
+                    value={formik.values.customerName}
+                    onChange={formik.handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                   />
+                  {formik.errors.customerName && (
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.customerName}
+                    </div>
+                  )}
                 </div>
                 <div className="w-full sm:w-1/3 px-2">
                   <label className="text-gray-700">Customer Email</label>
                   <input
                     type="email"
                     name="customerEmail"
-                    value={formData.customerEmail}
-                    onChange={handleChange}
+                    value={formik.values.customerEmail}
+                    onChange={formik.handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                     required
                   />
+                  {formik.errors.customerEmail && (
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.customerEmail}
+                    </div>
+                  )}
                 </div>
               </div>
-
               {/* Row 2 */}
               <div className="flex flex-wrap -mx-2 mb-4">
-                <div className="w-full sm:w-1/4 px-2 mb-4 sm:mb-0">
+                <div className="w-full sm:w-1/2 px-2 mb-4 sm:mb-0">
                   <label className="text-gray-700">Vehicle Model</label>
                   <input
                     type="text"
                     name="vehicleModel"
-                    value={formData.vehicleModel}
-                    onChange={handleChange}
+                    value={formik.values.vehicleModel}
+                    onChange={formik.handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                     required
                   />
+                  {formik.errors.vehicleModel && (
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.vehicleModel}
+                    </div>
+                  )}
                 </div>
-                <div className="w-full sm:w-1/4 px-2 mb-4 sm:mb-0">
+                <div className="w-full sm:w-1/2 px-2">
                   <label className="text-gray-700">Vehicle Number</label>
                   <input
                     type="text"
                     name="vehicleNumber"
-                    value={formData.vehicleNumber}
-                    onChange={handleChange}
+                    value={formik.values.vehicleNumber}
+                    onChange={formik.handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                     required
                   />
+                  {formik.errors.vehicleNumber && (
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.vehicleNumber}
+                    </div>
+                  )}
                 </div>
-                <div className="w-full sm:w-1/4 px-2">
+              </div>
+              {/* Row 3 */}
+              <div className="flex flex-wrap -mx-2 mb-4">
+                <div className="w-full sm:w-1/2 px-2 mb-4 sm:mb-0">
                   <label className="text-gray-700">Modification Type</label>
                   <select
                     name="modificationType"
-                    value={formData.modificationType}
-                    onChange={handleChange}
+                    value={formik.values.modificationType}
+                    onChange={formik.handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                     required
                   >
@@ -434,50 +446,51 @@ const CustomModification = () => {
                     <option value="exhaust">Exhaust</option>
                     <option value="suspension">Suspension</option>
                   </select>
+                  {formik.errors.modificationType && (
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.modificationType}
+                    </div>
+                  )}
                 </div>
-                <div className="w-full sm:w-1/4 px-2 mb-4 sm:mb-0">
+                <div className="w-full sm:w-1/2 px-2">
                   <label className="text-gray-700">Preferred Date</label>
                   <input
                     type="date"
                     name="date"
-                    value={formData.date}
-                    onChange={handleChange}
+                    value={formik.values.date}
+                    onChange={formik.handleChange}
+                    min={getTodayDate}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                     required
                   />
+                  {formik.errors.date && (
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.date}
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {/* Row 3 */}
-              <div className="flex flex-wrap -mx-2 mb-4">
-                <div className="w-full  px-2 mb-4 sm:mb-0">
-                  <label className="text-gray-700">Additional Notes</label>
-                  <textarea
-                    name="additionalNotes"
-                    value={formData.additionalNotes}
-                    onChange={handleChange}
-                    rows="4"
-                    className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-                  ></textarea>
-                </div>
-
-                <div className="w-full sm:w-1/3 px-2 mb-4 sm:mb-0">
-                  {/* Empty cell for layout consistency */}
-                </div>
+              {/* Row 4 */}
+              <div className="w-full px-2 mb-4">
+                <label className="text-gray-700">Additional Notes</label>
+                <textarea
+                  name="additionalNotes"
+                  value={formik.values.additionalNotes}
+                  onChange={formik.handleChange}
+                  className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                />
               </div>
-
               <button
                 type="submit"
-                className="bg-blue-500 text-white py-3 px-6 rounded-md font-bold hover:bg-blue-600 w-full"
+                className="bg-blue-500 text-white py-3 px-6 rounded-md hover:bg-blue-600 transition-colors"
               >
-                Submit Request
+                Submit
               </button>
             </form>
           </div>
         </div>
       </motion.section>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

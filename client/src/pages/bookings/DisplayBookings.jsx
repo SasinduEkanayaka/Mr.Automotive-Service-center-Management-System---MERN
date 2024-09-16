@@ -127,7 +127,7 @@ const DisplayBookings = () => {
                 <strong>Vehicle Number:</strong> {booking.vehNum}
               </p>
               <p className="text-gray-600 mb-2">
-                <strong>Modification Type:</strong> {booking.modificationType}
+                <strong>Package:</strong> {booking.package.pkgName}
               </p>
               <p className="text-gray-600 mb-2">
                 <strong>Customer Name:</strong> {booking.cusName}
