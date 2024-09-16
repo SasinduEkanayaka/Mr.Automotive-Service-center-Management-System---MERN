@@ -194,7 +194,7 @@ const UpdatePayment = ({ isOpen, onClose, paymentData, onUpdate }) => {
               />
             </div>
             <div className="mb-4">
-              <label className="text-dark block mb-2">Email</label>
+              <label className="text-dark block mb-2">Customer Email</label>
               <input
                 type="email"
                 className="w-full p-2 border border-dark rounded"
