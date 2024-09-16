@@ -25,7 +25,7 @@ export default function DashboardOverview() {
         </h1>
         <div className="flex items-center space-x-4">
           <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
-            Generate Report
+            Package Management
           </button>
           <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
             Add Inventory

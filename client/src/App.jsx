@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./pages/inventory management/DashboardLayout";
 import DashboardLayouSt from "./pages/Supplier management/DashboardLayoutS";
+import DashboardLayoutP from "./pages/Payment management/DashboardLayoutP";
+
 import Sidebar from "./pages/inventory management/Sidebar";
 import Home from "./pages/Home";
 
@@ -12,23 +14,32 @@ import ShowAllPackages from "./pages/packageManagement/ShowAllPackages";
 
 import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
 
-import CreatePayment from "./pages/Payments/CreatePayment";
-import DeletePayment from "./pages/Payments/DeletePayment";
-import EditPayment from "./pages/Payments/EditPayment";
-import ReadOnePayment from "./pages/Payments/ReadOnePayment";
-import ShowPayment from "./pages/Payments/ShowPayment";
+import DisplayBookings from "./pages/bookings/DisplayBookings";
+
+import AdminSidebar from "./components/AdminSidebar";
+
+import UserDashboard from "./pages/user/UserDashboard";
+
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+
+import CustomModification from "./pages/modificationManagement/CustomModification";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/Home" element={<Home />} />
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
-        <Route path="/book" element={<BookingPage />} />
+        <Route path="/Booking" element={<BookingPage />} />
         <Route path="/book/add/:id" element={<CreateBooking />} />
+
         <Route path="/pkg" element={<ShowAllPackages />} />
 
-        <Route path="/inventory-management/*" element={<DashboardLayout />} />
+
+        <Route path="/Service" element={<CustomModification />} />
+
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
 
@@ -37,6 +48,16 @@ export default function App() {
         <Route path="/payments/create" element={<CreatePayment />}></Route>
         <Route path="/payments/edit/:id" element={<EditPayment />}></Route>
         <Route path="/payments/delete/:id" element={<DeletePayment />}></Route>
+
+        <Route path="/payment-management/*" element={<DashboardLayoutP />} />
+
+        <Route path="/side" element={<AdminSidebar />} />
+        <Route path="/userside" element={<UserDashboard />} />
+
+        <Route path="/Bookings" element={<DisplayBookings />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
       </Routes>
     </BrowserRouter>
   );

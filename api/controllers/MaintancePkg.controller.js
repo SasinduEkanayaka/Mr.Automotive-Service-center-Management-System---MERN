@@ -41,3 +41,26 @@ export const getMaintancePkg = async (req, res) => {
       .send({ message: "Error fetching mainPkg: " + error.message });
   }
 };
+
+export const deleteMaintancePkg = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await MaintancePkgModel.findByIdAndDelete(id);
+    res.status(200).json({ message: "Maintance PKG Sucessfully Deleated" });
+  } catch (error) {
+    res.status(500).json({ message: "Error Deleating Maintance PKG" });
+  }
+};
+
+export const updateMaintancePkg = async (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+  try {
+    const mainPkg = await MaintancePkgModel.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+    res.status(200).json(mainPkg);
+  } catch (error) {
+    res.status(500).json({ message: "Error Updating Maintance Log", error });
+  }
+};

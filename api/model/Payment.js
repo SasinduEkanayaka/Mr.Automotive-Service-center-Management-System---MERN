@@ -26,11 +26,9 @@ const paymentSchema = mongoose.Schema({
         required: true
     },
     Package: String, // Removed 'required: true' since it's optional
-    selectedServices: [String],
     Pamount: Number,
-    totalAmount: Number,
+    // totalAmount: Number,
     email: String,
-    Samount: [Number]
 });
 
 const counterSchema = mongoose.Schema({
