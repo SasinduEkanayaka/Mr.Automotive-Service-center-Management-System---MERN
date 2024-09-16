@@ -13,7 +13,7 @@ const ShowAllPackages = () => {
   const [filteredPkg, setFilteredPkg] = useState([]);
 
   const handleUpdateClick = (id) => {
-    navigate(`/inventory-management/upd/${id}`);
+    navigate(`/admin/upd/${id}`);
   };
 
   const cardVariants = {
@@ -69,7 +69,7 @@ const ShowAllPackages = () => {
   };
 
   const navigateAddPkg = () => {
-    navigate("/inventory-management/create-pkg");
+    navigate("/admin/add-pkg");
   };
 
   return (

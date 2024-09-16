@@ -58,7 +58,7 @@ const ManagePayment = () => {
 
   const filteredPayments = payments.filter((payment) =>
     payment.PaymentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    payment.cusID.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    payment.cusName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     payment.Vehicle_Number.includes(searchTerm)
   );
 
@@ -74,7 +74,7 @@ const ManagePayment = () => {
         <input
           type="text"
           className="w-full p-2 border border-gray-400 rounded-lg"
-          placeholder="Search by payment ID, customer ID, or vehicle number..."
+          placeholder="Search by payment ID, customer Name, or vehicle number..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -85,7 +85,7 @@ const ManagePayment = () => {
           <thead className="bg-gray-800 text-white">
             <tr>
               <th className="py-3 px-5 text-left">Payment ID</th>
-              <th className="py-3 px-5 text-left">Customer ID</th>
+              <th className="py-3 px-5 text-left">Customer Name</th>
               <th className="py-3 px-5 text-left">Vehicle Number</th>
               <th className="py-3 px-5 text-left">Payment Date</th>
               <th className="py-3 px-5 text-left">Payment Method</th>
@@ -106,7 +106,7 @@ const ManagePayment = () => {
                   animate={{ opacity: 1 }}
                 >
                   <td className="py-3 px-5">{payment.PaymentId}</td>
-                  <td className="py-3 px-5">{payment.cusID}</td>
+                  <td className="py-3 px-5">{payment.cusName}</td>
                   <td className="py-3 px-5">{payment.Vehicle_Number}</td>
                   <td className="py-3 px-5">{payment.PaymentDate}</td>
                   <td className="py-3 px-5">{payment.PaymentMethod}</td>
@@ -169,7 +169,7 @@ const ManagePayment = () => {
                 Payment ID: {selectedPayment.PaymentId}
               </h2>
               <div className="flex flex-col space-y-4">
-                <p><strong>Customer ID:</strong> {selectedPayment.cusID}</p>
+                <p><strong>Customer Name:</strong> {selectedPayment.cusName}</p>
                 <p><strong>Vehicle Number:</strong> {selectedPayment.Vehicle_Number}</p>
                 <p><strong>Payment Date:</strong> {selectedPayment.PaymentDate}</p>
                 <p><strong>Payment Method:</strong> {selectedPayment.PaymentMethod}</p>
