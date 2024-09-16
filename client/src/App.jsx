@@ -20,10 +20,13 @@ import AdminSidebar from "./components/AdminSidebar";
 
 import UserDashboard from "./pages/user/UserDashboard";
 
-import Login from "./components/Login";
-import Signup from "./components/Signup";
+// import Login from "./components/Login";
+// import Signup from "./components/Signup";
 
 import CustomModification from "./pages/modificationManagement/CustomModification";
+import ShowPayment from "./pages/Payment management/DashboardOverview";
+import SignUp from "./pages/authentication/SignUp";
+import SignIn from "./pages/authentication/SignIn";
 
 export default function App() {
   return (
@@ -37,9 +40,7 @@ export default function App() {
 
         <Route path="/pkg" element={<ShowAllPackages />} />
 
-
         <Route path="/Service" element={<CustomModification />} />
-
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
 
@@ -55,9 +56,9 @@ export default function App() {
         <Route path="/userside" element={<UserDashboard />} />
 
         <Route path="/Bookings" element={<DisplayBookings />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
 
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-in" element={<SignIn />} />
       </Routes>
     </BrowserRouter>
   );
