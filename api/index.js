@@ -8,6 +8,7 @@ import sparePartRoutes from "./routes/SparePart.route.js";
 
 import bookingRoutes from "./routes/Booking.route.js";
 import maintancePkgRoutes from "./routes/MaintancePkg.route.js";
+import modificationRoutes from "./routes/ModificationPkg.route.js";
 
 import Supplier_Route from "./routes/Supplier.route.js";
 
@@ -37,6 +38,7 @@ app.use("/requestItems", Request_router);
 
 app.use("/api/booking", bookingRoutes);
 app.use("/api/maintance", maintancePkgRoutes);
+app.use("/api/mod", modificationRoutes);
 
 app.use("/suppliers", Supplier_Route);
 app.use("/payments", Payment_Route);

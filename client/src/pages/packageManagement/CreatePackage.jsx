@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 import { storage, ref, uploadBytes, getDownloadURL } from "./../../firebase"; // Import from updated firebase.js
@@ -55,6 +55,17 @@ const CreatePackage = () => {
     }
   };
 
+  const generatePkgId = () => {
+    const id = `P${Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(3, "0")}`;
+    setPkgId(id);
+  };
+
+  useEffect(() => {
+    generatePkgId();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -104,7 +115,7 @@ const CreatePackage = () => {
               type="text"
               className="w-full p-2 border border-dark rounded"
               value={pkgID}
-              onChange={(e) => setPkgId(e.target.value)}
+              readOnly
               required
             />
           </div>
