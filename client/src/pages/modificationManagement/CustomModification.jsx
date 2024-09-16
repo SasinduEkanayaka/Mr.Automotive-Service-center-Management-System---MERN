@@ -8,13 +8,18 @@ import Per from "../../assets/performanceimg.jpeg";
 import Style from "../../assets/stylevehimg.jpeg";
 import Effi from "../../assets/efficencyimg.jpeg";
 import Mod from "../../assets/repairveh.jpeg";
-import zIndex from "@mui/material/styles/zIndex";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const CustomModification = () => {
+  const navigate = useNavigate();
+  const name = localStorage.getItem("name");
+  const email = localStorage.getItem("email");
+  const uid = localStorage.getItem("uid");
   const [formData, setFormData] = useState({
-    customerId: "",
-    customerName: "",
-    customerEmail: "",
+    customerId: uid,
+    customerName: name,
+    customerEmail: email,
     vehicleModel: "",
     vehicleNumber: "",
     modificationType: "engine",
@@ -40,9 +45,12 @@ const CustomModification = () => {
       );
       console.log(formData);
       if (response.status === 201) {
-        // Success message
-        alert("Modification request submitted successfully!");
-        // Reset form data
+        Swal.fire({
+          title: "Success!",
+          text: "Modification Appointment Created Successfully.",
+          icon: "success",
+        });
+
         setFormData({
           customerId: "",
           customerName: "",
@@ -53,13 +61,18 @@ const CustomModification = () => {
           additionalNotes: "",
           date: "",
         });
+        navigate("/modreq");
       } else {
         alert("Failed to submit the request. Please try again.");
         console.log(formData);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("An error occurred. Please try again.");
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to Create Modification Appointment.",
+        icon: "error",
+      });
       console.log(formData);
     }
   };
@@ -140,6 +153,7 @@ const CustomModification = () => {
                 .scrollIntoView({ behavior: "smooth" })
             }
             className="bottom-10 -z-10 bg-green-400 text-black py-3 px-6 rounded-md font-bold hover:bg-gray-200 transition-colors fixed"
+            style={{ left: "45%" }}
           >
             Learn More
           </button>
@@ -218,7 +232,6 @@ const CustomModification = () => {
       </motion.section>
 
       {/* Section 3: Our Modification Process */}
-
       <motion.section
         id="process"
         className="min-h-screen py-2 bg-white flex items-center justify-center"
@@ -344,7 +357,7 @@ const CustomModification = () => {
         <div className="max-w-3xl mx-auto">
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-              Custom Modification Form
+              Custom Modification Request Form
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Row 1 */}
@@ -357,6 +370,8 @@ const CustomModification = () => {
                     value={formData.customerId}
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    required
+                    readOnly
                   />
                 </div>
                 <div className="w-full sm:w-1/3 px-2 mb-4 sm:mb-0">
@@ -377,6 +392,7 @@ const CustomModification = () => {
                     value={formData.customerEmail}
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    required
                   />
                 </div>
               </div>
@@ -391,6 +407,7 @@ const CustomModification = () => {
                     value={formData.vehicleModel}
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    required
                   />
                 </div>
                 <div className="w-full sm:w-1/4 px-2 mb-4 sm:mb-0">
@@ -401,6 +418,7 @@ const CustomModification = () => {
                     value={formData.vehicleNumber}
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    required
                   />
                 </div>
                 <div className="w-full sm:w-1/4 px-2">
@@ -410,6 +428,7 @@ const CustomModification = () => {
                     value={formData.modificationType}
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    required
                   >
                     <option value="engine">Engine</option>
                     <option value="exhaust">Exhaust</option>
@@ -424,6 +443,7 @@ const CustomModification = () => {
                     value={formData.date}
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    required
                   />
                 </div>
               </div>
