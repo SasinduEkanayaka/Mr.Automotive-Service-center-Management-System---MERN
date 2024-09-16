@@ -24,9 +24,9 @@ const AdminSidebar = ({ onCollapseChange }) => {
     setCollapsed(!isCollapsed);
   };
 
-  useEffect(() => {
-    onCollapseChange(isCollapsed);
-  }, [isCollapsed, onCollapseChange]);
+  // useEffect(() => {
+  //   onCollapseChange(isCollapsed);
+  // }, [isCollapsed, onCollapseChange]);
 
   return (
     <div style={{ display: "flex" }}>
