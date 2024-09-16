@@ -47,7 +47,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     },
     {
       name: "Generate Reports",
-      path: "/inventory-management/create-pkg",
+      path: "/inventory-management/inventory-report",
       icon: <FaTags />,
     },
     {

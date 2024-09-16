@@ -5,12 +5,10 @@ import DashboardLayouSt from "./pages/Supplier management/DashboardLayoutS";
 import Sidebar from "./pages/inventory management/Sidebar";
 import Home from "./pages/Home";
 
-
 import AddSparePartPage from "./pages/inventory management/AddSparePartPage";
 import BookingPage from "./pages/bookings/BookingPage";
 import CreateBooking from "./pages/bookings/CreateBooking";
 import ShowAllPackages from "./pages/packageManagement/ShowAllPackages";
-
 
 import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
 
@@ -23,7 +21,6 @@ import ShowPayment from "./pages/Payments/ShowPayment";
 export default function App() {
   return (
     <BrowserRouter>
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
@@ -31,21 +28,15 @@ export default function App() {
         <Route path="/book/add/:id" element={<CreateBooking />} />
         <Route path="/pkg" element={<ShowAllPackages />} />
 
-
-
-
-
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
-
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
 
-        <Route path='/payments/allPayments' element={<ShowPayment />}></Route>
-      <Route path='/payments/detail/:id' element={<ReadOnePayment />}></Route>
-      <Route path='/payments/create' element={<CreatePayment />}></Route>
-       <Route path='/payments/edit/:id' element={<EditPayment />}></Route>
-      <Route path='/payments/delete/:id' element={<DeletePayment />}></Route>
-
+        <Route path="/payments/allPayments" element={<ShowPayment />}></Route>
+        <Route path="/payments/detail/:id" element={<ReadOnePayment />}></Route>
+        <Route path="/payments/create" element={<CreatePayment />}></Route>
+        <Route path="/payments/edit/:id" element={<EditPayment />}></Route>
+        <Route path="/payments/delete/:id" element={<DeletePayment />}></Route>
       </Routes>
     </BrowserRouter>
   );
