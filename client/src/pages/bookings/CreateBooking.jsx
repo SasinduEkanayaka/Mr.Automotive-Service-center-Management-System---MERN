@@ -10,9 +10,11 @@ import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import Car from "../../assets/carbg2.png";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+import { useParams, useNavigate } from "react-router-dom";
 
 const CreateBooking = () => {
+  const navigate = useNavigate();
   const email = localStorage.getItem("email");
   const uName = localStorage.getItem("name");
   const [maintancePkg, setMaintancePkg] = useState({});
@@ -60,7 +62,6 @@ const CreateBooking = () => {
     e.preventDefault();
 
     try {
-      // Add selected date and time to bookingData before sending
       const updatedBookingData = {
         ...bookingData,
         cusName: uName,
@@ -70,18 +71,27 @@ const CreateBooking = () => {
         time: selectedDate ? selectedDate.format("HH:mm") : "",
       };
 
-      // Send the booking data to the backend API
       const response = await axios.post(
         "http://localhost:3000/api/booking/add",
         updatedBookingData
       );
       console.log(updatedBookingData);
-      // Handle success
-      alert("Booking created successfully!");
+
+      Swal.fire({
+        title: "Success!",
+        text: "Booking Successfully Created.",
+        icon: "success",
+      });
+      navigate("/bookings");
       console.log("Booking Response:", response.data);
     } catch (error) {
       console.log(bookingData);
-      alert("Failed to create booking. Please try again.");
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to create booking. Please try again",
+        icon: "error",
+      });
+      navigate("/Booking");
     }
   };
 

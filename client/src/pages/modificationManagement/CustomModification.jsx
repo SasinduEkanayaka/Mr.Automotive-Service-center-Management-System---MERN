@@ -4,6 +4,10 @@ import Footer from "../../components/Footer";
 import modBack from "../../assets/modBack.jpg";
 import { motion } from "framer-motion";
 import axios from "axios"; // Import axios
+import Per from "../../assets/performanceimg.jpeg";
+import Style from "../../assets/stylevehimg.jpeg";
+import Effi from "../../assets/efficencyimg.jpeg";
+import Mod from "../../assets/repairveh.jpeg";
 
 const CustomModification = () => {
   const [formData, setFormData] = useState({
@@ -61,7 +65,6 @@ const CustomModification = () => {
 
   return (
     <div>
-      {/* Sticky NavBar */}
       <NavBar
         style={{ position: "fixed", top: 0, width: "100%", zIndex: 50 }}
       />
@@ -112,49 +115,61 @@ const CustomModification = () => {
         style={{ zIndex: 2 }}
       >
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-10">Why Modify Your Vehicle?</h2>
+          <h2 className="text-4xl font-bold mb-10">Why Modify Your Vehicle?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Benefit 1 */}
-            <div className="bg-white shadow-lg rounded-lg p-6">
+            <div className="bg-white shadow-lg rounded-lg">
               <img
-                src="https://example.com/benefit1.jpg"
+                src={Per}
                 alt="Performance Upgrade"
                 className="w-full h-40 object-cover rounded-t-lg"
               />
-              <h3 className="text-xl font-semibold mt-4">
-                Performance Upgrades
-              </h3>
-              <p className="text-gray-600">
-                Boost your vehicle's performance with top-tier engine
-                modifications.
-              </p>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mt-4">
+                  Performance Upgrades
+                </h3>
+                <p className="text-gray-600">
+                  Boost your vehicle's performance with top-tier engine
+                  modifications.Boost your vehicle's performance with top-tier
+                  engine modifications.
+                </p>
+              </div>
             </div>
             {/* Benefit 2 */}
-            <div className="bg-white shadow-lg rounded-lg p-6">
+            <div className="bg-white shadow-lg rounded-lg">
               <img
-                src="https://example.com/benefit2.jpg"
+                src={Style}
                 alt="Style Enhancement"
                 className="w-full h-40 object-cover rounded-t-lg"
               />
-              <h3 className="text-xl font-semibold mt-4">Style Enhancements</h3>
-              <p className="text-gray-600">
-                Customize your vehicle's appearance with exterior and interior
-                upgrades.
-              </p>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mt-4">
+                  Style Enhancements
+                </h3>
+                <p className="text-gray-600">
+                  Customize your vehicle's appearance with exterior and interior
+                  upgrades.Customize your vehicle's appearance with exterior and
+                  interior upgrades.
+                </p>
+              </div>
             </div>
             {/* Benefit 3 */}
-            <div className="bg-white shadow-lg rounded-lg p-6">
+            <div className="bg-white shadow-lg rounded-lg ">
               <img
-                src="https://example.com/benefit3.jpg"
+                src={Effi}
                 alt="Efficiency"
                 className="w-full h-40 object-cover rounded-t-lg"
               />
-              <h3 className="text-xl font-semibold mt-4">
-                Efficiency Improvements
-              </h3>
-              <p className="text-gray-600">
-                Increase your vehicle's fuel efficiency and reduce emissions.
-              </p>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mt-4">
+                  Efficiency Improvements
+                </h3>
+                <p className="text-gray-600">
+                  Increase your vehicle's fuel efficiency and reduce emissions.
+                  Increase your vehicle's fuel efficiency and reduce emissions.
+                  Increase your vehicle's fuel efficiency and reduce emissions.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -163,20 +178,20 @@ const CustomModification = () => {
       {/* Section 3: Our Modification Process */}
       <motion.section
         id="process"
-        className="relative min-h-screen py-20 bg-white flex items-center justify-center"
-        initial={{ opacity: 0, y: 50 }}
+        className="relative min-h-screen py-10 bg-white flex items-center justify-center"
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2 }}
         viewport={{ once: true }}
         style={{ zIndex: 3 }}
       >
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-10">Our Modification Process</h2>
+          <h2 className="text-4xl font-bold mb-20">Our Modification Process</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Step 1 */}
             <div className="flex flex-col items-center">
               <img
-                src="https://example.com/process1.jpg"
+                src={Per}
                 alt="Consultation"
                 className="w-20 h-20 object-cover rounded-full mb-4"
               />
@@ -188,7 +203,7 @@ const CustomModification = () => {
             {/* Step 2 */}
             <div className="flex flex-col items-center">
               <img
-                src="https://example.com/process2.jpg"
+                src={Effi}
                 alt="Planning"
                 className="w-20 h-20 object-cover rounded-full mb-4"
               />
@@ -200,7 +215,7 @@ const CustomModification = () => {
             {/* Step 3 */}
             <div className="flex flex-col items-center">
               <img
-                src="https://example.com/process3.jpg"
+                src={Mod}
                 alt="Modification"
                 className="w-20 h-20 object-cover rounded-full mb-4"
               />
@@ -212,7 +227,7 @@ const CustomModification = () => {
             {/* Step 4 */}
             <div className="flex flex-col items-center">
               <img
-                src="https://example.com/process4.jpg"
+                src={Per}
                 alt="Delivery"
                 className="w-20 h-20 object-cover rounded-full mb-4"
               />

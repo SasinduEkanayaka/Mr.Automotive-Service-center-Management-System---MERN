@@ -20,11 +20,15 @@ import AdminSidebar from "./components/AdminSidebar";
 
 import UserDashboard from "./pages/user/UserDashboard";
 
+import ShowPayment from "./pages/Payment management/DashboardOverview";
+
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import ShowModRequest from "./pages/modificationManagement/ShowModRequest";
 
 import CustomModification from "./pages/modificationManagement/CustomModification";
 
+import AdminDashboard from "./components/AdminDashboard/DashboardLayout";
 export default function App() {
   return (
     <BrowserRouter>
@@ -37,17 +41,15 @@ export default function App() {
 
         <Route path="/pkg" element={<ShowAllPackages />} />
 
-
         <Route path="/Service" element={<CustomModification />} />
-
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
 
-        <Route path="/payments/allPayments" element={<ShowPayment />}></Route>
+        {/* <Route path="/payments/allPayments" element={<ShowPayment />}></Route>
         <Route path="/payments/detail/:id" element={<ReadOnePayment />}></Route>
         <Route path="/payments/create" element={<CreatePayment />}></Route>
         <Route path="/payments/edit/:id" element={<EditPayment />}></Route>
-        <Route path="/payments/delete/:id" element={<DeletePayment />}></Route>
+        <Route path="/payments/delete/:id" element={<DeletePayment />}></Route> */}
 
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
 
@@ -58,6 +60,9 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
+        <Route path="/modreq" element={<ShowModRequest />} />
+
+        <Route path="/admin/*" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );

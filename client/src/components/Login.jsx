@@ -55,7 +55,11 @@ const Login = () => {
       localStorage.setItem("email", response.data.email);
       localStorage.setItem("name", response.data.username);
 
-      navigate("/home");
+      if (response.data.usertype === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/home");
+      }
     } catch (err) {
       setError("Invalid credentials. Please try again.");
     }

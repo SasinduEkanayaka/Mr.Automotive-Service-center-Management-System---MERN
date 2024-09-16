@@ -5,6 +5,7 @@ import axios from "axios";
 const NavBar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const token = localStorage.getItem("token");
+  const email = localStorage.getItem("email");
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -65,7 +66,12 @@ const NavBar = () => {
                     <a href="/bookings">Bookings</a>
                   </li>
                   <li className="px-4 py-2 hover:bg-gray-200">
-                    <a href="/profile">Profile</a>
+                    <a href="/modreq">Modification Requests</a>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-200">
+                    <a href={email === "admin@gmail.com" ? "/admin" : " "}>
+                      Profile
+                    </a>
                   </li>
                   <li className="px-4 py-2 hover:bg-gray-200">
                     <button onClick={handleLogout}>Logout</button>{" "}

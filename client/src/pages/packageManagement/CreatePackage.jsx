@@ -56,7 +56,7 @@ const CreatePackage = () => {
   };
 
   const generatePkgId = () => {
-    const id = `P${Math.floor(Math.random() * 1000)
+    const id = `PKG${Math.floor(Math.random() * 1000)
       .toString()
       .padStart(3, "0")}`;
     setPkgId(id);

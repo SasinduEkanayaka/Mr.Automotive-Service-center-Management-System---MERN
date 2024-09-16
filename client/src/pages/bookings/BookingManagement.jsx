@@ -70,9 +70,6 @@ const BookingManagement = () => {
           <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
             Generate Report
           </button>
-          <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
-            Add Booking
-          </button>
         </div>
       </div>
 
@@ -135,12 +132,6 @@ const BookingManagement = () => {
                 <td className="py-3 px-5 text-ExtraDarkColor">{item.date}</td>
                 <td className="py-3 px-5 text-ExtraDarkColor">{item.time}</td>
                 <td className="py-3 px-5 text-ExtraDarkColor">
-                  <button
-                    className="bg-violet-500 text-black mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md mr-5"
-                    onClick={() => handleUpdateClick(item._id)}
-                  >
-                    Update
-                  </button>
                   <button
                     className="bg-pink-600 text-black mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md mr-5"
                     onClick={(e) => {
