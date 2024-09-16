@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import UpdatePaymentPopup from './UpdatePayment'; // Ensure the path is correct
 
 const ManagePayment = () => {
@@ -27,11 +28,34 @@ const ManagePayment = () => {
   };
 
   const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/payments/${id}`);
-      setPayments(prevPayments => prevPayments.filter(payment => payment._id !== id));
-    } catch (error) {
-      console.error('Error deleting payment:', error);
+    // Show confirmation dialog
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:3000/payments/${id}`);
+        setPayments(prevPayments => prevPayments.filter(payment => payment._id !== id));
+        Swal.fire(
+          'Deleted!',
+          'The payment has been deleted.',
+          'success'
+        );
+      } catch (error) {
+        console.error('Error deleting payment:', error);
+        Swal.fire(
+          'Error!',
+          'There was an issue deleting the payment.',
+          'error'
+        );
+      }
     }
   };
 
@@ -92,7 +116,7 @@ const ManagePayment = () => {
               <th className="py-3 px-5 text-left">Booking ID</th>
               <th className="py-3 px-5 text-left">Package</th>
               <th className="py-3 px-5 text-left">Package Amount</th>
-              <th className="py-3 px-5 text-left">Email</th>
+              <th className="py-3 px-5 text-left">Customer Email</th>
               <th className="py-3 px-5 text-left">Actions</th>
             </tr>
           </thead>
@@ -176,7 +200,7 @@ const ManagePayment = () => {
                 <p><strong>Booking ID:</strong> {selectedPayment.Booking_Id}</p>
                 <p><strong>Package:</strong> {selectedPayment.Package}</p>
                 <p><strong>Package Amount:</strong> {selectedPayment.Pamount}</p>
-                <p><strong>Email:</strong> {selectedPayment.email}</p>
+                <p><strong>Customer Email:</strong> {selectedPayment.email}</p>
               </div>
               <button
                 className="absolute top-2 right-2 text-2xl text-gray-500 hover:text-gray-800"

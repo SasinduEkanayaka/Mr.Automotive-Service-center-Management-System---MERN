@@ -94,7 +94,7 @@ const DisplayPayments = () => {
                 <strong>Payment Method:</strong> {payment.PaymentMethod}
               </p>
               <p className="text-gray-600 mb-4">
-                <strong>Amount:</strong> Rs.{payment.Pamount}
+                <strong>Package Amount:</strong> Rs.{payment.Pamount}
               </p>
               <button
                 className="bg-green-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded mr-5"
@@ -144,7 +144,7 @@ const DisplayPayments = () => {
                 <p><strong>Booking ID:</strong> {selectedPayment.Booking_Id}</p>
                 <p><strong>Package:</strong> {selectedPayment.Package}</p>
                 <p><strong>Package Amount:</strong> {selectedPayment.Pamount}</p>
-                <p><strong>Email:</strong> {selectedPayment.email}</p>
+                <p><strong>Customer Email:</strong> {selectedPayment.email}</p>
               </div>
               <button
                 className="absolute top-2 right-2 text-2xl text-gray-500 hover:text-gray-800"

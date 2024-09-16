@@ -201,7 +201,7 @@ const PaymentReport = () => {
                 <th className="py-2 px-4">Payment Method</th>
                 <th className="py-2 px-4">Booking ID</th>
                 <th className="py-2 px-4">Package</th>
-                <th className="py-2 px-4">Amount</th>
+                <th className="py-2 px-4">Package Amount</th>
               </tr>
             </thead>
             <tbody>
