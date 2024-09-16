@@ -46,8 +46,9 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       icon: <FaClipboardList />,
     },
     {
-      name: "Maintanance Package Management",
-      path: "/inventory-management/pkg",
+
+      name: "Generate Reports",
+      path: "/inventory-management/inventory-report",
       icon: <FaTags />,
     },
     {
