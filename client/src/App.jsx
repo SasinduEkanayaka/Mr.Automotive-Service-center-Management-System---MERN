@@ -44,11 +44,11 @@ export default function App() {
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
 
-        <Route path="/payments/allPayments" element={<ShowPayment />}></Route>
+        {/* <Route path="/payments/allPayments" element={<ShowPayment />}></Route>
         <Route path="/payments/detail/:id" element={<ReadOnePayment />}></Route>
         <Route path="/payments/create" element={<CreatePayment />}></Route>
         <Route path="/payments/edit/:id" element={<EditPayment />}></Route>
-        <Route path="/payments/delete/:id" element={<DeletePayment />}></Route>
+        <Route path="/payments/delete/:id" element={<DeletePayment />}></Route> */}
 
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
 
