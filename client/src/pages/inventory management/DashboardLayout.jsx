@@ -11,6 +11,7 @@ import CreatePackage from "../packageManagement/CreatePackage";
 import ShowAllPackages from "../packageManagement/ShowAllPackages";
 import UpdatePackage from "../packageManagement/UpdatePackage";
 import BookingManagement from "../bookings/BookingManagement";
+import ShowModRequest from "../modificationManagement/ShowModRequest";
 
 const contentVariants = {
   open: { marginLeft: 250, transition: { type: "spring", stiffness: 50 } },
@@ -55,6 +56,8 @@ export default function DashboardLayout() {
           <Route path="/pkg" element={<ShowAllPackages />} />
           <Route path="/create-pkg" element={<CreatePackage />} />
           <Route path="/upd/:id" element={<UpdatePackage />} />
+
+          <Route path="/modreq" element={<ShowModRequest />} />
 
           <Route path="/bmng" element={<BookingManagement />} />
           <Route path="/manage-parts" element={<ManageParts />} />

@@ -2,27 +2,33 @@ import mongoose from "mongoose";
 
 const modificationPkgSchema = new mongoose.Schema(
   {
-    pkgID: {
+    modID: {
       type: String,
     },
-    pkgName: {
+    customerId: {
       type: String,
     },
-    pkgDes: {
+    customerName: {
       type: String,
     },
-    imageURL: {
+    customerEmail: {
       type: String,
     },
-    pkgPrice: {
-      type: Number,
+    vehicleModel: {
+      type: String,
     },
-    pkgServ: [
-      {
-        key: String,
-        name: String,
-      },
-    ],
+    vehicleNumber: {
+      type: String,
+    },
+    modificationType: {
+      type: String,
+    },
+    additionalNote: {
+      type: String,
+    },
+    date: {
+      type: String,
+    },
   },
   {
     timestamps: true,

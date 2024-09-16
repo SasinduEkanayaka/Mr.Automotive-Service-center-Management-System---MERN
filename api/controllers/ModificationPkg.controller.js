@@ -1,4 +1,4 @@
-import ModiificationModel from "../model/Modiification.model";
+import ModiificationModel from "../model/Modiification.model.js";
 import mongoose from "mongoose";
 
 export const createModificationPkg = async (req, res) => {

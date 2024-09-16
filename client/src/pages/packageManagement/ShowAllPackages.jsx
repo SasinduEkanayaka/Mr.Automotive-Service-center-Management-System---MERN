@@ -4,10 +4,13 @@ import { FaBox, FaChartLine } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { FaSearch, FaBell } from "react-icons/fa";
 
 const ShowAllPackages = () => {
   const navigate = useNavigate();
   const [maintancePkgs, setmaintancePkgs] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredPkg, setFilteredPkg] = useState([]);
 
   const handleUpdateClick = (id) => {
     navigate(`/inventory-management/upd/${id}`);
@@ -29,6 +32,13 @@ const ShowAllPackages = () => {
     };
     fetchMaintaincePkgs();
   }, []);
+
+  useEffect(() => {
+    const serchResult = maintancePkgs.filter((item) =>
+      item.pkgName.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredPkg(serchResult);
+  }, [searchValue, maintancePkgs]);
 
   const handleDelete = async (id) => {
     try {
@@ -58,6 +68,10 @@ const ShowAllPackages = () => {
     }
   };
 
+  const navigateAddPkg = () => {
+    navigate("/inventory-management/create-pkg");
+  };
+
   return (
     <div className="p-8">
       {/* Dashboard Header */}
@@ -65,12 +79,22 @@ const ShowAllPackages = () => {
         <h1 className="text-3xl font-bold text-ExtraDarkColor">
           Manager Dashboard
         </h1>
+        <FaSearch className="text-DarkColor mr-3" />
+        <input
+          type="text"
+          placeholder="Search..."
+          className="bg-SecondaryColor rounded-md p-2 w-64 outline-none"
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
         <div className="flex items-center space-x-4">
           <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
             Generate Report
           </button>
-          <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
-            Add Inventory
+          <button
+            className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300"
+            onClick={navigateAddPkg}
+          >
+            Add Maintance Package
           </button>
         </div>
       </div>
@@ -121,7 +145,7 @@ const ShowAllPackages = () => {
             </tr>
           </thead>
           <tbody>
-            {maintancePkgs.map((item) => (
+            {filteredPkg.map((item) => (
               <tr
                 key={item.id}
                 className="border-b hover:bg-PrimaryColor transition-colors duration-300"
