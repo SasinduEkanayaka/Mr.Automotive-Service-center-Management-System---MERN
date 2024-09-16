@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import UpdateSupplierPopup from './UpdateSupplier'; // Placeholder for edit popup
+import SupplierReport from './SupplierReport'; // Report generation component
 
 const ManageSupplier = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -51,6 +52,16 @@ const ManageSupplier = () => {
     supplier.ContactNo.includes(searchTerm)
   );
 
+  const handleGenerateReport = () => {
+    // Logic for generating the supplier report, could be handled within the SupplierReport component
+    if (filteredSuppliers.length === 0) {
+      alert('No suppliers to generate a report.');
+    } else {
+      // Trigger report download or open report modal
+      console.log('Generating report...');
+    }
+  };
+
   if (loading) {
     return <div className="text-center mt-6">Loading...</div>;
   }
@@ -68,6 +79,21 @@ const ManageSupplier = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+      </div>
+
+      {/* Generate Report Button */}
+      {/* <div className="mb-4">
+        <button
+          onClick={handleGenerateReport}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Generate Supplier Report
+        </button>
+      </div> */}
+
+      {/* Supplier Report Component */}
+      <div className='mb-4'>
+        <SupplierReport filteredSuppliers={filteredSuppliers} />
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-lg">
