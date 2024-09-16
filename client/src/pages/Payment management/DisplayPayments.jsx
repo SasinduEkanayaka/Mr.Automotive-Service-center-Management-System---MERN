@@ -3,20 +3,20 @@ import axios from "axios";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import Swal from "sweetalert2";
+import { motion, AnimatePresence } from "framer-motion";
 
 const DisplayPayments = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [showDetailsPopup, setShowDetailsPopup] = useState(false);
 
   const email = localStorage.getItem("email");
 
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/payments/email/${email}`
-        );
-   
+        const response = await axios.get(`http://localhost:3000/payments/get/${email}`);
         setPayments(response.data.data); // Adjust based on your API response structure
         setLoading(false);
       } catch (error) {
@@ -27,10 +27,6 @@ const DisplayPayments = () => {
 
     fetchPayments();
   }, [email]);
-
-  if (loading) {
-    return <div className="text-center py-10">Loading payments...</div>;
-  }
 
   const handleDelete = async (id) => {
     try {
@@ -60,6 +56,20 @@ const DisplayPayments = () => {
     }
   };
 
+  const handleViewDetails = (payment) => {
+    setSelectedPayment(payment);
+    setShowDetailsPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowDetailsPopup(false);
+    setSelectedPayment(null);
+  };
+
+  if (loading) {
+    return <div className="text-center py-10">Loading payments...</div>;
+  }
+
   return (
     <div>
       <NavBar />
@@ -86,7 +96,10 @@ const DisplayPayments = () => {
               <p className="text-gray-600 mb-4">
                 <strong>Amount:</strong> ${payment.Pamount}
               </p>
-              <button className="bg-green-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded mr-5">
+              <button
+                className="bg-green-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded mr-5"
+                onClick={() => handleViewDetails(payment)}
+              >
                 View Details
               </button>
               <button
@@ -102,6 +115,48 @@ const DisplayPayments = () => {
           ))}
         </div>
       </div>
+
+      {/* Payment Details Popup */}
+      <AnimatePresence>
+        {showDetailsPopup && selectedPayment && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleClosePopup}
+          >
+            <motion.div
+              className="bg-white rounded-lg p-8 max-w-3xl w-full shadow-2xl relative overflow-y-auto max-h-[90vh]"
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-2xl text-gray-800 mb-6 font-bold border-b border-gray-300 pb-2">
+                Payment ID: {selectedPayment.PaymentId}
+              </h2>
+              <div className="flex flex-col space-y-4">
+                <p><strong>Customer Name:</strong> {selectedPayment.cusName}</p>
+                <p><strong>Vehicle Number:</strong> {selectedPayment.Vehicle_Number}</p>
+                <p><strong>Payment Date:</strong> {selectedPayment.PaymentDate}</p>
+                <p><strong>Payment Method:</strong> {selectedPayment.PaymentMethod}</p>
+                <p><strong>Booking ID:</strong> {selectedPayment.Booking_Id}</p>
+                <p><strong>Package:</strong> {selectedPayment.Package}</p>
+                <p><strong>Package Amount:</strong> {selectedPayment.Pamount}</p>
+                <p><strong>Email:</strong> {selectedPayment.email}</p>
+              </div>
+              <button
+                className="absolute top-2 right-2 text-2xl text-gray-500 hover:text-gray-800"
+                onClick={handleClosePopup}
+              >
+                &times;
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Footer />
     </div>
   );
