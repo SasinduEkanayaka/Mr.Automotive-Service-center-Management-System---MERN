@@ -3,35 +3,82 @@ import Swal from "sweetalert2";
 import axios from "axios";
 
 const AddPaymentPage = () => {
-  const [cusID, setCusID] = useState("");
+  const [cusName, setcusName] = useState("");
   const [Vehicle_Number, setVehicle_Number] = useState("");
   const [PaymentDate, setPaymentDate] = useState("");
   const [PaymentMethod, setPaymentMethod] = useState("");
   const [Booking_Id, setBooking_Id] = useState("");
-  const [Package, setPackage] = useState(""); // Optional field
+  const [Package, setPackage] = useState("");
   const [Pamount, setPamount] = useState(0);
   const [email, setEmail] = useState("");
+  const [customers, setCustomers] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [customerBookings, setCustomerBookings] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState("");
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchPackages = async () => {
+    const fetchBookingsAndPackages = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/maintance/get");
-        setPackages(response.data);
+        const bookingsResponse = await axios.get("http://localhost:3000/api/booking/get/");
+        const bookingsData = bookingsResponse.data;
+
+        const customerList = Array.from(new Set(bookingsData.map(booking => booking.cusName)));
+        setCustomers(customerList);
+        setBookings(bookingsData);
+
+        const packagesResponse = await axios.get("http://localhost:3000/api/maintance/get");
+        const packagesData = packagesResponse.data;
+        setPackages(packagesData);
       } catch (error) {
-        console.error("Error fetching packages:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    fetchPackages();
+    fetchBookingsAndPackages();
   }, []);
 
-  const paymentMethods = ["Credit Card", "Debit Card", "Cash", "Bank Transfer"]; // Add or modify payment methods as needed
+  const handleCustomerChange = (e) => {
+    const customerName = e.target.value;
+    setSelectedCustomer(customerName);
 
-  const handlePackageChange = (e) => {
-    const selectedPackage = packages.find(pkg => pkg.pkgName === e.target.value);
-    setPackage(e.target.value);
-    setPamount(selectedPackage ? selectedPackage.pkgPrice : 0);
+    const filteredBookings = bookings.filter((booking) => booking.cusName === customerName);
+    setCustomerBookings(filteredBookings);
+
+    setBooking_Id("");
+    setcusName("");
+    setEmail("");
+    setVehicle_Number("");
+    setPackage("");
+    setPamount(0);
+
+    if (filteredBookings.length > 0) {
+      const firstBooking = filteredBookings[0];
+      setcusName(firstBooking.cusName);
+      setEmail(firstBooking.cusEmail);
+      setVehicle_Number(firstBooking.vehNum);
+      setBooking_Id(firstBooking._id);
+      setPackage(firstBooking.package ? firstBooking.package.pkgName : "");
+
+      const selectedPackage = packages.find(pkg => pkg.pkgName === (firstBooking.package ? firstBooking.package.pkgName : ""));
+      setPamount(selectedPackage ? selectedPackage.pkgPrice : 0);
+    }
+  };
+
+  const handleBookingChange = (e) => {
+    const bookingId = e.target.value;
+    const selectedBooking = customerBookings.find((booking) => booking._id === bookingId);
+
+    if (selectedBooking) {
+      setcusName(selectedBooking.cusName);
+      setEmail(selectedBooking.cusEmail);
+      setVehicle_Number(selectedBooking.vehNum);
+      setBooking_Id(selectedBooking._id);
+      setPackage(selectedBooking.package ? selectedBooking.package.pkgName : "");
+
+      const selectedPackage = packages.find(pkg => pkg.pkgName === (selectedBooking.package ? selectedBooking.package.pkgName : ""));
+      setPamount(selectedPackage ? selectedPackage.pkgPrice : 0);
+    }
   };
 
   const handlePaymentMethodChange = (e) => {
@@ -44,14 +91,14 @@ const AddPaymentPage = () => {
 
     try {
       await axios.post("http://localhost:3000/payments", {
-        cusID: cusID,
-        Vehicle_Number: Vehicle_Number,
-        PaymentDate: PaymentDate,
-        PaymentMethod: PaymentMethod,
-        Booking_Id: Booking_Id,
-        Package: Package,
-        Pamount: Pamount,
-        email: email,
+        cusName,
+        Vehicle_Number,
+        PaymentDate,
+        PaymentMethod,
+        Booking_Id,
+        Package,
+        Pamount,
+        email,
       });
 
       Swal.fire({
@@ -60,7 +107,7 @@ const AddPaymentPage = () => {
         icon: "success",
       });
 
-      setCusID("");
+      setcusName("");
       setVehicle_Number("");
       setPaymentDate("");
       setPaymentMethod("");
@@ -68,6 +115,8 @@ const AddPaymentPage = () => {
       setPackage("");
       setPamount(0);
       setEmail("");
+      setSelectedCustomer("");
+      setCustomerBookings([]);
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -85,13 +134,53 @@ const AddPaymentPage = () => {
         <h2 className="text-dark text-3xl font-bold mb-6 bg-gray-800 text-white">Add Payment</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="text-dark block mb-2">Customer ID</label>
+            <label className="text-dark block mb-2">Customer</label>
+            <select
+              className="w-full p-2 border border-dark rounded"
+              value={selectedCustomer}
+              onChange={handleCustomerChange}
+              required
+            >
+              <option value="" disabled>Select a customer</option>
+              {customers.map((customer) => (
+                <option key={customer} value={customer}>
+                  {customer}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-dark block mb-2">Booking ID</label>
+            <select
+              className="w-full p-2 border border-dark rounded"
+              value={Booking_Id}
+              onChange={handleBookingChange}
+              required
+            >
+              <option value="" disabled>Select a booking</option>
+              {customerBookings.map((booking) => (
+                <option key={booking._id} value={booking._id}>
+                  {booking._id}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-dark block mb-2">Customer Name</label>
             <input
               type="text"
               className="w-full p-2 border border-dark rounded"
-              value={cusID}
-              onChange={(e) => setCusID(e.target.value)}
-              required
+              value={cusName}
+              readOnly
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-dark block mb-2">Email</label>
+            <input
+              type="email"
+              className="w-full p-2 border border-dark rounded"
+              value={email}
+              readOnly
             />
           </div>
           <div className="mb-4">
@@ -100,8 +189,7 @@ const AddPaymentPage = () => {
               type="text"
               className="w-full p-2 border border-dark rounded"
               value={Vehicle_Number}
-              onChange={(e) => setVehicle_Number(e.target.value)}
-              required
+              readOnly
             />
           </div>
           <div className="mb-4">
@@ -123,33 +211,21 @@ const AddPaymentPage = () => {
               required
             >
               <option value="" disabled>Select a payment method</option>
-              {paymentMethods.map(method => (
-                <option key={method} value={method}>{method}</option>
+              {["Credit Card", "Debit Card", "Cash", "Bank Transfer"].map((method) => (
+                <option key={method} value={method}>
+                  {method}
+                </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-dark block mb-2">Booking ID</label>
+            <label className="text-dark block mb-2">Package</label>
             <input
               type="text"
               className="w-full p-2 border border-dark rounded"
-              value={Booking_Id}
-              onChange={(e) => setBooking_Id(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-dark block mb-2">Package (Optional)</label>
-            <select
-              className="w-full p-2 border border-dark rounded"
               value={Package}
-              onChange={handlePackageChange}
-            >
-              <option value="" disabled>Select a package</option>
-              {packages.map(pkg => (
-                <option key={pkg.pkgID} value={pkg.pkgName}>{pkg.pkgName}</option>
-              ))}
-            </select>
+              readOnly
+            />
           </div>
           <div className="mb-4">
             <label className="text-dark block mb-2">Partial Amount</label>
@@ -157,18 +233,7 @@ const AddPaymentPage = () => {
               type="number"
               className="w-full p-2 border border-dark rounded"
               value={Pamount}
-              onChange={(e) => setPamount(parseFloat(e.target.value))}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-dark block mb-2">Email</label>
-            <input
-              type="email"
-              className="w-full p-2 border border-dark rounded"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              readOnly
             />
           </div>
           <button

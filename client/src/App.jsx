@@ -15,6 +15,7 @@ import ShowAllPackages from "./pages/packageManagement/ShowAllPackages";
 import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
 
 import DisplayBookings from "./pages/bookings/DisplayBookings";
+import DisplayPayments from "./pages/Payment management/DisplayPayments";
 
 import AdminSidebar from "./components/AdminSidebar";
 
@@ -43,11 +44,7 @@ export default function App() {
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
 
-        <Route path="/payments/allPayments" element={<ShowPayment />}></Route>
-        <Route path="/payments/detail/:id" element={<ReadOnePayment />}></Route>
-        <Route path="/payments/create" element={<CreatePayment />}></Route>
-        <Route path="/payments/edit/:id" element={<EditPayment />}></Route>
-        <Route path="/payments/delete/:id" element={<DeletePayment />}></Route>
+        
 
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
 
@@ -55,6 +52,7 @@ export default function App() {
         <Route path="/userside" element={<UserDashboard />} />
 
         <Route path="/Bookings" element={<DisplayBookings />} />
+        <Route path="/payments" element={<DisplayPayments />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 

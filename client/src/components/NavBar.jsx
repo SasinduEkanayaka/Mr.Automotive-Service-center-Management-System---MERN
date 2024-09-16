@@ -57,7 +57,7 @@ const NavBar = () => {
               <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-20">
                 <ul className="py-2">
                   <li className="px-4 py-2 hover:bg-gray-200">
-                    <a href="/payment">Payment</a>
+                    <a href="/payments">Payment</a>
                   </li>
                   <li className="px-4 py-2 hover:bg-gray-200">
                     <a href="/bookings">Bookings</a>
