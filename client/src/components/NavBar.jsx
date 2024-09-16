@@ -9,7 +9,7 @@ const NavBar = () => {
       <ul className="flex space-x-6">
         {["Home", "Booking", "Service", "Product", "FAQ"].map((item) => (
           <li key={item} className="hover:text-yellow-400">
-            {item}
+            {<a href={`/${item}`}>{item}</a>}
           </li>
         ))}
       </ul>

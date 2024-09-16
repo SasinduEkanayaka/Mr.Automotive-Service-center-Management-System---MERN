@@ -13,18 +13,25 @@ import CreateBooking from "./pages/bookings/CreateBooking";
 import ShowAllPackages from "./pages/packageManagement/ShowAllPackages";
 
 import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
+
 import AdminSidebar from "./components/AdminSidebar";
 
 import UserDashboard from "./pages/user/UserDashboard";
+
+import CustomModification from "./pages/modificationManagement/CustomModification";
+
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/Home" element={<Home />} />
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
-        <Route path="/book" element={<BookingPage />} />
+        <Route path="/Booking" element={<BookingPage />} />
         <Route path="/book/add/:id" element={<CreateBooking />} />
+
+        <Route path="/Service" element={<CustomModification />} />
 
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
 
@@ -32,8 +39,10 @@ export default function App() {
 
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
 
+
         <Route path="/side" element={<AdminSidebar />} />
         <Route path="/userside" element={<UserDashboard />} />
+
       </Routes>
     </BrowserRouter>
   );

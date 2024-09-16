@@ -45,7 +45,7 @@ const BookingManagement = () => {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:3000/api/bookings/del/${id}`);
+        await axios.delete(`http://localhost:3000/api/booking/delete/${id}`);
         setBookings(bookings.filter((booking) => booking._id !== id));
         Swal.fire("Deleted!", "The booking has been deleted.", "success");
       }
