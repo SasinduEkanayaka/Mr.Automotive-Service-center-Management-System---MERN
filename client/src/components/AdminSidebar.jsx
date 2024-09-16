@@ -24,9 +24,9 @@ const AdminSidebar = ({ onCollapseChange }) => {
     setCollapsed(!isCollapsed);
   };
 
-  // useEffect(() => {
-  //   onCollapseChange(isCollapsed);
-  // }, [isCollapsed, onCollapseChange]);
+  useEffect(() => {
+    onCollapseChange(isCollapsed);
+  }, [isCollapsed, onCollapseChange]);
 
   return (
     <div style={{ display: "flex" }}>
@@ -99,7 +99,7 @@ const AdminSidebar = ({ onCollapseChange }) => {
         {/* Menu Items */}
         <Menu>
           <SubMenu
-            label={isCollapsed ? "" : "Profile"}
+            label={isCollapsed ? "" : "Vehicle"}
             icon={<FaChartBar />}
             rootStyles={{
               color: "#fff",
@@ -111,10 +111,10 @@ const AdminSidebar = ({ onCollapseChange }) => {
             className="sidebar-submenu"
           >
             <MenuItem suffix={<span className="badge red">6</span>}>
-              Details
+              Pie charts
             </MenuItem>
-            {/* <MenuItem>Line charts</MenuItem>
-            <MenuItem>Bar charts</MenuItem> */}
+            <MenuItem>Line charts</MenuItem>
+            <MenuItem>Bar charts</MenuItem>
           </SubMenu>
 
           <SubMenu

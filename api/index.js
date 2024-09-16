@@ -3,8 +3,10 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import authRouter from "./routes/auth.routs.js";
 import cors from "cors";
 import sparePartRoutes from "./routes/SparePart.route.js";
+import userRouter from "./routes/user.route.js";
 
 import bookingRoutes from "./routes/Booking.route.js";
 import maintancePkgRoutes from "./routes/MaintancePkg.route.js";
@@ -45,6 +47,9 @@ app.use("/api/mod", modificationRoutes);
 
 app.use("/suppliers", Supplier_Route);
 app.use("/payments", Payment_Route);
+
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
 app.listen(3000, () => {
   console.log("Server listening on port 3000!!!");
