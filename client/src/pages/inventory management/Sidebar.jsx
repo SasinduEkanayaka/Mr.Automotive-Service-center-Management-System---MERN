@@ -51,8 +51,13 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       icon: <FaTags />,
     },
     {
-      name: "Request Spare Parts",
-      path: "/manager/sales-forecasting",
+      name: "Modification Requests",
+      path: "/inventory-management/modreq",
+      icon: <FaChartLine />,
+    },
+    {
+      name: "Booking Requests",
+      path: "/inventory-management/bmng",
       icon: <FaChartLine />,
     },
     { name: "Profile", path: "/manager/profile", icon: <FaUserCircle /> },
