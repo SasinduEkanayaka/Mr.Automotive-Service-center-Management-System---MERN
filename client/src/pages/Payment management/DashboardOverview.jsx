@@ -104,8 +104,8 @@ const ShowPayment = () => {
                     <th className="py-3 px-5 text-left">Payment Method</th>
                     <th className="py-3 px-5 text-left">Booking_Id</th>
                     <th className="py-3 px-5 text-left">Package</th>
-                    <th className="py-3 px-5 text-left">Pamount</th>
-                    <th className="py-3 px-5 text-left">Email</th>
+                    <th className="py-3 px-5 text-left">Package Amount</th>
+                    <th className="py-3 px-5 text-left">Customer Email</th>
                   </tr>
                 </thead>
                 <tbody>
