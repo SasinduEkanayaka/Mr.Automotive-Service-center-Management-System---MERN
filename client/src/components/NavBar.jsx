@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const NavBar = () => {
@@ -12,6 +12,8 @@ const NavBar = () => {
       // await axios.post("http://localhost:3000/api/auth/signout");
 
       localStorage.removeItem("token");
+      localStorage.removeItem("name");
+      localStorage.removeItem("email");
 
       navigate("/home");
     } catch (error) {

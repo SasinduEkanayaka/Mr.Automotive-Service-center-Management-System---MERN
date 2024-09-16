@@ -88,8 +88,8 @@ const DisplayBookings = () => {
                 <strong>Date:</strong>{" "}
                 {new Date(booking.date).toLocaleDateString()}
               </p>
-              <button className="bg-green-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded mr-5">
-                View Details
+              <button className="bg-green-400 text-black mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md mr-5">
+                Reshedule
               </button>
               <button
                 className="bg-pink-600 text-black mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md mr-5"
