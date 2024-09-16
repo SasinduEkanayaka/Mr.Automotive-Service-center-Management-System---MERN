@@ -1,5 +1,5 @@
 .carousel-item-custom {
-  height: 60vh; /* Adjust height as needed */
+  height: 90vh; /* Adjust height as needed */
 }
 
 .carousel-item-custom img {
@@ -9,7 +9,7 @@
 
 .caption-custom {
   position: absolute;
-  bottom: 20%; /* Adjust this value to move content upwards */
+  bottom: 30%; /* Adjust this value to move content upwards */
   left: 0;
   right: 0;
   text-align: center;
@@ -25,6 +25,6 @@
     0,
     0,
     0,
-    0.5
+    0.7
   ); /* Adjust background color for better visibility */
 }

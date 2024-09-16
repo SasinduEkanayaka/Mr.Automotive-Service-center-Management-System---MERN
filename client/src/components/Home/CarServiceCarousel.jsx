@@ -11,7 +11,12 @@ import "./../../assets/css/CarServiceCarousel.css";
 const CarServiceCarousel = () => {
   return (
     <div className="container-fluid p-0 mb-5 relative">
-      <Carousel id="header-carousel" fade>
+      <Carousel
+        id="header-carousel"
+        fade
+        interval={5000} // Set autoplay interval to 500ms
+        controls={true} // Disable slider arrows
+      >
         <Carousel.Item className="carousel-item-custom">
           <div className="relative">
             <img className="w-100" src={cbg1} alt="First slide" />
@@ -25,13 +30,16 @@ const CarServiceCarousel = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                   >
-                    <h6 className="text-white text-uppercase mb-3">
+                    <h6 className="text-white text-uppercase mb-3 font-extrabold">
                       // Car Servicing //
                     </h6>
-                    <h1 className="display-3 text-white mb-4 pb-3">
+                    <h1 className="display-3 text-white mb-4 pb-3 font-extrabold">
                       Qualified Car Repair Service Center
                     </h1>
-                    <a href="#" className="btn btn-primary py-3 px-5">
+                    <a
+                      href="#"
+                      className="btn btn-primary bg-DarkColor border-ExtraDarkColor py-3 px-5"
+                    >
                       Learn More <i className="fa fa-arrow-right ms-3"></i>
                     </a>
                   </motion.div>
@@ -62,13 +70,16 @@ const CarServiceCarousel = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                   >
-                    <h6 className="text-white text-uppercase mb-3">
+                    <h6 className="text-white text-uppercase mb-3 font-extrabold">
                       // Car Servicing //
                     </h6>
-                    <h1 className="display-3 text-white mb-4 pb-3">
+                    <h1 className="display-3 text-white mb-4 pb-3 font-extrabold">
                       Qualified Car Wash Service Center
                     </h1>
-                    <a href="#" className="btn btn-primary py-3 px-5">
+                    <a
+                      href="#"
+                      className="btn btn-primary bg-DarkColor border-ExtraDarkColor py-3 px-5"
+                    >
                       Learn More <i className="fa fa-arrow-right ms-3"></i>
                     </a>
                   </motion.div>
@@ -86,25 +97,6 @@ const CarServiceCarousel = () => {
           </div>
         </Carousel.Item>
       </Carousel>
-
-      <button
-        className="carousel-control-prev carousel-control-custom"
-        type="button"
-        data-bs-target="#header-carousel"
-        data-bs-slide="prev"
-      >
-        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Previous</span>
-      </button>
-      <button
-        className="carousel-control-next carousel-control-custom"
-        type="button"
-        data-bs-target="#header-carousel"
-        data-bs-slide="next"
-      >
-        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Next</span>
-      </button>
     </div>
   );
 };
