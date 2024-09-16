@@ -17,9 +17,9 @@ import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
 import DisplayBookings from "./pages/bookings/DisplayBookings";
 import DisplayPayments from "./pages/Payment management/DisplayPayments";
 
-import AdminSidebar from "./components/AdminSidebar";
+// import AdminSidebar from "./components/AdminSidebar";
 
-import UserDashboard from "./pages/user/UserDashboard";
+// import UserDashboard from "./pages/user/UserDashboard";
 
 import ShowPayment from "./pages/Payment management/DashboardOverview";
 
@@ -45,8 +45,6 @@ export default function App() {
         <Route path="/Service" element={<CustomModification />} />
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
-
-
 
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
 
