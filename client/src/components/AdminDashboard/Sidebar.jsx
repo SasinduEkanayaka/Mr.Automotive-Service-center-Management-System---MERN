@@ -42,7 +42,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     },
     {
       name: "Modification",
-      path: "",
+      path: "/admin/mod",
       icon: <FaClipboardList />,
     },
     {

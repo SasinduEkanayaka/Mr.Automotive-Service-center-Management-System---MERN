@@ -20,6 +20,7 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "firebase": "^10.13.1",
+    "formik": "^2.4.6",
     "framer-motion": "^11.5.4",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.3",
@@ -33,7 +34,8 @@
     "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^6.26.2",
     "sweetalert2": "^11.14.0",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
