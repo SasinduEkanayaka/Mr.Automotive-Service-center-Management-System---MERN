@@ -6,7 +6,7 @@ export default function ProductCard({ id, img, name, price, discount }) {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/item/${id}`); // Navigate to the item details page
+    navigate(`/sparepart/${id}`); // Navigate to the item details page
   };
 
   return (
@@ -19,7 +19,7 @@ export default function ProductCard({ id, img, name, price, discount }) {
         <img
           src={img}
           alt={name}
-          className=" h-56 2xl:h-64 rounded-t-xl w-full"
+          className=" h-56 object-contain 2xl:h-64 rounded-t-xl w-full"
         />
       </div>
       <div className=" flex flex-col justify-center items-center">

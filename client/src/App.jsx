@@ -27,6 +27,8 @@ import CustomModification from "./pages/modificationManagement/CustomModificatio
 import ShowPayment from "./pages/Payment management/DashboardOverview";
 import SignUp from "./pages/authentication/SignUp";
 import SignIn from "./pages/authentication/SignIn";
+import ProductPage from "./pages/inventory management/ProductPage";
+import SinglePartPage from "./pages/inventory management/SinglePartPage";
 
 export default function App() {
   return (
@@ -59,6 +61,9 @@ export default function App() {
 
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
+
+        <Route path="/products" element={<ProductPage />} />
+        <Route path="/sparepart/:id" element={<SinglePartPage />} />
       </Routes>
     </BrowserRouter>
   );

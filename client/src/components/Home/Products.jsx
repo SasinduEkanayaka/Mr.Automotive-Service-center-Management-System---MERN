@@ -3,11 +3,13 @@ import ProductCard from "./ProductCard";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Products() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch items from API
@@ -87,10 +89,12 @@ export default function Products() {
     <div className="min-h-screen flex flex-col justify-center px-5 pt-24 lg:pt-16">
       {/* Heading section with View More button on the same line */}
       <div className="flex ml-20 mr-20 justify-between items-center pb-4">
-        <h1 className="font-semibold text-4xl text-ExtraDarkColor">Products</h1>
+        <h1 className="font-semibold text-4xl text-ExtraDarkColor">
+          Spare Parts
+        </h1>
         <div
           className="flex-1 max-w-xs p-3 flex justify-center items-center border-2 border-dashed border-DarkColor rounded-lg cursor-pointer hover:bg-SecondaryColor"
-          onClick={() => alert("View more items!")}
+          onClick={() => navigate("/products")}
         >
           <h2 className="text-xl font-semibold text-DarkColor">
             View More Items
@@ -101,7 +105,6 @@ export default function Products() {
       {/* Cards section */}
       <div className="flex justify-center items-center gap-5 pt-8">
         {/* Limit the number of items displayed to 4 */}
-
         {data.slice(0, 4).map((item) => (
           <div key={item._id} className="flex-1 max-w-xs">
             <ProductCard

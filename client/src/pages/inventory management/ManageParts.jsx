@@ -82,7 +82,7 @@ const ManageParts = () => {
   };
 
   return (
-    <div className="bg-primary min-h-screen p-8">
+    <div className="bg-PrimaryColor min-h-screen p-8">
       <h1 className="text-extra-dark text-3xl mb-8 font-bold">
         Manage Spare Parts
       </h1>
