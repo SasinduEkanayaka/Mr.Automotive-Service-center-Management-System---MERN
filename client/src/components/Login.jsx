@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -27,19 +28,34 @@ const Login = () => {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      // Send login request to backend
       const response = await axios.post(
-        "http://localhost:3000/api/auth//signin",
+        "http://localhost:3000/api/auth/signin",
         formData
       );
 
-      // Save the JWT token to localStorage (or sessionStorage/cookies)
-      localStorage.setItem("token", response.data.token);
+      const getUserIdFromToken = () => {
+        const token = response.data.token;
+        if (token) {
+          try {
+            const decoded = jwtDecode(token);
+            console.log(decoded.id);
+            return decoded.id;
+          } catch (error) {
+            console.error("Failed to decode token:", error);
+            console.log(decoded.id);
+            return null;
+          }
+        }
+        return null;
+      };
 
-      // Redirect to dashboard or home page
+      const userId = getUserIdFromToken();
+      localStorage.setItem("uid", response.data._id);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("email", response.data.email);
+
       navigate("/home");
     } catch (err) {
-      // Handle errors such as incorrect credentials
       setError("Invalid credentials. Please try again.");
     }
   };

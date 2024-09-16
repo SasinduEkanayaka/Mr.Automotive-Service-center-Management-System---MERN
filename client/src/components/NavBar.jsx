@@ -5,7 +5,7 @@ import axios from "axios";
 const NavBar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const token = localStorage.getItem("token");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -13,7 +13,6 @@ const NavBar = () => {
 
       localStorage.removeItem("token");
 
-      // Redirect to login page
       navigate("/home");
     } catch (error) {
       console.error("Logout failed:", error);

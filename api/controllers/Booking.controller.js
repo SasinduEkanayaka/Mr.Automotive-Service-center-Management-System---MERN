@@ -44,3 +44,25 @@ export const updateBooking = async (req, res) => {
     res.status(500).json({ message: "Error Updating Booking Log", error });
   }
 };
+
+export const getBookingsByEmail = async (req, res) => {
+  const { email } = req.params;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  try {
+    const bookings = await BookingModel.find({ cusEmail: email.toLowerCase() });
+
+    if (bookings.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No bookings found for this email" });
+    }
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ message: "Error Fetching Bookings Data", error });
+  }
+};
