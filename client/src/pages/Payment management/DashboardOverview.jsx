@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from "framer-motion";
 import { FaMoneyBillWave, FaChartLine } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const ShowPayment = () => {
   const [payments, setPayments] = useState([]);
@@ -39,9 +40,11 @@ const ShowPayment = () => {
           Payment Dashboard
         </h1>
         <div className="flex items-center space-x-4">
+        <Link to="/payment-management/payment-report">
           <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
             Generate Payment Report
           </button>
+        </Link>
         </div>
       </div>
 
