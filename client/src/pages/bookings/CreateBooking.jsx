@@ -13,17 +13,17 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const CreateBooking = () => {
+  const email = localStorage.getItem("email");
+  const uName = localStorage.getItem("name");
   const [maintancePkg, setMaintancePkg] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [bookingData, setBookingData] = useState({
     package: {
       pkgName: "",
-      pkgId: "",
-      description: "",
-      price: 0,
+      pkgID: "",
+      pkgDes: "",
+      pkgPrice: 0,
     },
-    cusName: "",
-    cusEmail: "",
     cusMobile: "",
     vehNum: "",
     milage: 0,
@@ -63,6 +63,8 @@ const CreateBooking = () => {
       // Add selected date and time to bookingData before sending
       const updatedBookingData = {
         ...bookingData,
+        cusName: uName,
+        cusEmail: email,
         package: maintancePkg,
         date: selectedDate ? selectedDate.format("YYYY-MM-DD") : "",
         time: selectedDate ? selectedDate.format("HH:mm") : "",
@@ -98,123 +100,133 @@ const CreateBooking = () => {
   return (
     <div>
       <NavBar />
-      <div className="flex w-screen">
-        <div className="mt-28 ml-5">
-          <img src={Car} alt="" className="" style={{ width: "700px" }} />
+      <div className="flex w-screen items-center">
+        <div className="mt-28 ml-5 flex flex-col w-1/3">
+          <img src={Car} alt="" className="" style={{ width: "800px" }} />
         </div>
 
-        <div className="pt-28 pr-10">
-          <div className="ml-20 mb-10 flex">
-            <div className="bg-lime-300 rounded-2xl shadow-md overflow-hidden flex h-40">
+        <div className="pt-28 pr-10 flex flex-col w-2/3">
+          <div className="ml-20 mb-10 flex justify-end">
+            <div
+              className="bg-lime-300 rounded-2xl shadow-md overflow-hidden flex h-40"
+              style={{ width: "750px" }}
+            >
               <img src={maintancePkg.imageURL} className="h-48 object-cover" />
               <div className="p-3">
                 <h3 className="text-xl font-semibold mb-2">
                   {maintancePkg.pkgName}
                 </h3>
-                <p className="text-gray-700 mb-2">{maintancePkg.pkgDes}</p>
+
                 <button className="bg-yellow-400 text-white font-bold py-2 px-4 rounded-lg mr-5">
                   {maintancePkg.pkgPrice}
                 </button>
               </div>
             </div>
           </div>
+          <div className="flex justify-end">
+            <form onSubmit={handleSubmit} className="w-5/6 rigth-0">
+              <div className=" bg-slate-200 p-4 rounded-2xl shadow-sm  ">
+                <h2 className="text-2xl font-bold mb-5">
+                  Section 1: General Information
+                </h2>
 
-          <form onSubmit={handleSubmit}>
-            <div className=" bg-slate-200 p-4 rounded-2xl shadow-sm">
-              <h2 className="text-2xl font-bold mb-5">
-                Section 1: General Information
-              </h2>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex flex-col w-2/4">
+                    <label className="block text-gray-700 required">
+                      Name:
+                    </label>
+                    <input
+                      type="text"
+                      name="cusName"
+                      className="border border-gray-300 rounded-md p-2 mr-5"
+                      value={uName}
+                      readOnly
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-col w-2/4">
+                    <label className="block text-gray-700 required">
+                      Email:
+                    </label>
+                    <input
+                      type="email"
+                      name="cusEmail"
+                      className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-5"
+                      value={email}
+                      readOnly
+                      required
+                    />
+                  </div>
+                </div>
 
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex flex-col w-2/4">
-                  <label className="block text-gray-700 required">Name:</label>
-                  <input
-                    type="text"
-                    name="cusName"
-                    className="border border-gray-300 rounded-md p-2 mr-5"
-                    value={bookingData.cusName}
-                    onChange={handleBookingChange}
-                    required
-                  />
-                </div>
-                <div className="flex flex-col w-1/4">
-                  <label className="block text-gray-700 required">Email:</label>
-                  <input
-                    type="email"
-                    name="cusEmail"
-                    className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-5"
-                    value={bookingData.cusEmail}
-                    onChange={handleBookingChange}
-                    required
-                  />
-                </div>
-                <div className="flex flex-col w-1/4">
-                  <label className="block text-gray-700 required">Phone:</label>
-                  <input
-                    type="text"
-                    name="cusMobile"
-                    className="border border-gray-300 rounded-md p-2 bg-gray-100"
-                    value={bookingData.cusMobile}
-                    onChange={handleBookingChange}
-                    required
-                  />
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex flex-col w-1/4">
+                    <label className="block text-gray-700 required">
+                      Phone:
+                    </label>
+                    <input
+                      type="text"
+                      name="cusMobile"
+                      className="border border-gray-300 rounded-md p-2 bg-gray-100"
+                      value={bookingData.cusMobile}
+                      onChange={handleBookingChange}
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-col w-1/4">
+                    <label className="block text-gray-700 required">
+                      Vehicle No:
+                    </label>
+                    <input
+                      type="text"
+                      name="vehNum"
+                      className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-10"
+                      value={bookingData.vehNum}
+                      onChange={handleBookingChange}
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-col w-1/4">
+                    <label className="block text-gray-700 required">
+                      Mileage:
+                    </label>
+                    <input
+                      type="number"
+                      name="milage"
+                      className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-10"
+                      value={bookingData.milage}
+                      onChange={handleBookingChange}
+                      required
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex flex-col w-1/4">
-                  <label className="block text-gray-700 required">
-                    Vehicle No:
-                  </label>
-                  <input
-                    type="text"
-                    name="vehNum"
-                    className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-10"
-                    value={bookingData.vehNum}
-                    onChange={handleBookingChange}
-                    required
+              <div className="mt-10 bg-slate-200 p-6 rounded-2xl shadow-sm">
+                <h2 className="text-2xl font-bold mb-5">
+                  Section 2: Vehicle Information
+                </h2>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    label="Select a Date"
+                    value={selectedDate}
+                    onChange={(newValue) => setSelectedDate(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                    shouldDisableDate={shouldDisableDate}
                   />
-                </div>
-                <div className="flex flex-col w-1/4">
-                  <label className="block text-gray-700 required">
-                    Mileage:
-                  </label>
-                  <input
-                    type="number"
-                    name="milage"
-                    className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-10"
-                    value={bookingData.milage}
-                    onChange={handleBookingChange}
-                    required
-                  />
-                </div>
+                </LocalizationProvider>
               </div>
-            </div>
 
-            <div className="mt-10 bg-slate-200 p-6 rounded-2xl shadow-sm">
-              <h2 className="text-2xl font-bold mb-5">
-                Section 2: Vehicle Information
-              </h2>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  label="Select a Date"
-                  value={selectedDate}
-                  onChange={(newValue) => setSelectedDate(newValue)}
-                  renderInput={(params) => <TextField {...params} />}
-                  shouldDisableDate={shouldDisableDate}
-                />
-              </LocalizationProvider>
-            </div>
-
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="bg-lime-500 text-black text-xl px-4 py-2 rounded-md mt-5 mb-10"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="bg-lime-500 text-black text-xl px-4 py-2 rounded-md mt-5 mb-10"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
       <Footer />
