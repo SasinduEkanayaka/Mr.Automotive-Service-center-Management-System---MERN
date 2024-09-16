@@ -14,12 +14,16 @@ import ShowAllPackages from "./pages/packageManagement/ShowAllPackages";
 
 import AddSupplierPage from "./pages/Supplier management/AddSupplierPage";
 
+import DisplayBookings from "./pages/bookings/DisplayBookings";
+
 import AdminSidebar from "./components/AdminSidebar";
 
 import UserDashboard from "./pages/user/UserDashboard";
 
-import CustomModification from "./pages/modificationManagement/CustomModification";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
+import CustomModification from "./pages/modificationManagement/CustomModification";
 
 export default function App() {
   return (
@@ -39,10 +43,12 @@ export default function App() {
 
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
 
-
         <Route path="/side" element={<AdminSidebar />} />
         <Route path="/userside" element={<UserDashboard />} />
 
+        <Route path="/Bookings" element={<DisplayBookings />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );
