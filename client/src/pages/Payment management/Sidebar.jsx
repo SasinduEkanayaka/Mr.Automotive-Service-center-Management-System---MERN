@@ -47,7 +47,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     },
     {
       name: "Generate Reports",
-      path: "/payment-managemen/report",
+      path: "/payment-management/payment-report",
       icon: <FaTags />,
     },
     // {

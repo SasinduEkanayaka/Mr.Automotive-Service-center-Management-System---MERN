@@ -94,7 +94,7 @@ const DisplayPayments = () => {
                 <strong>Payment Method:</strong> {payment.PaymentMethod}
               </p>
               <p className="text-gray-600 mb-4">
-                <strong>Amount:</strong> ${payment.Pamount}
+                <strong>Amount:</strong> Rs.{payment.Pamount}
               </p>
               <button
                 className="bg-green-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded mr-5"
