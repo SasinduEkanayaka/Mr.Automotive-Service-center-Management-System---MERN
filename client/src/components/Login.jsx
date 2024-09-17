@@ -26,13 +26,41 @@ const Login = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-
+  
+    // Log formData to check if the values are correct
+    console.log("Form Data: ", formData);
+  
+    // Directly check if email and password match for supplier, payment, or inventory management
+    if (
+      formData.email.toLowerCase() === "supplier21@gmail.com" &&
+      formData.password === "supplier123"
+    ) {
+      // Navigate to supplier management page
+      navigate("/supplier-management/");
+      return; // Exit function early to prevent API call
+    } else if (
+      formData.email.toLowerCase() === "payment@gmail.com" &&
+      formData.password === "payment123"
+    ) {
+      // Navigate to payment management page
+      navigate("/payment-management/");
+      return;
+    } else if (
+      formData.email.toLowerCase() === "inventory@gmail.com" &&
+      formData.password === "inventory123"
+    ) {
+      // Navigate to inventory management page
+      navigate("/inventory-management/");
+      return;
+    }
+  
     try {
+      // Make API call if email/password doesn't match predefined conditions
       const response = await axios.post(
         "http://localhost:3000/api/auth/signin",
         formData
       );
-
+  
       const getUserIdFromToken = () => {
         const token = response.data.token;
         if (token) {
@@ -42,28 +70,33 @@ const Login = () => {
             return decoded.id;
           } catch (error) {
             console.error("Failed to decode token:", error);
-            console.log(decoded.id);
             return null;
           }
         }
         return null;
       };
-
+  
       const userId = getUserIdFromToken();
       localStorage.setItem("uid", response.data._id);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("email", response.data.email);
       localStorage.setItem("name", response.data.username);
-
+  
       if (response.data.usertype === "admin") {
         navigate("/admin");
       } else {
         navigate("/home");
       }
     } catch (err) {
+      console.error("Error:", err);
       setError("Invalid credentials. Please try again.");
     }
   };
+  
+  
+  
+  
+  
 
   return (
     <div className="flex h-screen justify-center items-center bg-gray-100">
