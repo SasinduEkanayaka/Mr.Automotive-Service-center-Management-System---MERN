@@ -48,15 +48,17 @@ const Packages = () => {
             <div className="p-6">
               <h3 className="text-xl font-semibold mb-2">{pkg.pkgName}</h3>
               <p className="text-gray-700 mb-4">{pkg.pkgDes}</p>
-              <button className="bg-yellow-400 text-white font-bold py-2 px-4 rounded-lg mr-5">
-                {pkg.pkgPrice}
-              </button>
-              <button
-                className="bg-green-400 text-white font-bold py-2 px-4 rounded-lg"
-                onClick={() => handleBooking(pkg._id)}
-              >
-                Book Now
-              </button>
+              <div className="flex">
+                <h4 className="bg-red-400 text-white font-bold py-2 px-4 rounded-lg w-36 mr-5">
+                  Rs. {pkg.pkgPrice}
+                </h4>
+                <button
+                  className="bg-green-400 text-white font-bold py-2 px-4 rounded-lg"
+                  onClick={() => handleBooking(pkg._id)}
+                >
+                  Book Now
+                </button>
+              </div>
             </div>
           </div>
         ))}

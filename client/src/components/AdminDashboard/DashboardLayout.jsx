@@ -6,16 +6,18 @@ import Header from "./Header";
 import { Route, Routes } from "react-router-dom";
 
 import DashboardOverview from "./DashboardOverview";
-import AddPaymentPage from "./AddPaymentPage";
-import ManagePayment from "./ManagePayment";
-import PaymentReport from "./PaymentReport";
 
+import BookingManagement from "../../pages/bookings/BookingManagement";
+import ShowAllPackages from "../../pages/packageManagement/ShowAllPackages";
+import CreatePackage from "../../pages/packageManagement/CreatePackage";
+import UpdatePackage from "../../pages/packageManagement/UpdatePackage";
+import ModificationManagement from "../../pages/modificationManagement/ModificationManagement";
 const contentVariants = {
   open: { marginLeft: 250, transition: { type: "spring", stiffness: 50 } },
   closed: { marginLeft: 0, transition: { type: "spring", stiffness: 50 } },
 };
 
-export default function DashboardLayouSt() {
+export default function AdminDashboard() {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -44,12 +46,11 @@ export default function DashboardLayouSt() {
         {/* Routes for Dashboard Components */}
         <Routes>
           <Route path="/" element={<DashboardOverview />} />
-          <Route path="/add-payment" element={<AddPaymentPage />} />
-          <Route
-            path="/manage-payment"
-            element={<ManagePayment />}
-          />
-          <Route path="/payment-report" element={<PaymentReport />} />
+          <Route path="/book" element={<BookingManagement />} />
+          <Route path="/pkg" element={<ShowAllPackages />} />
+          <Route path="/add-pkg" element={<CreatePackage />} />
+          <Route path="/upd/:id" element={<UpdatePackage />} />
+          <Route path="/mod" element={<ModificationManagement />} />
         </Routes>
       </motion.main>
     </div>

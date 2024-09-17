@@ -6,13 +6,13 @@ const bookingSchema = new mongoose.Schema(
       pkgName: {
         type: String,
       },
-      pkgId: {
+      pkgID: {
         type: String,
       },
-      description: {
+      pkgDes: {
         type: String,
       },
-      price: {
+      pkgPrice: {
         type: Number,
       },
     },

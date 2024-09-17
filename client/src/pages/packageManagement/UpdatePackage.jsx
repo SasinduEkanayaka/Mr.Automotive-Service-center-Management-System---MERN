@@ -3,9 +3,10 @@ import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 import { storage, ref, uploadBytes, getDownloadURL } from "./../../firebase"; // Import from updated firebase.js
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const UpdatePackage = () => {
+  const navigate = useNavigate();
   const [pkgID, setPkgId] = useState("");
   const [pkgName, setPkgName] = useState("");
   const [pkgDes, setPkgDes] = useState("");
@@ -100,12 +101,14 @@ const UpdatePackage = () => {
         text: "Package updated successfully.",
         icon: "success",
       });
+      navigate("/admin/pkg");
     } catch (error) {
       Swal.fire({
         title: "Error!",
         text: "Failed to update package.",
         icon: "error",
       });
+      navigate("/admin/pkg");
     } finally {
       setLoading(false);
     }

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaBox, FaChartLine } from "react-icons/fa";
+import { FaBox, FaChartLine, FaSearch } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { FaSearch, FaBell } from "react-icons/fa";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PackageReport from "./PackageReport"; // Import the new component
 
 const ShowAllPackages = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const ShowAllPackages = () => {
   const [filteredPkg, setFilteredPkg] = useState([]);
 
   const handleUpdateClick = (id) => {
-    navigate(`/inventory-management/upd/${id}`);
+    navigate(`/admin/upd/${id}`);
   };
 
   const cardVariants = {
@@ -27,7 +28,7 @@ const ShowAllPackages = () => {
         const pkgs = await axios.get("http://localhost:3000/api/maintance/get");
         setmaintancePkgs(pkgs.data);
       } catch (error) {
-        console.error("Error fetching repair estimates:", error);
+        console.error("Error fetching packages:", error);
       }
     };
     fetchMaintaincePkgs();
@@ -44,9 +45,8 @@ const ShowAllPackages = () => {
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
-        text: "You will not be able to recover this Estimate Log",
+        text: "You will not be able to recover this package log.",
         icon: "warning",
-        fontFamily: "Montserrat, sans-serif",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
@@ -56,20 +56,20 @@ const ShowAllPackages = () => {
       if (result.isConfirmed) {
         await axios.delete(`http://localhost:3000/api/maintance/del/${id}`);
         setmaintancePkgs(maintancePkgs.filter((rep) => rep._id !== id));
-        Swal.fire("Deleted!", "The Estimate Log has been deleted.", "success");
+        Swal.fire("Deleted!", "The package has been deleted.", "success");
       }
     } catch (error) {
-      console.error("Error deleting Estimate Log:", error);
+      console.error("Error deleting package:", error);
       Swal.fire(
         "Error",
-        "An error occurred while deleting the Estimate Log.",
+        "An error occurred while deleting the package.",
         "error"
       );
     }
   };
 
   const navigateAddPkg = () => {
-    navigate("/inventory-management/create-pkg");
+    navigate("/admin/add-pkg");
   };
 
   return (
@@ -87,9 +87,19 @@ const ShowAllPackages = () => {
           onChange={(e) => setSearchValue(e.target.value)}
         />
         <div className="flex items-center space-x-4">
-          <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
-            Generate Report
-          </button>
+          <PDFDownloadLink
+            document={<PackageReport packages={filteredPkg} />}
+            fileName="filtered-packages.pdf"
+          >
+            {({ loading }) => (
+              <button
+                className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300"
+                disabled={loading}
+              >
+                {loading ? "Generating PDF..." : "Generate Report"}
+              </button>
+            )}
+          </PDFDownloadLink>
           <button
             className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300"
             onClick={navigateAddPkg}
@@ -110,9 +120,11 @@ const ShowAllPackages = () => {
           <FaBox className="text-3xl text-DarkColor" />
           <div>
             <h2 className="text-lg font-bold text-ExtraDarkColor">
-              Total Parts
+              Total Packages
             </h2>
-            <p className="text-2xl font-semibold text-DarkColor">435</p>
+            <p className="text-2xl font-semibold text-DarkColor">
+              {maintancePkgs.length}
+            </p>
           </div>
         </motion.div>
 
@@ -124,8 +136,10 @@ const ShowAllPackages = () => {
         >
           <FaChartLine className="text-3xl text-DarkColor" />
           <div>
-            <h2 className="text-lg font-bold text-ExtraDarkColor">Low Stock</h2>
-            <p className="text-2xl font-semibold text-DarkColor">12 Parts</p>
+            <h2 className="text-lg font-bold text-ExtraDarkColor">
+              Total Services
+            </h2>
+            <p className="text-2xl font-semibold text-DarkColor">{20}</p>
           </div>
         </motion.div>
       </div>
@@ -158,8 +172,6 @@ const ShowAllPackages = () => {
                 </td>
                 <td className="py-3 px-5 text-ExtraDarkColor">
                   {item.pkgServ.map((serv) => serv.name).join(", ")}
-                  {/* Or render each service in a separate line: */}
-                  {/* item.pkgServ.map((serv) => <div key={serv._id}>{serv.name}</div>) */}
                 </td>
                 <td className="py-3 px-5 text-ExtraDarkColor">
                   <button
@@ -170,10 +182,7 @@ const ShowAllPackages = () => {
                   </button>
                   <button
                     className="bg-pink-600 text-black mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md mr-5"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent the click event from bubbling up
-                      handleDelete(item._id);
-                    }}
+                    onClick={(e) => handleDelete(item._id)}
                   >
                     Delete
                   </button>

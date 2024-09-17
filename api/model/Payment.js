@@ -5,7 +5,7 @@ const paymentSchema = mongoose.Schema({
         type: String,
         unique: true
     },
-    cusID: {
+    cusName: {
         type: String,
         required: true
     },

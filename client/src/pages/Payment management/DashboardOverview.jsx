@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from "framer-motion";
 import { FaMoneyBillWave, FaChartLine } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const ShowPayment = () => {
   const [payments, setPayments] = useState([]);
@@ -39,9 +40,11 @@ const ShowPayment = () => {
           Payment Dashboard
         </h1>
         <div className="flex items-center space-x-4">
+        <Link to="/payment-management/payment-report">
           <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
             Generate Payment Report
           </button>
+        </Link>
         </div>
       </div>
 
@@ -90,57 +93,59 @@ const ShowPayment = () => {
             <h2 className="text-xl font-bold text-ExtraDarkColor mb-6">
               Payment Details
             </h2>
-            <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-              <thead className="bg-DarkColor text-white">
-                <tr>
-                  <th className="py-3 px-5 text-left">Payment ID</th>
-                  <th className="py-3 px-5 text-left">Customer ID</th>
-                  <th className="py-3 px-5 text-left">Vehicle Number</th>
-                  <th className="py-3 px-5 text-left">Payment Date</th>
-                  <th className="py-3 px-5 text-left">Payment Method</th>
-                  <th className="py-3 px-5 text-left">Booking_Id</th>
-                  <th className="py-3 px-5 text-left">Package</th>
-                  <th className="py-3 px-5 text-left">Pamount</th>
-                  <th className="py-3 px-5 text-left">Email</th>
-                </tr>
-              </thead>
-              <tbody>
-                {payments.map((payment) => (
-                  <tr
-                    key={payment.PaymentId}
-                    className="border-b hover:bg-PrimaryColor transition-colors duration-300"
-                  >
-                    <td className="py-3 px-5 text-ExtraDarkColor">
-                      {payment.PaymentId}
-                    </td>
-                    <td className="py-3 px-5 text-ExtraDarkColor">
-                      {payment.cusID}
-                    </td>
-                    <td className="py-3 px-5 text-ExtraDarkColor">
-                      {payment.Vehicle_Number}
-                    </td>
-                    <td className="py-3 px-5 text-ExtraDarkColor">
-                      {payment.PaymentDate}
-                    </td>
-                    <td className="py-3 px-5 text-ExtraDarkColor">
-                      {payment.PaymentMethod}
-                    </td>
-                    <td className="py-3 px-5 text-ExtraDarkColor">
-                      {payment.Booking_Id}
-                    </td>
-                    <td className="py-3 px-5 text-ExtraDarkColor">
-                      {payment.Package}
-                    </td>
-                    <td className="py-3 px-5 text-extraDarkColor">
-                      {payment.Pamount}
-                    </td>
-                    <td className="py-3 px-5 text-extraDarkColor">
-                      {payment.email}
-                    </td>
+            <div className="max-h-96 overflow-y-auto">
+              <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead className="bg-DarkColor text-white">
+                  <tr>
+                    <th className="py-3 px-5 text-left">Payment ID</th>
+                    <th className="py-3 px-5 text-left">Customer Name</th>
+                    <th className="py-3 px-5 text-left">Vehicle Number</th>
+                    <th className="py-3 px-5 text-left">Payment Date</th>
+                    <th className="py-3 px-5 text-left">Payment Method</th>
+                    <th className="py-3 px-5 text-left">Booking_Id</th>
+                    <th className="py-3 px-5 text-left">Package</th>
+                    <th className="py-3 px-5 text-left">Package Amount</th>
+                    <th className="py-3 px-5 text-left">Customer Email</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {payments.map((payment) => (
+                    <tr
+                      key={payment.PaymentId}
+                      className="border-b hover:bg-PrimaryColor transition-colors duration-300"
+                    >
+                      <td className="py-3 px-5 text-ExtraDarkColor">
+                        {payment.PaymentId}
+                      </td>
+                      <td className="py-3 px-5 text-ExtraDarkColor">
+                        {payment.cusName}
+                      </td>
+                      <td className="py-3 px-5 text-ExtraDarkColor">
+                        {payment.Vehicle_Number}
+                      </td>
+                      <td className="py-3 px-5 text-ExtraDarkColor">
+                        {payment.PaymentDate}
+                      </td>
+                      <td className="py-3 px-5 text-ExtraDarkColor">
+                        {payment.PaymentMethod}
+                      </td>
+                      <td className="py-3 px-5 text-ExtraDarkColor">
+                        {payment.Booking_Id}
+                      </td>
+                      <td className="py-3 px-5 text-ExtraDarkColor">
+                        {payment.Package}
+                      </td>
+                      <td className="py-3 px-5 text-extraDarkColor">
+                        {payment.Pamount}
+                      </td>
+                      <td className="py-3 px-5 text-extraDarkColor">
+                        {payment.email}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </>
       )}
