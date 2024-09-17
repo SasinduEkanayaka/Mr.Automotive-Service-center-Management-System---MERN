@@ -34,32 +34,32 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items configuration
   const menuItems = [
-    { name: "Dashboard", path: "/payment-management", icon: <FaChartLine /> },
+    { name: "Dashboard", path: "", icon: <FaChartLine /> },
     {
-      name: "Add payment",
-      path: "/payment-management/add-payment",
+      name: "Packages",
+      path: "/admin/pkg",
       icon: <FaBox />,
     },
     {
-      name: "Manage Payments",
-      path: "/payment-management/manage-payment",
+      name: "Modification",
+      path: "/admin/mod",
       icon: <FaClipboardList />,
     },
     {
-      name: "Generate Reports",
-      path: "/payment-management/payment-report",
+      name: "Bookings",
+      path: "/admin/book",
       icon: <FaTags />,
     },
-    // {
-    //   name: "Request Item",
-    //   path: "/Supplier-management/add-request-item",
-    //   icon: <FaChartLine />,
-    // },
-    // {
-    //   name: "Manage Request Item",
-    //   path: "/Supplier-management/manage-request-item",
-    //   icon: <FaClipboardList />,
-    // },
+    {
+      name: "",
+      path: "",
+      icon: <FaChartLine />,
+    },
+    {
+      name: "",
+      path: "",
+      icon: <FaChartLine />,
+    },
     { name: "Profile", path: "/manager/profile", icon: <FaUserCircle /> },
   ];
 

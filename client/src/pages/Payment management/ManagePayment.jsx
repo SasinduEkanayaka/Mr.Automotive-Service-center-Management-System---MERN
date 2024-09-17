@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import UpdatePaymentPopup from './UpdatePayment'; // Ensure the path is correct
 
 const ManagePayment = () => {
@@ -27,11 +28,34 @@ const ManagePayment = () => {
   };
 
   const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/payments/${id}`);
-      setPayments(prevPayments => prevPayments.filter(payment => payment._id !== id));
-    } catch (error) {
-      console.error('Error deleting payment:', error);
+    // Show confirmation dialog
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:3000/payments/${id}`);
+        setPayments(prevPayments => prevPayments.filter(payment => payment._id !== id));
+        Swal.fire(
+          'Deleted!',
+          'The payment has been deleted.',
+          'success'
+        );
+      } catch (error) {
+        console.error('Error deleting payment:', error);
+        Swal.fire(
+          'Error!',
+          'There was an issue deleting the payment.',
+          'error'
+        );
+      }
     }
   };
 
@@ -58,7 +82,7 @@ const ManagePayment = () => {
 
   const filteredPayments = payments.filter((payment) =>
     payment.PaymentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    payment.cusID.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    payment.cusName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     payment.Vehicle_Number.includes(searchTerm)
   );
 
@@ -74,7 +98,7 @@ const ManagePayment = () => {
         <input
           type="text"
           className="w-full p-2 border border-gray-400 rounded-lg"
-          placeholder="Search by payment ID, customer ID, or vehicle number..."
+          placeholder="Search by payment ID, customer Name, or vehicle number..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -85,14 +109,14 @@ const ManagePayment = () => {
           <thead className="bg-gray-800 text-white">
             <tr>
               <th className="py-3 px-5 text-left">Payment ID</th>
-              <th className="py-3 px-5 text-left">Customer ID</th>
+              <th className="py-3 px-5 text-left">Customer Name</th>
               <th className="py-3 px-5 text-left">Vehicle Number</th>
               <th className="py-3 px-5 text-left">Payment Date</th>
               <th className="py-3 px-5 text-left">Payment Method</th>
               <th className="py-3 px-5 text-left">Booking ID</th>
               <th className="py-3 px-5 text-left">Package</th>
               <th className="py-3 px-5 text-left">Package Amount</th>
-              <th className="py-3 px-5 text-left">Email</th>
+              <th className="py-3 px-5 text-left">Customer Email</th>
               <th className="py-3 px-5 text-left">Actions</th>
             </tr>
           </thead>
@@ -106,7 +130,7 @@ const ManagePayment = () => {
                   animate={{ opacity: 1 }}
                 >
                   <td className="py-3 px-5">{payment.PaymentId}</td>
-                  <td className="py-3 px-5">{payment.cusID}</td>
+                  <td className="py-3 px-5">{payment.cusName}</td>
                   <td className="py-3 px-5">{payment.Vehicle_Number}</td>
                   <td className="py-3 px-5">{payment.PaymentDate}</td>
                   <td className="py-3 px-5">{payment.PaymentMethod}</td>
@@ -169,14 +193,14 @@ const ManagePayment = () => {
                 Payment ID: {selectedPayment.PaymentId}
               </h2>
               <div className="flex flex-col space-y-4">
-                <p><strong>Customer ID:</strong> {selectedPayment.cusID}</p>
+                <p><strong>Customer Name:</strong> {selectedPayment.cusName}</p>
                 <p><strong>Vehicle Number:</strong> {selectedPayment.Vehicle_Number}</p>
                 <p><strong>Payment Date:</strong> {selectedPayment.PaymentDate}</p>
                 <p><strong>Payment Method:</strong> {selectedPayment.PaymentMethod}</p>
                 <p><strong>Booking ID:</strong> {selectedPayment.Booking_Id}</p>
                 <p><strong>Package:</strong> {selectedPayment.Package}</p>
                 <p><strong>Package Amount:</strong> {selectedPayment.Pamount}</p>
-                <p><strong>Email:</strong> {selectedPayment.email}</p>
+                <p><strong>Customer Email:</strong> {selectedPayment.email}</p>
               </div>
               <button
                 className="absolute top-2 right-2 text-2xl text-gray-500 hover:text-gray-800"

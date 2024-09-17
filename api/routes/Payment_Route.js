@@ -5,38 +5,32 @@ import { Payment } from '../model/Payment.js';
 const router = express.Router();
 
 // Route for new payment
-router.post('/', async (request, response) => {
+router.post('/', async (req, res) => {
   try {
-    if (
-      !request.body.cusID ||
-      !request.body.Vehicle_Number ||
-      !request.body.PaymentDate ||
-      !request.body.PaymentMethod ||
-      !request.body.Booking_Id ||
-      !request.body.Pamount ||
-      !request.body.email
-    ) {
-      return response.status(400).send({
-        message: 'Send all required fields: cusID, Vehicle_Number, PaymentDate, PaymentMethod, Booking_Id, Pamount, email',
+    const { cusName, Vehicle_Number, PaymentDate, PaymentMethod, Booking_Id, Package, Pamount, email } = req.body;
+
+    if (!cusName || !Vehicle_Number || !PaymentDate || !PaymentMethod || !Booking_Id) {
+      return res.status(400).send({
+        message: 'Send all required fields: cusName, Vehicle_Number, PaymentDate, PaymentMethod, Booking_Id',
       });
     }
 
     const newPayment = new Payment({
-      cusID: request.body.cusID,
-      Vehicle_Number: request.body.Vehicle_Number,
-      PaymentDate: request.body.PaymentDate,
-      PaymentMethod: request.body.PaymentMethod,
-      Booking_Id: request.body.Booking_Id,
-      Pamount: request.body.Pamount,
-      email: request.body.email,
-      Package: request.body.Package || null, // Set to null if not provided
+      cusName,
+      Vehicle_Number,
+      PaymentDate,
+      PaymentMethod,
+      Booking_Id,
+      Package,
+      Pamount,
+      email,
     });
 
     const payment = await newPayment.save();
-    return response.status(201).send(payment);
+    return res.status(201).send(payment);
   } catch (error) {
     console.error(error.message);
-    response.status(500).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 
@@ -45,7 +39,7 @@ router.get("/payments", async (req, res) => {
   try {
     const { page = 1, limit = 5, search = "", sort = "PaymentId" } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
-    
+
     const query = {
       $or: [
         { PaymentId: { $regex: new RegExp(search, 'i') } },
@@ -68,92 +62,115 @@ router.get("/payments", async (req, res) => {
 });
 
 // Route for all the payments
-router.get('/', async (request, response) => {
+router.get('/', async (req, res) => {
   try {
     const payments = await Payment.find({});
-    return response.status(200).json({
+    return res.status(200).json({
       count: payments.length,
       data: payments
     });
   } catch (error) {
     console.log(error.message);
-    response.status(500).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 
-// Route for retrieving a specific Payment by ID or cusID
-router.get('/:identifier', async (request, response) => {
+// Route for retrieving a specific Payment by ID or cusName
+router.get('/:identifier', async (req, res) => {
   try {
-    const { identifier } = request.params;
+    const { identifier } = req.params;
 
     if (mongoose.Types.ObjectId.isValid(identifier)) {
-      const PaymentByID = await Payment.findById(identifier);
-      if (PaymentByID) {
-        return response.status(200).json(PaymentByID);
+      const paymentByID = await Payment.findById(identifier);
+      if (paymentByID) {
+        return res.status(200).json(paymentByID);
       }
     }
 
-    const PaymentByCUSID = await Payment.find({ cusID: identifier });
-    if (PaymentByCUSID.length) {
-      return response.status(200).json(PaymentByCUSID);
+    const paymentByCusName = await Payment.find({ cusName: identifier });
+    if (paymentByCusName.length > 0) {
+      return res.status(200).json(paymentByCusName);
     }
 
-    return response.status(404).json({ message: 'Payment not found' });
+    return res.status(404).json({ message: 'Payment not found' });
   } catch (error) {
     console.error(error);
-    response.status(500).send({ message: 'Error fetching payment: ' + error.message });
+    res.status(500).send({ message: 'Error fetching payment: ' + error.message });
   }
 });
 
-// Route for updating a payment
-router.put('/:id', async (request, response) => {
+// In your Express router file (e.g., payment.js)
+router.get('/get/:email', async (req, res) => {
   try {
-    if (
-      !request.body.cusID ||
-      !request.body.Vehicle_Number ||
-      !request.body.PaymentDate ||
-      !request.body.PaymentMethod ||
-      !request.body.Booking_Id
-    ) {
-      return response.status(400).send({
-        message: 'Send all required fields: PaymentId, cusID, PaymentDate, PaymentMethod',
+    const { email } = req.params;
+    console.log('Fetching payments for email:', email); // Debug log
+
+    // Perform a case-insensitive search for payments by email
+    const payments = await Payment.find({ email: email.toLowerCase() });
+
+    if (payments.length === 0) {
+      return res.status(404).json({ message: 'No payments found for this email' });
+    }
+
+    return res.status(200).json({
+      count: payments.length,
+      data: payments,
+    });
+  } catch (error) {
+    console.error('Error fetching payments:', error.message); // Debug log
+    res.status(500).send({ message: 'Error fetching payments: ' + error.message });
+  }
+});
+
+
+
+
+// Route for update
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { cusName, Vehicle_Number, PaymentDate, PaymentMethod, Booking_Id, Pamount, email, Package } = req.body;
+
+    if (!cusName || !Vehicle_Number || !PaymentDate || !PaymentMethod || !Booking_Id) {
+      return res.status(400).send({
+        message: 'Send all required fields: cusName, Vehicle_Number, PaymentDate, PaymentMethod, Booking_Id',
       });
     }
 
-    const { id } = request.params;
+    const result = await Payment.findByIdAndUpdate(id, {
+      cusName,
+      Vehicle_Number,
+      PaymentDate,
+      PaymentMethod,
+      Booking_Id,
+      Pamount,
+      email,
+      Package
+    }, { new: true });
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return response.status(400).send({ message: 'Invalid Payment ID' });
-    }
-
-    const result = await Payment.findByIdAndUpdate(id, request.body, { new: true });
     if (!result) {
-      return response.status(404).json({ message: 'Payment not found' });
+      return res.status(404).json({ message: 'Payment not found' });
     }
-    return response.status(200).send(result);
+
+    return res.status(200).send(result);
   } catch (error) {
     console.log(error.message);
-    response.status(500).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 
-// Route for deleting a payment
-router.delete('/:id', async (request, response) => {
+// Route for delete
+router.delete('/:id', async (req, res) => {
   try {
-    const { id } = request.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return response.status(400).send({ message: 'Invalid Payment ID' });
-    }
-
+    const { id } = req.params;
     const result = await Payment.findByIdAndDelete(id);
     if (!result) {
-      return response.status(404).json({ message: 'Payment not found' });
+      return res.status(404).json({ message: 'Payment not found' });
     }
-    return response.status(200).send({ message: "Payment deleted successfully" });
+    return res.status(200).send({ message: "Payment deleted successfully" });
   } catch (error) {
     console.log(error.message);
-    response.status(500).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 

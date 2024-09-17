@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
-import { storage, ref, uploadBytes, getDownloadURL } from "./../../firebase"; // Import from updated firebase.js
+import { storage, ref, uploadBytes, getDownloadURL } from "./../../firebase";
 import axios from "axios";
+import classNames from "classnames";
 
 const CreatePackage = () => {
   const [pkgID, setPkgId] = useState("");
@@ -20,6 +21,8 @@ const CreatePackage = () => {
 
   const [imageURL, setImageURL] = useState("");
   const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+  const [descriptionWordCount, setDescriptionWordCount] = useState(100); // Initialize word count
 
   const handleAddService = () => {
     setPkgServ([...pkgServ, { id: uuidv4(), key: "", value: "" }]);
@@ -56,7 +59,7 @@ const CreatePackage = () => {
   };
 
   const generatePkgId = () => {
-    const id = `P${Math.floor(Math.random() * 1000)
+    const id = `PKG${Math.floor(Math.random() * 1000)
       .toString()
       .padStart(3, "0")}`;
     setPkgId(id);
@@ -66,8 +69,33 @@ const CreatePackage = () => {
     generatePkgId();
   }, []);
 
+  const validateForm = () => {
+    const errors = {};
+    if (!pkgName) errors.pkgName = "Package name is required";
+    if (!pkgPrice) errors.pkgPrice = "Package price is required";
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleDescriptionChange = (e) => {
+    const words = e.target.value.trim().split(/\s+/).length;
+    if (words <= 100) {
+      setPkgDes(e.target.value);
+      setDescriptionWordCount(100 - words);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please fill in the required fields.",
+        icon: "error",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       let imageUrl = "";
@@ -76,21 +104,20 @@ const CreatePackage = () => {
         setImageURL(imageUrl);
       }
 
-      // Send form data to backend API
       await axios.post("http://localhost:3000/api/maintance/add", {
         pkgID,
         pkgName,
         pkgDes,
         pkgPrice,
-        imageURL,
+        imageURL: imageUrl,
         pkgServ,
       });
-      console.log(imageURL);
       Swal.fire({
         title: "Success!",
         text: "Spare part added successfully.",
         icon: "success",
       });
+      console.log(imageUrl);
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -101,14 +128,14 @@ const CreatePackage = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="bg-primary min-h-screen flex justify-center items-center p-4">
       <div className="bg-secondary p-8 rounded-lg shadow-lg max-w-2xl w-full">
         <h2 className="text-dark text-2xl font-bold mb-6">
-          Create Maintance Packages
+          Create Maintenance Package
         </h2>
         <form onSubmit={handleSubmit}>
-          {/* Form fields */}
           <div className="mb-4">
             <label className="text-dark block mb-2">Package Id</label>
             <input
@@ -123,31 +150,48 @@ const CreatePackage = () => {
             <label className="text-dark block mb-2">Package Name</label>
             <input
               type="text"
-              className="w-full p-2 border border-dark rounded"
+              className={classNames(
+                "w-full p-2 border rounded",
+                formErrors.pkgName ? "border-red-500" : "border-dark"
+              )}
               value={pkgName}
               onChange={(e) => setPkgName(e.target.value)}
               required
             />
+            {formErrors.pkgName && (
+              <span className="text-red-500 text-sm">{formErrors.pkgName}</span>
+            )}
           </div>
           <div className="mb-4">
             <label className="text-dark block mb-2">Description</label>
             <textarea
               className="w-full p-2 border border-dark rounded"
               value={pkgDes}
-              onChange={(e) => setPkgDes(e.target.value)}
+              onChange={handleDescriptionChange}
               rows="3"
             />
+            <p className="text-sm text-red-500">
+              {descriptionWordCount} words remaining
+            </p>
           </div>
           <div className="flex space-x-4 mb-4">
             <div className="w-1/2">
               <label className="text-dark block mb-2">Price</label>
               <input
                 type="number"
-                className="w-full p-2 border border-dark rounded"
+                className={classNames(
+                  "w-full p-2 border rounded",
+                  formErrors.pkgPrice ? "border-red-500" : "border-dark"
+                )}
                 value={pkgPrice}
                 onChange={(e) => setPkgPrice(e.target.value)}
                 required
               />
+              {formErrors.pkgPrice && (
+                <span className="text-red-500 text-sm">
+                  {formErrors.pkgPrice}
+                </span>
+              )}
             </div>
           </div>
 
@@ -205,7 +249,7 @@ const CreatePackage = () => {
             }`}
             disabled={loading}
           >
-            {loading ? "Adding..." : "Add Spare Part"}
+            {loading ? "Adding..." : "Create New Package"}
           </button>
         </form>
       </div>

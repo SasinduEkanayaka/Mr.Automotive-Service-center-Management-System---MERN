@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaCalendarAlt, FaUserAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaEdit } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import BookingsReport from "./BookingsReport";
+import ModificationReport from "./ModificationReport";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import TextField from "@mui/material/TextField";
 
-const BookingManagement = () => {
+const ModificationManagement = () => {
   const navigate = useNavigate();
-  const [bookings, setBookings] = useState([]);
+  const [modifications, setModifications] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [filteredBook, setFilteredBook] = useState([]);
+  const [filteredMods, setFilteredMods] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
   const handleUpdateClick = (id) => {
-    navigate(`/booking-management/update/${id}`);
+    navigate(`/modification-management/update/${id}`);
   };
 
   const cardVariants = {
@@ -28,38 +29,38 @@ const BookingManagement = () => {
   };
 
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchModifications = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/booking/get"
+          "http://localhost:3000/api/mod/getMod"
         );
-        setBookings(response.data);
+        setModifications(response.data);
       } catch (error) {
-        console.error("Error fetching bookings:", error);
+        console.error("Error fetching modifications:", error);
       }
     };
-    fetchBookings();
+    fetchModifications();
   }, []);
 
   useEffect(() => {
-    const filtered = bookings.filter((item) => {
-      const bookingDate = dayjs(item.date);
+    const filtered = modifications.filter((item) => {
+      const modificationDate = dayjs(item.date);
       const matchesDateRange =
-        (!startDate || bookingDate.isAfter(startDate, "day")) &&
-        (!endDate || bookingDate.isBefore(endDate, "day"));
+        (!startDate || modificationDate.isAfter(startDate, "day")) &&
+        (!endDate || modificationDate.isBefore(endDate, "day"));
       return (
-        item.cusName.toLowerCase().includes(searchValue.toLowerCase()) &&
+        item.customerName.toLowerCase().includes(searchValue.toLowerCase()) &&
         matchesDateRange
       );
     });
-    setFilteredBook(filtered);
-  }, [searchValue, bookings, startDate, endDate]);
+    setFilteredMods(filtered);
+  }, [searchValue, modifications, startDate, endDate]);
 
   const handleDelete = async (id) => {
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
-        text: "You will not be able to recover this booking",
+        text: "You will not be able to recover this modification",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -68,15 +69,15 @@ const BookingManagement = () => {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:3000/api/booking/delete/${id}`);
-        setBookings(bookings.filter((booking) => booking._id !== id));
-        Swal.fire("Deleted!", "The booking has been deleted.", "success");
+        await axios.delete(`http://localhost:3000/api/mod/delMod/${id}`);
+        setModifications(modifications.filter((mod) => mod._id !== id));
+        Swal.fire("Deleted!", "The modification has been deleted.", "success");
       }
     } catch (error) {
-      console.error("Error deleting booking:", error);
+      console.error("Error deleting modification:", error);
       Swal.fire(
         "Error",
-        "An error occurred while deleting the booking.",
+        "An error occurred while deleting the modification.",
         "error"
       );
     }
@@ -87,7 +88,7 @@ const BookingManagement = () => {
       {/* Dashboard Header */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-ExtraDarkColor">
-          Booking Management
+          Modification Management
         </h1>
         <input
           type="text"
@@ -97,8 +98,8 @@ const BookingManagement = () => {
         />
         <div className="flex items-center space-x-4">
           <PDFDownloadLink
-            document={<BookingsReport packages={filteredBook} />}
-            fileName="filtered-bookings.pdf"
+            document={<ModificationReport packages={filteredMods} />}
+            fileName="filtered-modifications.pdf"
           >
             {({ loading }) => (
               <button
@@ -135,7 +136,7 @@ const BookingManagement = () => {
         </LocalizationProvider>
       </div>
 
-      {/* Booking Summary Cards */}
+      {/* Modification Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <motion.div
           className="bg-SecondaryColor p-6 rounded-lg shadow-lg flex items-center space-x-4"
@@ -143,13 +144,13 @@ const BookingManagement = () => {
           initial="hidden"
           animate="visible"
         >
-          <FaUserAlt className="text-3xl text-DarkColor" />
+          <FaEdit className="text-3xl text-DarkColor" />
           <div>
             <h2 className="text-lg font-bold text-ExtraDarkColor">
-              Total Bookings
+              Total Modifications
             </h2>
             <p className="text-2xl font-semibold text-DarkColor">
-              {bookings.length}
+              {modifications.length}
             </p>
           </div>
         </motion.div>
@@ -163,49 +164,56 @@ const BookingManagement = () => {
           <FaCalendarAlt className="text-3xl text-DarkColor" />
           <div>
             <h2 className="text-lg font-bold text-ExtraDarkColor">
-              Upcoming Services
+              Recent Modifications
             </h2>
-            <p className="text-2xl font-semibold text-DarkColor">25</p>
+            <p className="text-2xl font-semibold text-DarkColor">15</p>
           </div>
         </motion.div>
       </div>
 
-      {/* Booking Table */}
+      {/* Modification Table */}
       <div className="mt-12 bg-SecondaryColor p-6 rounded-lg shadow-lg">
         <h2 className="text-xl font-bold text-ExtraDarkColor mb-6">
-          Booking Details
+          Modification Details
         </h2>
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-DarkColor text-white">
             <tr>
-              <th className="py-3 px-5 text-left">Customer Name</th>
-              <th className="py-3 px-5 text-left">Booking Date</th>
-              <th className="py-3 px-5 text-left">Time</th>
-              <th className="py-3 px-5 text-left">Package</th>
-              <th className="py-3 px-5 text-left">Price</th>
+              <th className="py-3 px-5 text-left">CusName</th>
+              <th className="py-3 px-5 text-left">Email</th>
+              <th className="py-3 px-5 text-left">Model</th>
+              <th className="py-3 px-5 text-left">Vehical No</th>
+              <th className="py-3 px-5 text-left">Mod Type</th>
+              <th className="py-3 px-5 text-left">Date</th>
               <th className="py-3 px-5 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
-            {filteredBook.map((item) => (
+            {filteredMods.map((item) => (
               <tr
                 key={item._id}
                 className="border-b hover:bg-PrimaryColor transition-colors duration-300"
               >
                 <td className="py-3 px-5 text-ExtraDarkColor">
-                  {item.cusName}
+                  {item.customerName}
+                </td>
+
+                <td className="py-3 px-5 text-ExtraDarkColor">
+                  {item.customerEmail}
+                </td>
+                <td className="py-3 px-5 text-ExtraDarkColor">
+                  {item.vehicleModel}
+                </td>
+                <td className="py-3 px-5 text-ExtraDarkColor">
+                  {item.vehicleNumber}
+                </td>
+                <td className="py-3 px-5 text-ExtraDarkColor">
+                  {item.modificationType}
                 </td>
                 <td className="py-3 px-5 text-ExtraDarkColor">{item.date}</td>
-                <td className="py-3 px-5 text-ExtraDarkColor">{item.time}</td>
-                <td className="py-3 px-5 text-ExtraDarkColor">
-                  {item.package.pkgName}
-                </td>
-                <td className="py-3 px-5 text-ExtraDarkColor">
-                  {item.package.pkgPrice}
-                </td>
                 <td className="py-3 px-5 text-ExtraDarkColor">
                   <button
-                    className="bg-pink-600 text-black mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md mr-5"
+                    className="bg-pink-600 text-white mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDelete(item._id);
@@ -223,4 +231,4 @@ const BookingManagement = () => {
   );
 };
 
-export default BookingManagement;
+export default ModificationManagement;
