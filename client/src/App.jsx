@@ -19,7 +19,7 @@ import DisplayPayments from "./pages/Payment management/DisplayPayments";
 
 import AdminSidebar from "./components/AdminSidebar";
 
-import UserDashboard from "./pages/user/UserDashboard";
+// import UserDashboard from "./pages/user/UserDashboard";
 
 // import ShowPayment from "./pages/Payment management/DashboardOverview";
 
@@ -28,7 +28,11 @@ import Signup from "./components/Signup";
 import ShowModRequest from "./pages/modificationManagement/ShowModRequest";
 
 import CustomModification from "./pages/modificationManagement/CustomModification";
+
 //import ShowPayment from "./pages/Payment management/DashboardOverview";
+
+ import ShowPayment from "./pages/Payment management/DashboardOverview";
+
 import ProductPage from "./pages/inventory management/ProductPage";
 import SinglePartPage from "./pages/inventory management/SinglePartPage";
 
@@ -58,7 +62,7 @@ export default function App() {
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
 
         <Route path="/side" element={<AdminSidebar />} />
-        <Route path="/userside" element={<UserDashboard />} />
+        {/* <Route path="/userside" element={<UserDashboard />} /> */}
 
         <Route path="/Bookings" element={<DisplayBookings />} />
 
