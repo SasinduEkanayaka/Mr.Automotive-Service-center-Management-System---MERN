@@ -21,8 +21,6 @@ import AdminSidebar from "./components/AdminSidebar";
 
 import UserDashboard from "./pages/user/UserDashboard";
 
-import ShowPayment from "./pages/Payment management/DashboardOverview";
-
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import ShowModRequest from "./pages/modificationManagement/ShowModRequest";
@@ -49,13 +47,11 @@ export default function App() {
 
         <Route path="/supplier-management/*" element={<DashboardLayouSt />} />
 
-
         {/* <Route path="/payments/allPayments" element={<ShowPayment />}></Route>
         <Route path="/payments/detail/:id" element={<ReadOnePayment />}></Route>
         <Route path="/payments/create" element={<CreatePayment />}></Route>
         <Route path="/payments/edit/:id" element={<EditPayment />}></Route>
         <Route path="/payments/delete/:id" element={<DeletePayment />}></Route> */}
-
 
         <Route path="/payment-management/*" element={<DashboardLayoutP />} />
 
@@ -63,7 +59,6 @@ export default function App() {
         <Route path="/userside" element={<UserDashboard />} />
 
         <Route path="/Bookings" element={<DisplayBookings />} />
-
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -78,7 +73,6 @@ export default function App() {
         <Route path="/modreq" element={<ShowModRequest />} />
 
         <Route path="/admin/*" element={<AdminDashboard />} />
-
       </Routes>
     </BrowserRouter>
   );
