@@ -129,7 +129,7 @@ const InventoryReport = () => {
   }
 
   return (
-    <div className="p-6 bg-primary rounded-lg shadow-lg">
+    <div className="p-6 bg-PrimaryColor rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold text-dark mb-4">Inventory Report</h2>
       <motion.div
         initial={{ opacity: 0, y: -10 }}

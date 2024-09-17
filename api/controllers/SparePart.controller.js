@@ -84,3 +84,15 @@ export const searchSpareParts = async (req, res) => {
     res.status(500).json({ message: "Error searching spare parts", error });
   }
 };
+
+export const getOnePart = async (req, res) => {
+  try {
+    const sparePart = await SparePart.findById(req.params.id);
+    if (!sparePart) {
+      return res.status(404).json({ message: "Spare part not found" });
+    }
+    res.json(sparePart);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
