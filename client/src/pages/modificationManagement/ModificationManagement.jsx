@@ -179,13 +179,13 @@ const ModificationManagement = () => {
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-DarkColor text-white">
             <tr>
-              <th className="py-3 px-5 text-left">CusName</th>
-              <th className="py-3 px-5 text-left">Email</th>
-              <th className="py-3 px-5 text-left">Model</th>
-              <th className="py-3 px-5 text-left">Vehical No</th>
-              <th className="py-3 px-5 text-left">Mod Type</th>
-              <th className="py-3 px-5 text-left">Date</th>
-              <th className="py-3 px-5 text-left">Action</th>
+              <th className="py-3 px-2 text-left">CusName</th>
+              <th className="py-3 px-2 text-left">Email</th>
+              <th className="py-3 px-2 text-left">Model</th>
+              <th className="py-3 px-2 text-left">Vehical No</th>
+              <th className="py-3 px-2 text-left">Mod Type</th>
+              <th className="py-3 px-2 text-left">Date</th>
+              <th className="py-3 px-2 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -194,24 +194,24 @@ const ModificationManagement = () => {
                 key={item._id}
                 className="border-b hover:bg-PrimaryColor transition-colors duration-300"
               >
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   {item.customerName}
                 </td>
 
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   {item.customerEmail}
                 </td>
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   {item.vehicleModel}
                 </td>
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   {item.vehicleNumber}
                 </td>
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   {item.modificationType}
                 </td>
-                <td className="py-3 px-5 text-ExtraDarkColor">{item.date}</td>
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="py-3 px-2 text-ExtraDarkColor">{item.date}</td>
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   <button
                     className="bg-pink-600 text-white mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md"
                     onClick={(e) => {

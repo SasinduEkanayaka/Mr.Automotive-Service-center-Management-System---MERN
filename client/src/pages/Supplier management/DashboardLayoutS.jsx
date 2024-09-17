@@ -48,10 +48,7 @@ export default function DashboardLayouSt() {
           <Route path="/add-supplier" element={<AddSupplierPage />} />
           <Route path="/add-request-item" element={<AddRequestItemPage />} />
           <Route path="/manage-request-item" element={<ManageRequestItem />} />
-          <Route
-            path="/manage-supplier"
-            element={<ManageSupplier />}
-          />
+          <Route path="/manage-supplier" element={<ManageSupplier />} />
         </Routes>
       </motion.main>
     </div>

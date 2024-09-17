@@ -67,8 +67,8 @@ const ManageSupplier = () => {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-8">Approved Suppliers</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Approved Suppliers</h1>
 
       {/* Search input */}
       <div className="mb-4">
@@ -81,32 +81,23 @@ const ManageSupplier = () => {
         />
       </div>
 
-      {/* Generate Report Button */}
-      {/* <div className="mb-4">
-        <button
-          onClick={handleGenerateReport}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Generate Supplier Report
-        </button>
-      </div> */}
-
       {/* Supplier Report Component */}
       <div className='mb-4'>
         <SupplierReport filteredSuppliers={filteredSuppliers} />
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+      {/* Make table responsive */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden table-fixed">
           <thead className="bg-gray-800 text-white">
             <tr>
-              <th className="py-3 px-5 text-left">Supplier ID</th>
-              <th className="py-3 px-5 text-left">Supplier Name</th>
-              <th className="py-3 px-5 text-left">Supply items</th>
-              <th className="py-3 px-5 text-left">Contact number</th>
-              <th className="py-3 px-5 text-left">Email</th>
-              <th className="py-3 px-5 text-left">Address</th>
-              <th className="py-3 px-5 text-left">Actions</th>
+              <th className="py-3 px-4 text-left w-1/6">Supplier ID</th>
+              <th className="py-3 px-4 text-left w-1/4">Supplier Name</th>
+              <th className="py-3 px-4 text-left w-1/6">Supply items</th>
+              <th className="py-3 px-4 text-left w-1/6">Contact number</th>
+              <th className="py-3 px-4 text-left w-1/6">Email</th>
+              <th className="py-3 px-4 text-left w-1/6">Address</th>
+              <th className="py-3 px-4 text-left w-1/6">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -118,13 +109,13 @@ const ManageSupplier = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 >
-                  <td className="py-3 px-5">{supplier.SupplierID}</td>
-                  <td className="py-3 px-5">{supplier.SupplierName}</td>
-                  <td className="py-3 px-5">{supplier.ItemName}</td>
-                  <td className="py-3 px-5">{supplier.ContactNo}</td>
-                  <td className="py-3 px-5">{supplier.Email}</td>
-                  <td className="py-3 px-5">{supplier.Address}</td>
-                  <td className="py-3 px-5">
+                  <td className="py-2 px-4">{supplier.SupplierID}</td>
+                  <td className="py-2 px-4">{supplier.SupplierName}</td>
+                  <td className="py-2 px-4">{supplier.ItemName}</td>
+                  <td className="py-2 px-4">{supplier.ContactNo}</td>
+                  <td className="py-2 px-4">{supplier.Email}</td>
+                  <td className="py-2 px-4">{supplier.Address}</td>
+                  <td className="py-2 px-4">
                     <div className="flex items-center">
                       <button
                         onClick={() => handleOverview(supplier)}

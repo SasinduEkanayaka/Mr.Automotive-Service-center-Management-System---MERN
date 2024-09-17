@@ -50,16 +50,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       path: "/admin/book",
       icon: <FaTags />,
     },
-    {
-      name: "",
-      path: "",
-      icon: <FaChartLine />,
-    },
-    {
-      name: "",
-      path: "",
-      icon: <FaChartLine />,
-    },
     { name: "Profile", path: "/manager/profile", icon: <FaUserCircle /> },
   ];
 
