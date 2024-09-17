@@ -10,8 +10,8 @@ import UpdateRequestItemPopup from './UpdateReqItemPopup'; // Make sure path is 
 const ManageRequestItem = () => {
   const [requestItems, setRequestItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterStatus, setFilterStatus] = useState("received");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState('received');
   const [loading, setLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
@@ -20,12 +20,15 @@ const ManageRequestItem = () => {
     fetchRequestItems();
   }, []);
 
+  useEffect(() => {
+    filterItems(requestItems, filterStatus, searchQuery);
+  }, [requestItems, filterStatus, searchQuery]);
+
   const fetchRequestItems = async () => {
     setLoading(true);
     try {
       const response = await axios.get('http://localhost:3000/requestItems');
       setRequestItems(response.data);
-      filterItems(response.data, filterStatus, searchQuery);
     } catch (error) {
       console.error('Error fetching request items:', error);
     } finally {
@@ -35,27 +38,24 @@ const ManageRequestItem = () => {
 
   const filterItems = (items, status, query) => {
     const lowercasedQuery = query.toLowerCase();
-    const filtered = items.filter((item) =>
-      item.status === status &&
-      (item.requestID.toLowerCase().includes(lowercasedQuery) ||
-      item.supplierName.toLowerCase().includes(lowercasedQuery) ||
-      item.itemName.toLowerCase().includes(lowercasedQuery) ||
-      item.brand?.toLowerCase().includes(lowercasedQuery) ||
-      new Date(item.requestDate).toLocaleDateString().toLowerCase().includes(lowercasedQuery))
+    const filtered = items.filter(
+      (item) =>
+        item.status === status &&
+        (item.requestID.toLowerCase().includes(lowercasedQuery) ||
+          item.supplierName.toLowerCase().includes(lowercasedQuery) ||
+          item.itemName.toLowerCase().includes(lowercasedQuery) ||
+          item.brand?.toLowerCase().includes(lowercasedQuery) ||
+          new Date(item.requestDate).toLocaleDateString().toLowerCase().includes(lowercasedQuery))
     );
     setFilteredItems(filtered);
   };
 
   const handleSearch = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    filterItems(requestItems, filterStatus, query);
+    setSearchQuery(e.target.value);
   };
 
   const handleFilterChange = (e) => {
-    const status = e.target.value;
-    setFilterStatus(status);
-    filterItems(requestItems, status, searchQuery);
+    setFilterStatus(e.target.value);
   };
 
   const handleDelete = async (id) => {
@@ -72,7 +72,6 @@ const ManageRequestItem = () => {
         try {
           await axios.delete(`http://localhost:3000/requestItems/${id}`);
           setRequestItems((prevItems) => prevItems.filter((item) => item._id !== id));
-          filterItems(requestItems, filterStatus, searchQuery);
           Swal.fire('Deleted!', 'Request item has been deleted.', 'success');
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete request item.', 'error');
@@ -92,16 +91,7 @@ const ManageRequestItem = () => {
 
   const generatePDF = () => {
     const doc = new jsPDF();
-    const tableColumn = [
-      "No",
-      "Request ID",
-      "Supplier Name",
-      "Item Name",
-      "Brand",
-      "Quantity",
-      "Request Date",
-      "Status"
-    ];
+    const tableColumn = ['No', 'Request ID', 'Supplier Name', 'Item Name', 'Brand', 'Quantity', 'Request Date', 'Status'];
     const tableRows = [];
 
     filteredItems.forEach((item, index) => {
@@ -110,32 +100,27 @@ const ManageRequestItem = () => {
         item.requestID,
         item.supplierName,
         item.itemName,
-        item.brand || "-",
+        item.brand || '-',
         item.quantity,
         new Date(item.requestDate).toLocaleDateString(),
-        item.status
+        item.status,
       ];
       tableRows.push(data);
     });
 
     const date = new Date().toLocaleDateString();
 
-    doc.setFontSize(24).setFont("helvetica", "bold").setTextColor("#4B9CD3");
-    doc.text("Vehicle_Service Management", 105, 15, { align: "center" });
+    doc.setFontSize(24).setFont('helvetica', 'bold').setTextColor('#4B9CD3');
+    doc.text('Vehicle_Service Management', 105, 15, { align: 'center' });
 
-    doc.setFont("helvetica", "normal").setFontSize(18).setTextColor("#333");
-    doc.text("Request Item Details Report", 105, 25, { align: "center" });
+    doc.setFont('helvetica', 'normal').setFontSize(18).setTextColor('#333');
+    doc.text('Request Item Details Report', 105, 25, { align: 'center' });
 
-    doc.setFont("helvetica", "italic").setFontSize(12).setTextColor("#666");
-    doc.text(`Report Generated Date: ${date}`, 105, 35, { align: "center" });
+    doc.setFont('helvetica', 'italic').setFontSize(12).setTextColor('#666');
+    doc.text(`Report Generated Date: ${date}`, 105, 35, { align: 'center' });
 
-    doc.setFont("helvetica", "normal").setFontSize(10).setTextColor("#999");
-    doc.text(
-      "Service, Gampaha",
-      105,
-      45,
-      { align: "center" }
-    );
+    doc.setFont('helvetica', 'normal').setFontSize(10).setTextColor('#999');
+    doc.text('Service, Gampaha', 105, 45, { align: 'center' });
 
     doc.setDrawColor(0, 0, 0).setLineWidth(0.5);
     doc.line(10, 49, 200, 49);
@@ -148,13 +133,13 @@ const ManageRequestItem = () => {
       headStyles: {
         fillColor: [44, 62, 80],
         textColor: [255, 255, 255],
-        fontStyle: "bold",
-        halign: 'center'
+        fontStyle: 'bold',
+        halign: 'center',
       },
       alternateRowStyles: {
-        fillColor: [230, 230, 230]
+        fillColor: [230, 230, 230],
       },
-      margin: { top: 60 }
+      margin: { top: 60 },
     });
 
     doc.save(`Request-Items-Report_${date}.pdf`);
@@ -167,8 +152,8 @@ const ManageRequestItem = () => {
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-8">Manage Request Items</h1>
+
       <div className="flex gap-4 mb-6">
-        {/* Search Bar */}
         <input
           type="text"
           placeholder="Search request items..."
@@ -177,7 +162,6 @@ const ManageRequestItem = () => {
           onChange={handleSearch}
         />
 
-        {/* Filter Dropdown */}
         <select
           className="p-3 border border-dark rounded-md"
           value={filterStatus}
@@ -188,7 +172,6 @@ const ManageRequestItem = () => {
         </select>
       </div>
 
-      {/* Generate Report Button */}
       <button
         onClick={generatePDF}
         className="mb-4 px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition"
@@ -196,9 +179,9 @@ const ManageRequestItem = () => {
         Generate Report
       </button>
 
-      {/* Items Table */}
       <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
         <h2 className="text-xl font-bold mb-4">{filterStatus.charAt(0).toUpperCase() + filterStatus.slice(1)} Items</h2>
+
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-800 text-white">
             <tr>
@@ -253,64 +236,17 @@ const ManageRequestItem = () => {
         </table>
       </div>
 
-      {/* Item Overview Popup */}
-      <AnimatePresence>
-        {selectedItem && !showUpdatePopup && (
-          <motion.div
-            className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedItem(null)}
-          >
-            <motion.div
-              className="bg-white rounded-lg p-8 max-w-3xl w-full shadow-2xl relative"
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 50, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2 className="text-2xl text-gray-800 mb-6 font-bold border-b border-gray-300 pb-2">
-                {selectedItem.itemName}
-              </h2>
-              <div className="flex flex-col space-y-4">
-                <p>
-                  <strong>Request ID:</strong> {selectedItem.requestID}
-                </p>
-                <p>
-                  <strong>Supplier:</strong> {selectedItem.supplierName}
-                </p>
-                <p>
-                  <strong>Brand:</strong> {selectedItem.brand}
-                </p>
-                <p>
-                  <strong>Quantity:</strong> {selectedItem.quantity}
-                </p>
-                <p>
-                  <strong>Request Date:</strong> {new Date(selectedItem.requestDate).toLocaleDateString()}
-                </p>
-              </div>
-              <button
-                className="absolute top-2 right-2 text-2xl text-gray-500 hover:text-gray-800"
-                onClick={() => setSelectedItem(null)}
-              >
-                &times;
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Update Item Popup */}
-      <AnimatePresence>
-        {showUpdatePopup && selectedItem && (
-          <UpdateRequestItemPopup
-            item={selectedItem}
-            onClose={() => setShowUpdatePopup(false)}
-            refreshItems={fetchRequestItems}
-          />
-        )}
-      </AnimatePresence>
+      {showUpdatePopup && selectedItem && (
+        <UpdateRequestItemPopup
+          item={selectedItem}
+          onClose={() => setShowUpdatePopup(false)}
+          onItemUpdated={(updatedItem) => {
+            setRequestItems((prevItems) =>
+              prevItems.map((item) => (item._id === updatedItem._id ? updatedItem : item))
+            );
+          }}
+        />
+      )}
     </div>
   );
 };
