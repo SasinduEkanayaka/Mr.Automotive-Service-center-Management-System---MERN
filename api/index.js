@@ -19,6 +19,8 @@ import Payment_Route from "./routes/Payment_Route.js";
 
 import Customer_Route from "./routes/Customer_Route.js";
 
+import reorderRout from "./routes/reorderRoutes.js";
+
 dotenv.config();
 
 mongoose
@@ -37,6 +39,7 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/spareparts", sparePartRoutes);
+app.use("/api/reorder", reorderRout);
 
 app.use("/requestItems", Request_router);
 app.use("/Customer", Customer_Route);

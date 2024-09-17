@@ -34,7 +34,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items configuration
   const menuItems = [
-    { name: "Dashboard", path: "/inventory-management", icon: <FaChartLine /> },
     {
       name: "Add Spare Parts",
       path: "/inventory-management/add-parts",
@@ -46,22 +45,15 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       icon: <FaClipboardList />,
     },
     {
-
       name: "Generate Reports",
       path: "/inventory-management/inventory-report",
       icon: <FaTags />,
     },
     {
-      name: "Modification Requests",
-      path: "/inventory-management/modreq",
-      icon: <FaChartLine />,
+      name: "Item Re-Odering",
+      path: "/inventory-management/reorder",
+      icon: <FaTags />,
     },
-    {
-      name: "Booking Requests",
-      path: "/inventory-management/bmng",
-      icon: <FaChartLine />,
-    },
-    { name: "Profile", path: "/manager/profile", icon: <FaUserCircle /> },
   ];
 
   return (
