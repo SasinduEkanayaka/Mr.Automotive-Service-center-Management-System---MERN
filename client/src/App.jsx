@@ -20,13 +20,11 @@ import AdminSidebar from "./components/AdminSidebar";
 
 import UserDashboard from "./pages/user/UserDashboard";
 
-// import Login from "./components/Login";
-// import Signup from "./components/Signup";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 import CustomModification from "./pages/modificationManagement/CustomModification";
 import ShowPayment from "./pages/Payment management/DashboardOverview";
-import SignUp from "./pages/authentication/SignUp";
-import SignIn from "./pages/authentication/SignIn";
 import ProductPage from "./pages/inventory management/ProductPage";
 import SinglePartPage from "./pages/inventory management/SinglePartPage";
 
@@ -59,8 +57,8 @@ export default function App() {
 
         <Route path="/Bookings" element={<DisplayBookings />} />
 
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
         <Route path="/products" element={<ProductPage />} />
         <Route path="/sparepart/:id" element={<SinglePartPage />} />
