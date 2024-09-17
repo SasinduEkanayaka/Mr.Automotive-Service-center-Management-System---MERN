@@ -68,9 +68,11 @@ const AddSupplierPage = () => {
   };
 
   return (
+
     <div className="bg-PrimaryColor min-h-screen flex justify-center items-center p-4">
       <div className="bg-SecondaryColor p-8 rounded-lg shadow-lg max-w-2xl w-full">
         <h2 className="text-dark text-3xl font-bold mb-6 bg-gray-800 text-white">Supplier Registration</h2>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="text-dark block mb-2">Supplier Name</label>
@@ -100,7 +102,9 @@ const AddSupplierPage = () => {
               onChange={(e) => setItemName(e.target.value)}
               required
             >
-              <option value="" disabled>Select Item</option>
+              <option value="" disabled>
+                Select Item
+              </option>
               {items.map((item) => (
                 <option key={item._id} value={item.itemName}>
                   {item.partName}
@@ -140,7 +144,9 @@ const AddSupplierPage = () => {
           </div>
           <button
             type="submit"
-            className={`w-full p-2 border border-dark rounded ${loading ? "bg-gray-500" : "bg-blue-500 text-white"}`}
+            className={`w-full p-2 border border-dark rounded ${
+              loading ? "bg-gray-500" : "bg-blue-500 text-white"
+            }`}
             disabled={loading}
           >
             {loading ? "Adding..." : "Add Supplier"}
