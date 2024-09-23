@@ -118,9 +118,11 @@ const AddRequestItemPage = () => {
               className="w-full p-2 border border-dark rounded"
               value={requestDate}
               onChange={(e) => setRequestDate(e.target.value)}
+              min={new Date().toISOString().split('T')[0]} // Setting the min date to today
               required
             />
           </div>
+
           <div className="mb-4">
             <label className="text-dark block mb-2">Item Name</label>
             <select
@@ -143,9 +145,17 @@ const AddRequestItemPage = () => {
               type="text"
               className="w-full p-2 border border-dark rounded"
               value={brand}
-              onChange={(e) => setBrand(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Allow only letters and spaces
+                const regex = /^[A-Za-z\s]*$/;
+                if (regex.test(value)) {
+                  setBrand(value);
+                }
+              }}
             />
           </div>
+
           <div className="mb-4">
             <label className="text-dark block mb-2">Quantity</label>
             <input
@@ -153,14 +163,14 @@ const AddRequestItemPage = () => {
               className="w-full p-2 border border-dark rounded"
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
+              min={1}
               required
             />
           </div>
           <button
             type="submit"
-            className={`w-full p-2 border border-dark rounded ${
-              loading ? "bg-gray-500" : "bg-blue-500 text-white"
-            }`}
+            className={`w-full p-2 border border-dark rounded ${loading ? "bg-gray-500" : "bg-blue-500 text-white"
+              }`}
             disabled={loading}
           >
             {loading ? "Adding..." : "Add Request Item"}

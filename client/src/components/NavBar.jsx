@@ -28,7 +28,7 @@ const NavBar = () => {
         <h1 className="text-xl font-bold">Mr.Automotive</h1>
       </div>
       <ul className="flex space-x-6">
-        {["Home", "Booking", "Service", "Product", "FAQ"].map((item) => (
+        {["Home", "Booking", "Service", "Product", "FAQ","Reg As Supplier"].map((item) => (
           <li key={item} className="hover:text-yellow-400">
             <a href={`/${item}`}>{item}</a>
           </li>
