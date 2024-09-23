@@ -99,7 +99,7 @@ const UpdateItemPopup = ({ isOpen, onClose, partData }) => {
         text: "Spare part updated successfully.",
         icon: "success",
       });
-      onClose(); // Close the popup after update
+      window.location.reload();
     } catch (error) {
       Swal.fire({
         title: "Error!",
