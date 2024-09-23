@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
-import Swal from 'sweetalert2'; // Import SweetAlert2
-import UpdatePaymentPopup from './UpdatePayment'; // Ensure the path is correct
+import Swal from 'sweetalert2';
+import { jsPDF } from 'jspdf'; // Import jsPDF
+ // Ensure the path is correct
 
 const ManagePayment = () => {
   const [payments, setPayments] = useState([]);
@@ -28,7 +29,6 @@ const ManagePayment = () => {
   };
 
   const handleDelete = async (id) => {
-    // Show confirmation dialog
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: 'This action cannot be undone!',
@@ -43,18 +43,10 @@ const ManagePayment = () => {
       try {
         await axios.delete(`http://localhost:3000/payments/${id}`);
         setPayments(prevPayments => prevPayments.filter(payment => payment._id !== id));
-        Swal.fire(
-          'Deleted!',
-          'The payment has been deleted.',
-          'success'
-        );
+        Swal.fire('Deleted!', 'The payment has been deleted.', 'success');
       } catch (error) {
         console.error('Error deleting payment:', error);
-        Swal.fire(
-          'Error!',
-          'There was an issue deleting the payment.',
-          'error'
-        );
+        Swal.fire('Error!', 'There was an issue deleting the payment.', 'error');
       }
     }
   };
@@ -76,14 +68,66 @@ const ManagePayment = () => {
     );
     setShowUpdatePopup(false);
     setSelectedPayment(null);
-    // Refresh payments data after update
     fetchPayments();
   };
 
-  const filteredPayments = payments.filter((payment) =>
-    payment.PaymentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    payment.cusName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    payment.Vehicle_Number.includes(searchTerm)
+  // PDF generation logic
+// PDF generation logic
+const handleGeneratePDF = () => {
+  const doc = new jsPDF();
+  
+  const tableColumn = [
+    "Payment ID", 
+    "Customer Name", 
+    "Vehicle Number", 
+    "Payment Date", 
+    "Payment Method", 
+    "Booking ID", 
+    "Package", 
+    "Package Amount", 
+    "Customer Email"
+  ];
+
+  const tableRows = [];
+
+  // Use filteredPayments to generate the PDF for only the filtered results
+  filteredPayments.forEach(payment => {
+    const paymentData = [
+      payment.PaymentId,
+      payment.cusName,
+      payment.Vehicle_Number,
+      payment.PaymentDate,
+      payment.PaymentMethod,
+      payment.Booking_Id,
+      payment.Package,
+      payment.Pamount,
+      payment.email
+    ];
+    tableRows.push(paymentData);
+  });
+
+  const date = new Date().toLocaleDateString();
+
+  doc.setFontSize(18).setFont("helvetica", "bold").text("Payments Report", 105, 20, { align: "center" });
+  doc.setFontSize(12).setFont("helvetica", "italic").text(`Report Generated on: ${date}`, 105, 30, { align: "center" });
+  
+  doc.autoTable({
+    head: [tableColumn],
+    body: tableRows,
+    startY: 40,
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [22, 160, 133], textColor: [255, 255, 255] },
+    alternateRowStyles: { fillColor: [240, 240, 240] },
+  });
+
+  doc.save(`Payments_Report_${date}.pdf`);
+};
+
+  const filteredPayments = payments.filter(payment =>
+    (payment.PaymentId && payment.PaymentId.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (payment.cusName && payment.cusName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (payment.PaymentMethod && payment.PaymentMethod.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (payment.Vehicle_Number && payment.Vehicle_Number.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   if (loading) {
@@ -103,6 +147,13 @@ const ManagePayment = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
+
+      <button
+        className="bg-blue-500 text-white py-2 px-4 rounded-lg mb-4"
+        onClick={handleGeneratePDF}
+      >
+        Generate PDF
+      </button>
 
       <div className="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
         <table className="min-w-full bg-white shadow-md rounded-lg">
@@ -186,45 +237,49 @@ const ManagePayment = () => {
               className="bg-white rounded-lg p-8 max-w-3xl w-full shadow-2xl relative overflow-y-auto max-h-[90vh]"
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 50, opacity: 0 }}
+              exit={{ y: -50, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-2xl text-gray-800 mb-6 font-bold border-b border-gray-300 pb-2">
-                Payment ID: {selectedPayment.PaymentId}
-              </h2>
-              <div className="flex flex-col space-y-4">
-                <p><strong>Customer Name:</strong> {selectedPayment.cusName}</p>
-                <p><strong>Vehicle Number:</strong> {selectedPayment.Vehicle_Number}</p>
-                <p><strong>Payment Date:</strong> {selectedPayment.PaymentDate}</p>
-                <p><strong>Payment Method:</strong> {selectedPayment.PaymentMethod}</p>
-                <p><strong>Booking ID:</strong> {selectedPayment.Booking_Id}</p>
-                <p><strong>Package:</strong> {selectedPayment.Package}</p>
-                <p><strong>Package Amount:</strong> {selectedPayment.Pamount}</p>
-                <p><strong>Customer Email:</strong> {selectedPayment.email}</p>
-              </div>
-              <button
-                className="absolute top-2 right-2 text-2xl text-gray-500 hover:text-gray-800"
-                onClick={() => setSelectedPayment(null)}
-              >
-                &times;
-              </button>
+              <h2 className="text-2xl font-bold mb-6">Payment Details</h2>
+              <p className="mb-2">
+                <strong>Payment ID:</strong> {selectedPayment.PaymentId}
+              </p>
+              <p className="mb-2">
+                <strong>Customer Name:</strong> {selectedPayment.cusName}
+              </p>
+              <p className="mb-2">
+                <strong>Vehicle Number:</strong> {selectedPayment.Vehicle_Number}
+              </p>
+              <p className="mb-2">
+                <strong>Payment Date:</strong> {selectedPayment.PaymentDate}
+              </p>
+              <p className="mb-2">
+                <strong>Payment Method:</strong> {selectedPayment.PaymentMethod}
+              </p>
+              <p className="mb-2">
+                <strong>Booking ID:</strong> {selectedPayment.Booking_Id}
+              </p>
+              <p className="mb-2">
+                <strong>Package:</strong> {selectedPayment.Package}
+              </p>
+              <p className="mb-2">
+                <strong>Package Amount:</strong> {selectedPayment.Pamount}
+              </p>
+              <p className="mb-2">
+                <strong>Customer Email:</strong> {selectedPayment.email}
+              </p>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {showUpdatePopup && (
-          <UpdatePaymentPopup
-            isOpen={showUpdatePopup}
-            onClose={() => setShowUpdatePopup(false)}
-            paymentData={selectedPayment}
-            onUpdate={(updatedPayment) => {
-              handlePaymentUpdate(updatedPayment);
-            }}
-          />
-        )}
-      </AnimatePresence>
+      {showUpdatePopup && (
+        <UpdatePaymentPopup
+          payment={selectedPayment}
+          onClose={() => setShowUpdatePopup(false)}
+          onUpdate={handlePaymentUpdate}
+        />
+      )}
     </div>
   );
 };
