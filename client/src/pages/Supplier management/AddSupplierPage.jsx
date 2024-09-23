@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import NavBar from "../../components/NavBar";
+import { Navigate } from "react-router-dom";
 
 const AddSupplierPage = () => {
   const [supplierName, setSupplierName] = useState("");
@@ -25,12 +27,36 @@ const AddSupplierPage = () => {
       console.error("Error fetching parts:", error);
     } finally {
       setLoading(false);
+     
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    // Validation: Ensure name doesn't contain numbers
+    const namePattern = /^[a-zA-Z\s]+$/; // Allows only letters and spaces
+    if (!namePattern.test(supplierName)) {
+      Swal.fire({
+        title: "Invalid Name",
+        text: "Supplier name should not contain numbers.",
+        icon: "warning",
+      });
+      setLoading(false);
+      return;
+    }
+
+    // Validation: Ensure contact number is exactly 10 digits
+    if (contactNo.length !== 10 || isNaN(contactNo)) {
+      Swal.fire({
+        title: "Invalid Contact Number",
+        text: "Contact number must be exactly 10 digits.",
+        icon: "warning",
+      });
+      setLoading(false);
+      return;
+    }
 
     try {
       // Send supplier data to backend API
@@ -64,14 +90,16 @@ const AddSupplierPage = () => {
       });
     } finally {
       setLoading(false);
+      Navigate("/");
     }
   };
 
   return (
-
     <div className="bg-PrimaryColor min-h-screen flex justify-center items-center p-4">
       <div className="bg-SecondaryColor p-8 rounded-lg shadow-lg max-w-2xl w-full">
-        <h2 className="text-dark text-3xl font-bold mb-6 bg-gray-800 text-white">Supplier Registration</h2>
+        <h2 className="text-center text-3xl font-bold mb-6 text-black">
+          Supplier Registration
+        </h2>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -84,16 +112,6 @@ const AddSupplierPage = () => {
               required
             />
           </div>
-          {/* <div className="mb-4">
-            <label className="text-dark block mb-2">Item Number</label>
-            <input
-              type="text"
-              className="w-full p-2 border border-dark rounded"
-              value={itemNo}
-              onChange={(e) => setItemNo(e.target.value)}
-              required
-            />
-          </div> */}
           <div className="mb-4">
             <label className="text-dark block mb-2">Item Name</label>
             <select
@@ -119,8 +137,10 @@ const AddSupplierPage = () => {
               className="w-full p-2 border border-dark rounded"
               value={contactNo}
               onChange={(e) => setContactNo(e.target.value)}
+              maxLength={10} // Set max length to 10 digits
               required
             />
+
           </div>
           <div className="mb-4">
             <label className="text-dark block mb-2">Email</label>
@@ -144,12 +164,11 @@ const AddSupplierPage = () => {
           </div>
           <button
             type="submit"
-            className={`w-full p-2 border border-dark rounded ${
-              loading ? "bg-gray-500" : "bg-blue-500 text-white"
-            }`}
+            className={`w-full p-2 border border-dark rounded ${loading ? "bg-gray-500" : "bg-yellow-500 text-white"
+              }`}
             disabled={loading}
           >
-            {loading ? "Adding..." : "Add Supplier"}
+            {loading ? "Adding..." : "Reg Supplier"}
           </button>
         </form>
       </div>

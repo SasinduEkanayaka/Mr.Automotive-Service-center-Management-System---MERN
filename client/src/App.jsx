@@ -67,11 +67,13 @@ export default function App() {
         {/* <Route path="/userside" element={<UserDashboard />} /> */}
 
         <Route path="/Bookings" element={<DisplayBookings />} />
+        <Route path="/Reg As Supplier" element={<AddSupplierPage />} />
+
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        <Route path="/products" element={<ProductPage />} />
+        <Route path="/product" element={<ProductPage />} />
         <Route path="/sparepart/:id" element={<SinglePartPage />} />
 
         <Route path="/payments" element={<DisplayPayments />} />
