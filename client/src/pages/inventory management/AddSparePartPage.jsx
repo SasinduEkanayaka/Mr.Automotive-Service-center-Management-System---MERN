@@ -21,6 +21,17 @@ const AddSparePartPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Validation functions
+  const validatePartName = (name) => /^[a-zA-Z\s]+$/.test(name);
+  const validateSupplier = (supplier) => /^[a-zA-Z\s]+$/.test(supplier);
+  const validateQuantity = (qty) => /^[1-9]\d*$/.test(qty);
+  const validateCategory = (category) => /^[a-zA-Z\s]+$/.test(category);
+  const validateFeatureKey = (key) => /^[a-zA-Z\s]+$/.test(key);
+
+  const validateImage = (file) =>
+    (file.type === "image/jpeg" || file.type === "image/png") &&
+    file.size <= 2 * 1024 * 1024; // 2MB limit
+
   const handleAddFeature = () => {
     setFeatures([...features, { id: uuidv4(), key: "", value: "" }]);
   };
@@ -38,8 +49,17 @@ const AddSparePartPage = () => {
   };
 
   const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      if (validateImage(file)) {
+        setImage(file);
+      } else {
+        Swal.fire({
+          title: "Invalid Image",
+          text: "Only JPG/PNG images under 2MB are allowed.",
+          icon: "error",
+        });
+      }
     }
   };
 
@@ -57,6 +77,33 @@ const AddSparePartPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validation before submission
+    if (!validatePartName(partName)) {
+      Swal.fire("Error", "Part name should contain letters only.", "error");
+      return;
+    }
+    if (!validateSupplier(supplier)) {
+      Swal.fire("Error", "Supplier name should contain letters only.", "error");
+      return;
+    }
+    if (!validateQuantity(quantity)) {
+      Swal.fire("Error", "Quantity should be a positive integer.", "error");
+      return;
+    }
+    if (!validateCategory(category)) {
+      Swal.fire("Error", "Category should contain letters only.", "error");
+      return;
+    }
+    if (features.some((feature) => !validateFeatureKey(feature.key))) {
+      Swal.fire(
+        "Error",
+        "Feature keys and values should contain letters only.",
+        "error"
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       let imageUrl = "";
@@ -198,7 +245,7 @@ const AddSparePartPage = () => {
                 />
                 <button
                   type="button"
-                  className="ml-2 text-red-500"
+                  className="ml-2 p-2 text-red-500"
                   onClick={() => handleRemoveFeature(feature.id)}
                 >
                   Remove
@@ -210,15 +257,19 @@ const AddSparePartPage = () => {
               className="text-blue-500"
               onClick={handleAddFeature}
             >
-              Add Feature
+              + Add Feature
             </button>
           </div>
           <div className="mb-4">
-            <label className="text-dark block mb-2">Image</label>
+            <label className="text-dark block mb-2">
+              Image (JPG/PNG max 2MB)
+            </label>
             <input
               type="file"
+              accept="image/jpeg, image/png"
               className="w-full p-2 border border-dark rounded"
               onChange={handleImageChange}
+              required
             />
           </div>
           <button
@@ -228,7 +279,7 @@ const AddSparePartPage = () => {
             }`}
             disabled={loading}
           >
-            {loading ? "Adding..." : "Add Spare Part"}
+            {loading ? "Submitting..." : "Add Spare Part"}
           </button>
         </form>
       </div>
