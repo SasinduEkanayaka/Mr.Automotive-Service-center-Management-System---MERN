@@ -18,6 +18,12 @@ const AddPaymentPage = () => {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() + 1);
+  const maxDateString = maxDate.toISOString().split('T')[0]; // Get the max date in YYYY-MM-DD format
+
+
   useEffect(() => {
     const fetchBookingsAndPackages = async () => {
       try {
@@ -199,6 +205,8 @@ const AddPaymentPage = () => {
               className="w-full p-2 border border-dark rounded"
               value={PaymentDate}
               onChange={(e) => setPaymentDate(e.target.value)}
+              min={today}
+              max={maxDateString}
               required
             />
           </div>
