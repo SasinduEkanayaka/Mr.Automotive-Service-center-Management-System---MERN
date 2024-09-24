@@ -32,6 +32,10 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       reqired: true,
     },
+    vType: {
+      type: String,
+      reqired: true,
+    },
     milage: {
       type: Number,
       reqired: true,
