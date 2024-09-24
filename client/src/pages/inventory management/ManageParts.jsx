@@ -145,7 +145,7 @@ const ManageParts = () => {
                     </span>
                   </td>
                   <td className="p-4 text-dark">{part.supplier}</td>
-                  <td className="p-4 text-dark">${part.price}</td>
+                  <td className="p-4 text-dark">Rs {part.price}</td>
                   <td className="p-4 text-dark">{part.quantity}</td>
                   <td className="p-4 text-dark">{part.category}</td>
                   <td className="p-4 flex space-x-2">
@@ -208,7 +208,7 @@ const ManageParts = () => {
                     <strong>Supplier:</strong> {selectedPart.supplier}
                   </p>
                   <p>
-                    <strong>Price:</strong> ${selectedPart.price}
+                    <strong>Price:</strong> Rs {selectedPart.price}
                   </p>
                   <p>
                     <strong>Quantity:</strong> {selectedPart.quantity}
