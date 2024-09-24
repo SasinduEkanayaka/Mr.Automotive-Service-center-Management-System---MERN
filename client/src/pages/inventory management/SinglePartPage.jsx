@@ -85,7 +85,7 @@ const SinglePartPage = () => {
 
               {/* Price and Supplier */}
               <p className="mt-4 text-xl font-semibold text-DarkColor">
-                Price: ${sparePart.price.toFixed(2)}
+                Price: Rs {sparePart.price.toFixed(2)}
               </p>
               <p className="text-sm text-gray-500">
                 Supplier: {sparePart.supplier}

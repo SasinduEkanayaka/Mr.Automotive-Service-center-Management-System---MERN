@@ -81,11 +81,11 @@ const InventoryReport = () => {
       body: inventoryData.map((item) => [
         item.partName,
         item.supplier,
-        `$${item.price.toFixed(2)}`,
+        `Rs ${item.price.toFixed(2)}`,
         item.quantity,
         item.category,
         item.type,
-        `$${(item.price * item.quantity).toFixed(2)}`,
+        `Rs ${(item.price * item.quantity).toFixed(2)}`,
       ]),
       startY: 100, // Adjust startY to ensure it is below the logo
     });
@@ -218,12 +218,12 @@ const InventoryReport = () => {
                 <tr key={item._id} className="text-center">
                   <td className="py-2 px-4">{item.partName}</td>
                   <td className="py-2 px-4">{item.supplier}</td>
-                  <td className="py-2 px-4">${item.price.toFixed(2)}</td>
+                  <td className="py-2 px-4">Rs {item.price.toFixed(2)}</td>
                   <td className="py-2 px-4">{item.quantity}</td>
                   <td className="py-2 px-4">{item.category}</td>
                   <td className="py-2 px-4">{item.type}</td>
                   <td className="py-2 px-4">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    Rs {(item.price * item.quantity).toFixed(2)}
                   </td>
                 </tr>
               ))}

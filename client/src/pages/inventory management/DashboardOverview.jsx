@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import { FaBox, FaChartLine } from "react-icons/fa";
 
 const inventoryData = [
-  { id: 1, partName: "Brake Pads", quantity: 50, price: "$30" },
-  { id: 2, partName: "Oil Filter", quantity: 120, price: "$15" },
-  { id: 3, partName: "Air Filter", quantity: 85, price: "$20" },
-  { id: 4, partName: "Spark Plug", quantity: 150, price: "$8" },
-  { id: 5, partName: "Headlights", quantity: 30, price: "$100" },
+  { id: 1, partName: "Brake Pads", quantity: 50, price: "Rs 30" },
+  { id: 2, partName: "Oil Filter", quantity: 120, price: "Rs 15" },
+  { id: 3, partName: "Air Filter", quantity: 85, price: "Rs 20" },
+  { id: 4, partName: "Spark Plug", quantity: 150, price: "Rs 8" },
+  { id: 5, partName: "Headlights", quantity: 30, price: "Rs 100" },
 ];
 
 const cardVariants = {
