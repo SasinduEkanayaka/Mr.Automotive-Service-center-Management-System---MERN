@@ -22,7 +22,13 @@ const validationSchema = yup.object({
     .email("Invalid email format")
     .required("Customer Email is required"),
   vehicleModel: yup.string().required("Vehicle Model is required"),
-  vehicleNumber: yup.string().required("Vehicle Number is required"),
+  vehicleNumber: yup
+    .string()
+    .required("Vehicle Number is required")
+    .matches(
+      /^(?:[A-Z]{2,3}-\d{4})$/,
+      "Vehicle Number must be in the format ABC-1234 or AB-1234"
+    ),
   modificationType: yup
     .string()
     .oneOf(["engine", "exhaust", "suspension"])
@@ -352,19 +358,7 @@ const CustomModification = () => {
             <form onSubmit={formik.handleSubmit} className="space-y-4">
               {/* Row 1 */}
               <div className="flex flex-wrap -mx-2 mb-4">
-                <div className="w-full sm:w-1/3 px-2 mb-4 sm:mb-0">
-                  <label className="text-gray-700">Customer ID</label>
-                  <input
-                    type="text"
-                    name="customerId"
-                    value={formik.values.customerId}
-                    onChange={formik.handleChange}
-                    className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-                    required
-                    readOnly
-                  />
-                </div>
-                <div className="w-full sm:w-1/3 px-2 mb-4 sm:mb-0">
+                <div className="w-full sm:w-1/2 px-2 mb-4 sm:mb-0">
                   <label className="text-gray-700">Customer Name</label>
                   <input
                     type="text"
@@ -379,7 +373,7 @@ const CustomModification = () => {
                     </div>
                   )}
                 </div>
-                <div className="w-full sm:w-1/3 px-2">
+                <div className="w-full sm:w-1/2 px-2">
                   <label className="text-gray-700">Customer Email</label>
                   <input
                     type="email"

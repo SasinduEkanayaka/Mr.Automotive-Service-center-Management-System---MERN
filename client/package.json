@@ -15,11 +15,8 @@
     "@mui/icons-material": "^6.1.0",
     "@mui/material": "^6.1.0",
     "@mui/x-date-pickers": "^7.16.0",
-
-    "@reduxjs/toolkit": "^2.2.7",
-
     "@react-pdf/renderer": "^3.4.4",
-
+    "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "dayjs": "^1.11.13",
@@ -30,12 +27,11 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.3",
     "jwt-decode": "^4.0.0",
-
     "notistack": "^3.0.1",
-
     "papaparse": "^5.4.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
+    "react-clock": "^5.0.0",
     "react-countup": "^6.5.3",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18.3.1",
