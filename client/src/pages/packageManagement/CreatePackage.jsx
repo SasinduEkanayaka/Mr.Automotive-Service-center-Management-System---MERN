@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 import { storage, ref, uploadBytes, getDownloadURL } from "./../../firebase";
 import axios from "axios";
-import classNames from "classnames";
 
 const CreatePackage = () => {
   const [pkgID, setPkgId] = useState("");
@@ -71,8 +70,32 @@ const CreatePackage = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!pkgName) errors.pkgName = "Package name is required";
-    if (!pkgPrice) errors.pkgPrice = "Package price is required";
+    const textOnlyRegex = /^[A-Za-z\s]+$/;
+
+    if (!pkgName) {
+      errors.pkgName = "Package name is required";
+    } else if (!textOnlyRegex.test(pkgName)) {
+      errors.pkgName = "Package name can only contain letters and spaces";
+    }
+
+    pkgServ.forEach((service, index) => {
+      if (!service.name) {
+        errors[
+          `serviceName${index}`
+        ] = `Service name is required for service #${index + 1}`;
+      } else if (!textOnlyRegex.test(service.name)) {
+        errors[
+          `serviceName${index}`
+        ] = `Service name can only contain letters and spaces for service #${
+          index + 1
+        }`;
+      }
+    });
+
+    if (!pkgPrice) {
+      errors.pkgPrice = "Package price is required";
+    }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -90,7 +113,7 @@ const CreatePackage = () => {
     if (!validateForm()) {
       Swal.fire({
         title: "Error!",
-        text: "Please fill in the required fields.",
+        text: "Please fill correctly in the required fields.",
         icon: "error",
       });
       return;
@@ -114,14 +137,14 @@ const CreatePackage = () => {
       });
       Swal.fire({
         title: "Success!",
-        text: "Spare part added successfully.",
+        text: "Package added successfully.",
         icon: "success",
       });
       console.log(imageUrl);
     } catch (error) {
       Swal.fire({
         title: "Error!",
-        text: "Failed to add spare part.",
+        text: "Failed to add Package.",
         icon: "error",
       });
     } finally {
@@ -150,10 +173,7 @@ const CreatePackage = () => {
             <label className="text-dark block mb-2">Package Name</label>
             <input
               type="text"
-              className={classNames(
-                "w-full p-2 border rounded",
-                formErrors.pkgName ? "border-red-500" : "border-dark"
-              )}
+              className="w-full p-2 border rounded"
               value={pkgName}
               onChange={(e) => setPkgName(e.target.value)}
               required
@@ -179,10 +199,7 @@ const CreatePackage = () => {
               <label className="text-dark block mb-2">Price</label>
               <input
                 type="number"
-                className={classNames(
-                  "w-full p-2 border rounded",
-                  formErrors.pkgPrice ? "border-red-500" : "border-dark"
-                )}
+                className="w-full p-2 border rounded"
                 value={pkgPrice}
                 onChange={(e) => setPkgPrice(e.target.value)}
                 required
@@ -197,33 +214,41 @@ const CreatePackage = () => {
 
           <div className="mb-4">
             <label className="text-dark block mb-2">Services</label>
-            {pkgServ.map((pkg) => (
-              <div key={pkg.id} className="mb-2 flex items-center">
-                <input
-                  type="text"
-                  className="w-1/2 p-2 border border-dark rounded"
-                  placeholder="Service Id"
-                  value={pkg.key}
-                  onChange={(e) =>
-                    handleServiceChange(pkg.id, "key", e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  className="w-1/2 p-2 border border-dark rounded ml-2"
-                  placeholder="Service Name"
-                  value={pkg.name}
-                  onChange={(e) =>
-                    handleServiceChange(pkg.id, "name", e.target.value)
-                  }
-                />
-                <button
-                  type="button"
-                  className="ml-2 text-red-500"
-                  onClick={() => handleRemoveFeature(pkg.id)}
-                >
-                  Remove
-                </button>
+            {pkgServ.map((pkg, index) => (
+              <div>
+                <div key={pkg.id} className="mb-2 flex items-center">
+                  <input
+                    type="number"
+                    className="w-1/2 p-2 border border-dark rounded"
+                    placeholder="Service Id"
+                    value={pkg.key}
+                    onChange={(e) =>
+                      handleServiceChange(pkg.id, "key", e.target.value)
+                    }
+                  />
+                  <input
+                    type="text"
+                    className="w-1/2 p-2 border border-dark rounded ml-2"
+                    placeholder="Service Name"
+                    value={pkg.name}
+                    onChange={(e) =>
+                      handleServiceChange(pkg.id, "name", e.target.value)
+                    }
+                  />
+
+                  <button
+                    type="button"
+                    className="ml-2 text-red-500"
+                    onClick={() => handleRemoveFeature(pkg.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+                {formErrors[`serviceName${index}`] && (
+                  <span className="text-red-500 text-sm">
+                    {formErrors[`serviceName${index}`]}
+                  </span>
+                )}
               </div>
             ))}
             <button

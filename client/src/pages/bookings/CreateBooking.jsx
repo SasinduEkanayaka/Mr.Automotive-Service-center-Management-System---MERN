@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
 import NavBar from "../../components/NavBar";
@@ -9,14 +9,18 @@ import Footer from "../../components/Footer";
 import Car from "../../assets/carbg2.png";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { DesktopTimePicker } from "@mui/x-date-pickers";
+
 import { useParams, useNavigate } from "react-router-dom";
 
 const CreateBooking = () => {
   const navigate = useNavigate();
-  const email = localStorage.getItem("email");
-  const uName = localStorage.getItem("name");
+  const cusEmail = localStorage.getItem("email");
+  const cusName = localStorage.getItem("name");
+  const [disabledDates, setDisabledDates] = useState([]);
   const [maintancePkg, setMaintancePkg] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(dayjs("2022-04-17T15:30")); // Set default time to 8 AM
   const [formErrors, setFormErrors] = useState({});
   const [bookingData, setBookingData] = useState({
     package: {
@@ -26,6 +30,7 @@ const CreateBooking = () => {
       pkgPrice: 0,
     },
     cusMobile: "",
+    vType: "",
     vehNum: "",
     milage: 0,
     date: "",
@@ -41,7 +46,15 @@ const CreateBooking = () => {
         const pkgs = await axios.get(
           `http://localhost:3000/api/maintance/get/${id}`
         );
+        const bookings = await axios.get(
+          "http://localhost:3000/api/booking/get"
+        );
+
         setMaintancePkg(pkgs.data);
+
+        const bookedDates = bookings.data.map((bk) => dayjs(bk.date));
+        setDisabledDates(bookedDates);
+        console.log(disabledDates);
       } catch (error) {
         console.error("Error fetching repair estimates:", error);
       }
@@ -110,17 +123,18 @@ const CreateBooking = () => {
     try {
       const updatedBookingData = {
         ...bookingData,
-        cusName: uName,
-        cusEmail: email,
+        cusName: cusName,
+        cusEmail: cusEmail,
         package: maintancePkg,
         date: selectedDate ? selectedDate.format("YYYY-MM-DD") : "",
-        time: selectedDate ? selectedDate.format("HH:mm") : "",
+        time: selectedTime ? selectedTime.format("HH:mm") : "",
       };
 
       const response = await axios.post(
         "http://localhost:3000/api/booking/add",
         updatedBookingData
       );
+      console.log(updatedBookingData);
       Swal.fire({
         title: "Success!",
         text: "Booking Successfully Created.",
@@ -137,18 +151,15 @@ const CreateBooking = () => {
     }
   };
 
-  const disabledDates = [
-    dayjs("2024-09-15"),
-    dayjs("2024-09-18"),
-    dayjs("2024-09-22"),
-  ];
-
   const shouldDisableDate = (date) => {
     return disabledDates.some((disabledDate) =>
       dayjs(date).isSame(disabledDate, "day")
     );
   };
 
+  const minTime = dayjs().hour(8).minute(0);
+
+  const maxTime = dayjs().hour(18).minute(0);
   return (
     <div>
       <NavBar />
@@ -193,8 +204,7 @@ const CreateBooking = () => {
                       type="text"
                       name="cusName"
                       className="border border-gray-300 rounded-md p-2 mr-5"
-                      value={uName}
-                      readOnly
+                      value={cusName}
                       required
                     />
                   </div>
@@ -206,15 +216,14 @@ const CreateBooking = () => {
                       type="email"
                       name="cusEmail"
                       className="border border-gray-300 rounded-md p-2 bg-gray-100 mr-5"
-                      value={email}
-                      readOnly
+                      value={cusEmail}
                       required
                     />
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex flex-col w-1/4">
+                  <div className="flex flex-col w-1/4 mr-5">
                     <label className="block text-gray-700 required">
                       Phone:
                     </label>
@@ -231,6 +240,19 @@ const CreateBooking = () => {
                         {formErrors.cusMobile}
                       </span>
                     )}
+                  </div>
+                  <div className="flex flex-col w-1/6 mr-5">
+                    <label className="block text-gray-700 required">
+                      Vehicle Type:
+                    </label>
+                    <input
+                      type="text"
+                      name="vType"
+                      className="border border-gray-300 rounded-md p-2 bg-gray-100"
+                      value={bookingData.vType}
+                      onChange={handleBookingChange}
+                      required
+                    />
                   </div>
                   <div className="flex flex-col w-1/4">
                     <label className="block text-gray-700 required">
@@ -250,7 +272,7 @@ const CreateBooking = () => {
                       </span>
                     )}
                   </div>
-                  <div className="flex flex-col w-1/4">
+                  <div className="flex flex-col w-1/6">
                     <label className="block text-gray-700 required">
                       Milage:
                     </label>
@@ -285,18 +307,34 @@ const CreateBooking = () => {
                 <h2 className="text-2xl font-bold mb-5">
                   Section 2: Time and Date Selection
                 </h2>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimePicker
-                    label="Pick a date and time"
-                    disablePast
-                    shouldDisableDate={shouldDisableDate}
-                    value={selectedDate}
-                    onChange={setSelectedDate}
-                    renderInput={(params) => (
-                      <TextField {...params} className="w-full" />
-                    )}
-                  />
-                </LocalizationProvider>
+                <div className="flex gap-5">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Pick a date and time"
+                      disablePast
+                      value={selectedDate}
+                      onChange={setSelectedDate}
+                      shouldDisableDate={shouldDisableDate}
+                      renderInput={(params) => (
+                        <TextField {...params} className="w-full" />
+                      )}
+                    />
+                  </LocalizationProvider>
+
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <div>
+                      {/* Display selected time */}
+                      <DesktopTimePicker
+                        value={selectedTime}
+                        onChange={(newValue) => setSelectedTime(newValue)}
+                        minutesStep={60}
+                        ampm={false}
+                        minTime={minTime}
+                        maxTime={maxTime}
+                      />
+                    </div>
+                  </LocalizationProvider>
+                </div>
               </div>
 
               <div className="flex justify-center mt-10">
