@@ -27,7 +27,7 @@ const AddSupplierPage = () => {
       console.error("Error fetching parts:", error);
     } finally {
       setLoading(false);
-     
+
     }
   };
 
@@ -108,10 +108,18 @@ const AddSupplierPage = () => {
               type="text"
               className="w-full p-2 border border-dark rounded"
               value={supplierName}
-              onChange={(e) => setSupplierName(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Allow only letters and spaces
+                const regex = /^[A-Za-z\s]*$/;
+                if (regex.test(value)) {
+                  setSupplierName(value);
+                }
+              }}
               required
             />
           </div>
+
           <div className="mb-4">
             <label className="text-dark block mb-2">Item Name</label>
             <select
@@ -133,11 +141,12 @@ const AddSupplierPage = () => {
           <div className="mb-4">
             <label className="text-dark block mb-2">Contact Number</label>
             <input
-              type="text"
+              type="Number"
               className="w-full p-2 border border-dark rounded"
               value={contactNo}
               onChange={(e) => setContactNo(e.target.value)}
               maxLength={10} // Set max length to 10 digits
+              
               required
             />
 
