@@ -11,6 +11,10 @@ const requestItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    Email: {
+      type: String,
+      
+  },
     requestDate: {
       type: Date,
       required: true,

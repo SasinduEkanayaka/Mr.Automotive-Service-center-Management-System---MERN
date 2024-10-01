@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import emailjs from "emailjs-com";
 
 const AddRequestItemPage = () => {
   const [requestID, setRequestID] = useState("");
   const [supplierName, setSupplierName] = useState("");
+  const [supplierEmail, setSupplierEmail] = useState("");
   const [requestDate, setRequestDate] = useState("");
   const [itemName, setItemName] = useState("");
   const [brand, setBrand] = useState("");
@@ -16,10 +18,12 @@ const AddRequestItemPage = () => {
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/suppliers');
-        setSuppliers(response.data.data.filter(supplier => supplier.status === 'approved'));
+        const response = await axios.get("http://localhost:3000/suppliers");
+        setSuppliers(
+          response.data.data.filter((supplier) => supplier.status === "approved")
+        );
       } catch (error) {
-        console.error('Error fetching suppliers:', error);
+        console.error("Error fetching suppliers:", error);
       }
     };
 
@@ -39,34 +43,123 @@ const AddRequestItemPage = () => {
     fetchParts();
   }, []);
 
+  const sendEmailToCustomer = (reqitem) => {
+    const emailConfig = {
+      serviceID: "service_3p901v6",
+      templateID: "template_cwl7ahv",
+      userID: "-r5ctVwHjzozvGIfg",
+    };
+
+    emailjs
+      .send(
+        emailConfig.serviceID,
+        emailConfig.templateID,
+        {
+          to_email: reqitem.Email, // Corrected email key here
+          subject: `Request item for ${reqitem.itemName}`,
+          message: `
+          Dear ${reqitem.supplierName},
+
+          We want the following items immediately!
+
+          ReqItem Summary:
+          - Item Name: ${reqitem.itemName}
+          - Brand Name: ${reqitem.brand}
+          - Quantity: ${reqitem.quantity}
+          - Date of request: ${reqitem.requestDate}
+
+          Please confirm the delivery date and we will send the Money as soon as possible.
+
+          Best regards,
+          Mr. Automotive Team
+        `,
+        },
+        emailConfig.userID
+      )
+      .then(() => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Email sent successfully!",
+          showConfirmButton: true,
+          timer: 2000,
+        });
+      })
+      .catch((error) => {
+        console.error("Error sending email:", error);
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error sending email!",
+          showConfirmButton: true,
+          timer: 2000,
+        });
+      });
+  };
+
+  const handleSupplierChange = (e) => {
+    const selectedSupplierName = e.target.value;
+    setSupplierName(selectedSupplierName);
+
+    const selectedSupplier = suppliers.find(
+      (supplier) => supplier.SupplierName === selectedSupplierName
+    );
+
+    if (selectedSupplier) {
+      setSupplierEmail(selectedSupplier.Email);
+    } else {
+      setSupplierEmail("");
+    }
+  };
+
+  const clearForm = () => {
+    setRequestID("");
+    setSupplierName("");
+    setRequestDate("");
+    setItemName("");
+    setBrand("");
+    setQuantity("");
+    setSupplierEmail("");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      // Send request item data to backend API
-      await axios.post("http://localhost:3000/requestItems/", {
-        requestID,
-        supplierName,
-        requestDate,
-        itemName,
-        brand,
-        quantity,
-      });
+    const reqitem = {
+      requestID,
+      supplierName,
+      requestDate,
+      itemName,
+      brand,
+      quantity,
+      Email: supplierEmail,
+    };
 
+    try {
+      await axios.post("http://localhost:3000/requestItems/", reqitem);
       Swal.fire({
         title: "Success!",
         text: "Request item added successfully.",
         icon: "success",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Send Email?",
+            text: "Do you want to send a confirmation email to the supplier?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Yes, send it",
+            cancelButtonText: "No, skip",
+          }).then((emailResult) => {
+            if (emailResult.isConfirmed) {
+              sendEmailToCustomer(reqitem);
+            }
+          });
+        }
       });
 
-      // Clear the form fields after successful submission
-      setRequestID("");
-      setSupplierName("");
-      setRequestDate("");
-      setItemName("");
-      setBrand("");
-      setQuantity("");
+      clearForm();
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -77,6 +170,8 @@ const AddRequestItemPage = () => {
       setLoading(false);
     }
   };
+
+  const todayDate = new Date().toISOString().split("T")[0];
 
   return (
     <div className="bg-PrimaryColor min-h-screen flex justify-center items-center p-4">
@@ -100,16 +195,28 @@ const AddRequestItemPage = () => {
             <select
               className="w-full p-2 border border-dark rounded"
               value={supplierName}
-              onChange={(e) => setSupplierName(e.target.value)}
+              onChange={handleSupplierChange}
               required
             >
-              <option value="" disabled>Select Supplier</option>
+              <option value="" disabled>
+                Select Supplier
+              </option>
               {suppliers.map((supplier) => (
                 <option key={supplier._id} value={supplier.SupplierName}>
                   {supplier.SupplierName}
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="mb-4">
+            <label className="text-dark block mb-2">Supplier Email</label>
+            <input
+              type="email"
+              className="w-full p-2 border border-dark rounded"
+              value={supplierEmail}
+              readOnly
+            />
           </div>
           <div className="mb-4">
             <label className="text-dark block mb-2">Request Date</label>
@@ -118,7 +225,7 @@ const AddRequestItemPage = () => {
               className="w-full p-2 border border-dark rounded"
               value={requestDate}
               onChange={(e) => setRequestDate(e.target.value)}
-              min={new Date().toISOString().split('T')[0]} // Setting the min date to today
+              min={todayDate}
               required
             />
           </div>
@@ -131,7 +238,9 @@ const AddRequestItemPage = () => {
               onChange={(e) => setItemName(e.target.value)}
               required
             >
-              <option value="" disabled>Select Item</option>
+              <option value="" disabled>
+                Select Item
+              </option>
               {items.map((item) => (
                 <option key={item._id} value={item.itemName}>
                   {item.partName}
@@ -146,8 +255,7 @@ const AddRequestItemPage = () => {
               className="w-full p-2 border border-dark rounded"
               value={brand}
               onChange={(e) => {
-                const value = e.target.value;
-                // Allow only letters and spaces
+                const value = e.target.value.trim();
                 const regex = /^[A-Za-z\s]*$/;
                 if (regex.test(value)) {
                   setBrand(value);
@@ -169,8 +277,9 @@ const AddRequestItemPage = () => {
           </div>
           <button
             type="submit"
-            className={`w-full p-2 border border-dark rounded ${loading ? "bg-gray-500" : "bg-blue-500 text-white"
-              }`}
+            className={`w-full p-2 border border-dark rounded ${
+              loading ? "bg-gray-500" : "bg-blue-500 text-white"
+            }`}
             disabled={loading}
           >
             {loading ? "Adding..." : "Add Request Item"}
