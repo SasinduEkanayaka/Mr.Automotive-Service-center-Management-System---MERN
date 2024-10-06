@@ -45,11 +45,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       path: "/Supplier-management/manage-supplier",
       icon: <FaClipboardList />,
     },
-    {
-      name: "Generate Reports",
-      path: "/manager/discount-management",
-      icon: <FaTags />,
-    },
+    // {
+    //   name: "Generate Reports",
+    //   path: "/manager/discount-management",
+    //   icon: <FaTags />,
+    // },
     {
       name: "Request Item",
       path: "/Supplier-management/add-request-item",
