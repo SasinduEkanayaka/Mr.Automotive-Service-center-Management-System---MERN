@@ -9,7 +9,7 @@ const reorderRequestSchema = new mongoose.Schema({
   partName: { type: String },
   supplier: { type: String, required: true },
   quantity: { type: Number, required: true },
-  status: { type: String, enum: ["pending", "completed"], default: "pending" },
+  status: { type: String, enum: ["pending", "approve","reject"], default: "pending" },
   createdAt: { type: Date, default: Date.now },
 });
 
