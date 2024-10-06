@@ -12,6 +12,20 @@ const ShowSupplier = () => {
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null); // Added state for selected item
 
+  const [reorders, setReorders] = useState([]);
+
+  useEffect(() => {
+    fetchReorders();
+  }, []);
+
+  const fetchReorders = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/reorder/get");
+      setReorders(response.data);
+    } catch (error) {
+      console.error("Error fetching reorder requests:", error);
+    }
+  };
   useEffect(() => {
     setLoading(true);
     axios
@@ -62,6 +76,7 @@ const ShowSupplier = () => {
     }
   };
 
+
   const handleDecline = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/suppliers/${id}`);
@@ -94,6 +109,26 @@ const ShowSupplier = () => {
       setError("Error updating request item status");
     }
   };
+
+  const handleinvenoryStatusChange = async (itemId, newStatus) => {
+    try {
+      // Send PUT request to update only the status
+      await axios.put(`http://localhost:3000/api/reorder/updateReorderStatus/${itemId}`, {
+        status: newStatus,
+      });
+
+      // Update the local reorders state
+      setReorders((prevReorders) =>
+        prevReorders.map((reorder) =>
+          reorder._id === itemId ? { ...reorder, status: newStatus } : reorder
+        )
+      );
+    } catch (error) {
+      setError("Error updating reorder status");
+      console.error('Error updating reorder status:', error);
+    }
+  };
+
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -281,6 +316,64 @@ const ShowSupplier = () => {
                       >
                         <FaEdit />
                       </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {/* from inventory request */}
+          <div className="mt-12 bg-SecondaryColor p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold text-ExtraDarkColor mb-6">
+              Inventory manager Request Item Details
+            </h2>
+            <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+              <thead>
+                <tr className="bg-gradient-to-r from-teal-500 to-blue-500 text-white">
+                  {/* <th className="p-4 text-left font-semibold border-b border-gray-300">
+              Part
+            </th> */}
+                  <th className="p-4 text-left font-semibold border-b border-gray-300">
+                    Supplier
+                  </th>
+                  <th className="p-4 text-left font-semibold border-b border-gray-300">
+                    Quantity
+                  </th>
+                  <th className="p-4 text-left font-semibold border-b border-gray-300">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {reorders.map((reorder) => (
+                  <tr
+                    key={reorder._id}
+                    className="border-b hover:bg-PrimaryColor transition-colors duration-300"
+                  >
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {reorder.supplier}
+                    </td>
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      {reorder.quantity}
+                    </td>
+
+                    <td className="py-3 px-5 text-ExtraDarkColor">
+                      <select
+                        className="bg-gray-200 text-black px-3 py-1 rounded-md mr-2"
+                        onChange={(e) => handleinvenoryStatusChange(reorder._id, e.target.value)}  // Send selected value on change
+                        value={reorder.status}  // Set the current status as the selected value
+                      >
+                        <option value="pending">Pending</option>  {/* Default status option */}
+                        <option value="approve">Completed</option>  {/* Status option for approved */}
+                        <option value="reject">Failed</option>  {/* Status option for rejected */}
+                      </select>
+
+                      {/* <button
+                        onClick={() => handleUpdate(item)}
+                        className="text-green-500 hover:text-green-700 mr-2"
+                      >
+                        <FaEdit />
+                      </button> */}
                     </td>
                   </tr>
                 ))}
