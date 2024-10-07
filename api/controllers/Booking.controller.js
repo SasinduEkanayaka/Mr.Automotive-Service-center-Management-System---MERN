@@ -66,3 +66,17 @@ export const getBookingsByEmail = async (req, res) => {
     res.status(500).json({ message: "Error Fetching Bookings Data", error });
   }
 };
+
+export const updateStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const response = await BookingModel.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

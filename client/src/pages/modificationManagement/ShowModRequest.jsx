@@ -17,11 +17,13 @@ const ShowModRequest = () => {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [updatedDate, setUpdatedDate] = useState(null);
 
+  const email = localStorage.getItem("email");
+
   useEffect(() => {
     const fetchModRequests = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/mod/getMod"
+          `http://localhost:3000/api/mod/get/${email}`
         );
         setModReq(response.data);
         setLoading(false);
