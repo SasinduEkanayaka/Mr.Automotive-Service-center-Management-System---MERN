@@ -135,7 +135,7 @@ const RequestedParts = () => {
             <thead className="bg-gray-200">
               <tr>
                 <th className="px-4 py-2 text-left">Item Name</th>
-                <th className="px-4 py-2 text-left">Description</th>
+
                 <th className="px-4 py-2 text-left">Requested Items</th>
                 <th className="px-4 py-2 text-left">Status</th>
               </tr>
@@ -155,7 +155,7 @@ const RequestedParts = () => {
                     <td className="px-4 py-2">
                       {part.item.map((i) => i.name).join(", ")}
                     </td>
-                    <td className="px-4 py-2">{part.description}</td>
+
                     <td className="px-4 py-2">
                       <ul className="list-disc pl-5">
                         {part.item.map((i, index) => (

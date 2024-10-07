@@ -146,7 +146,7 @@ const AddSparePartPage = () => {
 
   return (
     <div className="bg-PrimaryColor min-h-screen flex justify-center items-center p-4">
-      <div className="bg-SecondaryColor p-8 rounded-lg shadow-lg max-w-2xl w-full">
+      <div className="bg-PrimaryColor p-8 rounded-lg shadow-lg max-w-2xl w-full">
         <h2 className="text-dark text-2xl font-bold mb-6">Add Spare Part</h2>
         <form onSubmit={handleSubmit}>
           {/* Form fields */}
