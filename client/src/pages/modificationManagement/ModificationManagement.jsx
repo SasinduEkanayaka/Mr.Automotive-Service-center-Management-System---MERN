@@ -11,6 +11,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import Modal from "react-modal";
 import TextField from "@mui/material/TextField";
+import { init, send } from "emailjs-com";
 
 const ModificationManagement = () => {
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ const ModificationManagement = () => {
     quantity: "",
   });
   const [pickList, setPickList] = useState([]);
+
+  init("jm1C0XkEa3KYwvYK0");
 
   const handleUpdateClick = (id) => {
     navigate(`/modification-management/update/${id}`);
@@ -114,6 +117,12 @@ const ModificationManagement = () => {
             { status: newStatus }
           );
 
+          await send("service_fjpvjh9", "template_atolrdf", {
+            to_email: order.customerEmail,
+            service_date_time: order.date,
+            status: newStatus,
+          });
+          console.log(modifications.customerEmail);
           Swal.fire("Saved!", "", "success");
           window.location.reload();
         } catch (error) {
@@ -218,16 +227,23 @@ const ModificationManagement = () => {
         </h2>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div className="flex space-x-4">
+            <label>Start Date:</label>
             <DatePicker
               value={startDate}
               onChange={(newValue) => setStartDate(newValue)}
               renderInput={(params) => <TextField {...params} />}
             />
+            <label>End Date:</label>
             <DatePicker
               value={endDate}
               onChange={(newValue) => setEndDate(newValue)}
               renderInput={(params) => <TextField {...params} />}
             />
+            {startDate >= endDate && (
+              <p className="text-red-500 text-xs mt-1">
+                End date should greater than Start Date
+              </p>
+            )}
           </div>
         </LocalizationProvider>
       </div>
@@ -281,7 +297,9 @@ const ModificationManagement = () => {
               <th className="py-3 px-2 text-left">Vehical No</th>
               <th className="py-3 px-2 text-left">Mod Type</th>
               <th className="py-3 px-2 text-left">Date</th>
-              <th className="py-3 px-2 text-left">Action</th>
+              <th className="py-3 px-2 text-left">Status</th>
+              <th className="py-3 px-2 text-left">Delete</th>
+              <th className="py-3 px-2 text-left">Request</th>
             </tr>
           </thead>
           <tbody>
@@ -307,6 +325,19 @@ const ModificationManagement = () => {
                   {item.modificationType}
                 </td>
                 <td className="py-3 px-2 text-ExtraDarkColor">{item.date}</td>
+                <td className="p-4">
+                  <select
+                    className="p-2 bg-PrimaryColor rounded"
+                    value={item.status}
+                    onChange={(e) =>
+                      handleStatusChange(item, item._id, e.target.value)
+                    }
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Compleated">Compleated</option>
+                  </select>
+                </td>
                 <td className="py-3 px-2 text-ExtraDarkColor">
                   <button
                     className="bg-pink-600 text-white mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md"
@@ -325,19 +356,6 @@ const ModificationManagement = () => {
                   >
                     Request Parts
                   </button>
-                </td>
-                <td className="p-4">
-                  <select
-                    className="p-2 bg-PrimaryColor rounded"
-                    value={item.status}
-                    onChange={(e) =>
-                      handleStatusChange(item, item._id, e.target.value)
-                    }
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Compleated">Compleated</option>
-                  </select>
                 </td>
               </tr>
             ))}

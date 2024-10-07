@@ -84,3 +84,27 @@ export const updateStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getModificationByEmail = async (req, res) => {
+  const { email } = req.params;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  try {
+    const modPkg = await ModiificationModel.find({
+      customerEmail: email.toLowerCase(),
+    });
+
+    if (modPkg.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No modPkg found for this email" });
+    }
+
+    res.status(200).json(modPkg);
+  } catch (error) {
+    res.status(500).json({ message: "Error Fetching Bookings Data", error });
+  }
+};

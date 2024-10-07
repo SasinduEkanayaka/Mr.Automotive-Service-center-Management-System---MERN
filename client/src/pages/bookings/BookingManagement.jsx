@@ -9,6 +9,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { init, send } from "emailjs-com";
 
 const BookingManagement = () => {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ const BookingManagement = () => {
   const [filteredBook, setFilteredBook] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  init("jm1C0XkEa3KYwvYK0");
 
   const handleUpdateClick = (id) => {
     navigate(`/booking-management/update/${id}`);
@@ -85,6 +88,39 @@ const BookingManagement = () => {
     }
   };
 
+  const handleStatusChange = (order, id, newStatus) => {
+    Swal.fire({
+      title: "Do you want to save the changes?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      denyButtonText: `Don't save`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.put(
+            `http://localhost:3000/api/booking/status/${id}`,
+            { status: newStatus }
+          );
+
+          await send("service_fjpvjh9", "template_atolrdf", {
+            to_email: order.cusEmail,
+            service_date_time: order.date,
+            status: newStatus,
+          });
+
+          Swal.fire("Saved!", "", "success");
+          window.location.reload();
+        } catch (error) {
+          console.log(error);
+          Swal.fire("Error saving changes", "", "error");
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+  };
+
   return (
     <div className="p-8">
       {/* Dashboard Header */}
@@ -134,6 +170,11 @@ const BookingManagement = () => {
               onChange={(newValue) => setEndDate(newValue)}
               renderInput={(params) => <TextField {...params} />}
             />
+            {startDate >= endDate && (
+              <p className="text-red-500 text-xs mt-1">
+                End date should greater than Start Date
+              </p>
+            )}
           </div>
         </LocalizationProvider>
       </div>
@@ -181,12 +222,13 @@ const BookingManagement = () => {
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-DarkColor text-white">
             <tr>
-              <th className="py-3 px-5 text-left">Customer Name</th>
-              <th className="py-3 px-5 text-left">Booking Date</th>
-              <th className="py-3 px-5 text-left">Time</th>
-              <th className="py-3 px-5 text-left">Package</th>
-              <th className="py-3 px-5 text-left">Price</th>
-              <th className="py-3 px-5 text-left">Action</th>
+              <th className="py-3 px-2 text-left">Customer Name</th>
+              <th className="py-3 px-2 text-left">Booking Date</th>
+              <th className="py-3 px-2 text-left">Time</th>
+              <th className="py-3 px-2 text-left">Package</th>
+              <th className="py-3 px-2 text-left">Price</th>
+              <th className="py-3 px-2 text-left">Status</th>
+              <th className="py-3 px-2 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -195,18 +237,31 @@ const BookingManagement = () => {
                 key={item._id}
                 className="border-b hover:bg-PrimaryColor transition-colors duration-300"
               >
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   {item.cusName}
                 </td>
-                <td className="py-3 px-5 text-ExtraDarkColor">{item.date}</td>
-                <td className="py-3 px-5 text-ExtraDarkColor">{item.time}</td>
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="py-3 px-2 text-ExtraDarkColor">{item.date}</td>
+                <td className="py-3 px-2 text-ExtraDarkColor">{item.time}</td>
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   {item.package.pkgName}
                 </td>
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   {item.package.pkgPrice}
                 </td>
-                <td className="py-3 px-5 text-ExtraDarkColor">
+                <td className="px-2">
+                  <select
+                    className=" bg-PrimaryColor rounded"
+                    value={item.status}
+                    onChange={(e) =>
+                      handleStatusChange(item, item._id, e.target.value)
+                    }
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Compleated">Compleated</option>
+                  </select>
+                </td>
+                <td className="py-3 px-2 text-ExtraDarkColor">
                   <button
                     className="bg-pink-600 text-black mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md mr-5"
                     onClick={(e) => {
