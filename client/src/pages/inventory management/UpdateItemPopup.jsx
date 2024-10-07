@@ -18,6 +18,7 @@ const UpdateItemPopup = ({ isOpen, onClose, partData }) => {
   );
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState(partData?.imageUrl || "");
+  const [units, setUnits] = useState(partData?.units || "Pack Of");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const UpdateItemPopup = ({ isOpen, onClose, partData }) => {
       setDescription(partData.description || "");
       setFeatures(partData.features || [{ id: uuidv4(), key: "", value: "" }]);
       setImageURL(partData.imageUrl || "");
+      setUnits(partData.units || "Pack Of");
     }
   }, [partData]);
 
@@ -91,6 +93,7 @@ const UpdateItemPopup = ({ isOpen, onClose, partData }) => {
           description,
           features,
           imageUrl: updatedImageURL,
+          units,
         }
       );
 
@@ -185,6 +188,20 @@ const UpdateItemPopup = ({ isOpen, onClose, partData }) => {
                   <option value="used">Used</option>
                 </select>
               </div>
+
+              <div className="mb-4">
+                <label className="text-dark block mb-2">Units</label>
+                <select
+                  className="w-full p-2 border border-dark rounded"
+                  value={units}
+                  onChange={(e) => setUnits(e.target.value)}
+                >
+                  <option value="Pack Of">Pack Of</option>
+                  <option value="Bottle Of">Bottle Of</option>
+                  <option value="Pair Of">Pair Of</option>
+                </select>
+              </div>
+
               <div className="mb-4">
                 <label className="text-dark block mb-2">Description</label>
                 <textarea

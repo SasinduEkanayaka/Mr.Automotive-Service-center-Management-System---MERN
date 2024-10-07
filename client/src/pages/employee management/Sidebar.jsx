@@ -10,6 +10,7 @@ import {
   FaUserCircle,
 } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
+import { Delete, SaveAltSharp } from "@mui/icons-material";
 
 const sidebarVariants = {
   open: {
@@ -34,39 +35,34 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items configuration
   const menuItems = [
-    { name: "Dashboard", path: "/payment-management", icon: <FaChartLine /> },
     {
-      name: "Add payment",
-      path: "/payment-management/add-payment",
+      name: "Employee Dashboard",
+      path: "/employee-management/",
       icon: <FaBox />,
     },
     {
-      name: "Manage Payments",
-      path: "/payment-management/manage-payment",
+      name: "Attandenc Dashboard",
+      path: "/employee-management/attendence",
       icon: <FaClipboardList />,
     },
     {
-      name: "Manage Employee Salary",
-      path: "/payment-management/manage-EmployeeSalarypayment",
-      icon: <FaClipboardList />,
-    },
-    {
-      name: "Generate Reports",
-      path: "/payment-management/payment-report",
+      name: "Salary Dashboard",
+      path: "/employee-management/salary",
       icon: <FaTags />,
     },
-    // {
-    //   name: "Request Item",
-    //   path: "/Supplier-management/add-request-item",
-    //   icon: <FaChartLine />,
-    // },
-    // {
-    //   name: "Manage Request Item",
-    //   path: "/Supplier-management/manage-request-item",
-    //   icon: <FaClipboardList />,
-    // },
-    { name: "Profile", path: "/manager/profile", icon: <FaUserCircle /> },
+    {
+      name: "Download Report",
+      path: "generate-reports",
+      icon: <SaveAltSharp />,
+    },
+    {
+      name: "Delete Employee",
+      path: "delete-employee",
+      icon: <Delete />,
+    },
   ];
+
+  
 
   return (
     <motion.aside
@@ -101,11 +97,12 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
               </Link>
             </li>
           ))}
+
           {/* LogOut Button */}
           <li>
             <button
               className="flex items-center text-DarkColor p-2 rounded-lg hover:text-ExtraDarkColor hover:bg-DarkColor transition-colors duration-300 w-full"
-              onClick={() => navigate("/")} // Use navigate function to handle logout
+              onClick={() => navigate("/")}
             >
               <span className="mr-3">
                 <IoIosLogOut />

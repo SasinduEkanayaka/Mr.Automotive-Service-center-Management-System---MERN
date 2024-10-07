@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -53,7 +54,24 @@ const Login = () => {
       navigate("/inventory-management/");
       return;
     }
+    else if (
+      formData.email.toLowerCase() === "employee@gmail.com" &&
+      formData.password === "employee123"
+    ) {
+      // Navigate to Employee management page
+      Swal.fire({
+        title: 'Hi Udantha',
+        text: 'You have successfully logged in',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        showCancelButton: false,
+        timer:4000,});
+      navigate("/employee-management/");
+      return;
+    }
   
+
+
     try {
       // Make API call if email/password doesn't match predefined conditions
       const response = await axios.post(

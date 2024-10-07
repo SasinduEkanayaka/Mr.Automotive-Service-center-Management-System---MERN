@@ -22,7 +22,15 @@ import Customer_Route from "./routes/Customer_Route.js";
 import reorderRout from "./routes/reorderRoutes.js";
 import spareReqRoute from "./routes/SpareReq.route.js";
 
+
 import "./scheduler.js";
+
+//Employee routes filess...
+import employeeRoute from './routes/Employee.js';
+import AttendenceRoute from './routes/EmployeeAttendence.js';
+import employeeSalaryRoute from './routes/EmployeeSalary.js'
+
+
 
 dotenv.config();
 
@@ -40,6 +48,13 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+
+//Call the employee menager part
+app.use("/Employee", employeeRoute);
+app.use("/EmployeeAttendence", AttendenceRoute);
+app.use("/EmployeeSalary", employeeSalaryRoute);
+
+
 
 app.use("/api/spareparts", sparePartRoutes);
 app.use("/api/reorder", reorderRout);
