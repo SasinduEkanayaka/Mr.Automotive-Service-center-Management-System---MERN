@@ -19,6 +19,7 @@ const sparePartSchema = new mongoose.Schema({
     },
   ],
   imageUrl: { type: String },
+  units: { type: String, required: true },
 });
 
 export default mongoose.model("SparePart", sparePartSchema);

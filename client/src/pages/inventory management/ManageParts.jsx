@@ -216,6 +216,9 @@ const ManageParts = () => {
                   <p>
                     <strong>Category:</strong> {selectedPart.category}
                   </p>
+                  <p>
+                    <strong>Units:</strong> {selectedPart.units}
+                  </p>
                   <div>
                     <h3 className="text-lg mb-2 font-semibold">Features:</h3>
                     <ul className="list-disc pl-5 space-y-1">
