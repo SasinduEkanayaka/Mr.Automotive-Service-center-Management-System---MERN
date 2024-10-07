@@ -4,9 +4,9 @@ import { EmployeeSalary } from '../model/EmployeeSalary.js';
 const rout = express.Router();
 
 //Add the Employee Salary For System
-
 rout.post('/', async (req, res) => {
     try {
+
         // console.log(req.body);
         // if (!req.body.employeeName ||
         //     !req.body.NIC ||
@@ -19,6 +19,7 @@ rout.post('/', async (req, res) => {
         //     });
         // }
 
+
         console.log(req.body)
         const AddEmployeeSalary = {
             employeeName: req.body.employeeName,
@@ -27,10 +28,12 @@ rout.post('/', async (req, res) => {
             toDate: req.body.toDate,
             totalOtHours: req.body.totalOThours,
             totalOtAmount: req.body.totalOTpay,
+
             basicSalary: req.body.basicSalary, // Corrected field name
             totalSalary: req.body.totalSalary,
             
             status: req.body.status, // Added validation for status
+
         };
 
         console.log(AddEmployeeSalary)

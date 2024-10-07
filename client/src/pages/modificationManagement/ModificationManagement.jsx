@@ -20,6 +20,8 @@ const ModificationManagement = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sparePart, setSparePart] = useState([]);
+  const [selectedPart, setSelectedPart] = useState({});
   const [item, setItem] = useState({
     name: "",
     quantity: "",
@@ -41,6 +43,11 @@ const ModificationManagement = () => {
         const response = await axios.get(
           "http://localhost:3000/api/mod/getMod"
         );
+        const spaREPart = await axios.get(
+          "http://localhost:3000/api/spareparts/"
+        );
+        console.log(spaREPart);
+        setSparePart(spaREPart.data);
         setModifications(response.data);
       } catch (error) {
         console.error("Error fetching modifications:", error);
@@ -129,10 +136,16 @@ const ModificationManagement = () => {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
+    const selectedName = e.target.value;
     setItem((prev) => ({
       ...prev,
       [name]: value,
     }));
+    const selectedPart = sparePart.find(
+      (part) => part.partName === selectedName
+    );
+    console.log(selectedPart);
+    setSelectedPart(selectedPart);
   };
 
   const calculateSubtotal = () => {
@@ -345,15 +358,19 @@ const ModificationManagement = () => {
                     <label className="block text-gray-700 required">
                       Item Name:
                     </label>
-                    <input
-                      type="text"
+                    <select
                       className="border border-gray-300 text-black rounded-md p-2"
-                      placeholder="Item Name"
                       name="name"
                       value={item.name}
                       onChange={handleOnChange}
                       required
-                    />
+                    >
+                      {sparePart.map((part) => (
+                        <option key={part._id} value={part.name}>
+                          {part.partName}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="flex flex-col mb-4">
