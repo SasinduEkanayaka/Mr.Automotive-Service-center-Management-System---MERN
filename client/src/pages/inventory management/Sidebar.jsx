@@ -54,6 +54,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       path: "/inventory-management/reorder",
       icon: <FaTags />,
     },
+    {
+      name: "Requested Item",
+      path: "/inventory-management/requested-parts",
+      icon: <FaTags />,
+    },
   ];
 
   return (
