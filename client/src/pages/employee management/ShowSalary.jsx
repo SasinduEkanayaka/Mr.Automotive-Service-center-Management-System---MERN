@@ -42,6 +42,12 @@ useEffect(() => {
         });
 }, []);
 
+const parseFloat = (str, value) => {
+  str = str.toString();
+  str = str.slice(0, (str.indexOf('.')) + value + 1)
+  return Number(str);
+}
+
   return (
     <div className='p-4'>
      {/* <BackButton/> */}
@@ -83,12 +89,13 @@ useEffect(() => {
 
           <div className="my-4">
             <span className='text-xl mr-4  text-gray-500'>Basic Salary</span>
-            <span>{Salary.basicSalary}</span>
+            <span>{Salary.basicSalary.toFix(2)}</span>
           </div>
 
           <div className="my-4">
             <span className='text-xl mr-4  text-gray-500'>Total Salary</span>
-            <span>{Salary.totalSalary}</span>
+            <span>{
+            parseFloat(Salary.totalSalary, 2)}</span>
           </div>
         </div>
       )}
