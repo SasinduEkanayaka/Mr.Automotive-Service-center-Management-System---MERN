@@ -4,7 +4,6 @@ import { EmployeeSalary } from '../model/EmployeeSalary.js';
 const rout = express.Router();
 
 //Add the Employee Salary For System
-
 rout.post('/', async (req, res) => {
     try {
         console.log(req.body);
@@ -12,7 +11,7 @@ rout.post('/', async (req, res) => {
             !req.body.NIC ||
             !req.body.formDate ||
             !req.body.toDate ||
-            !req.body.BasicSalary // Added validation for BasicSalary
+            !req.body.basicSalary // Added validation for BasicSalary
         ) {
             return res.status(400).send({
                 message: "Please fill all the fields",
@@ -27,7 +26,7 @@ rout.post('/', async (req, res) => {
             toDate: req.body.toDate,
             totalOtHours: req.body.totalOThours,
             totalOtAmount: req.body.totalOTpay,
-            basicSalary: req.body.BasicSalary, // Corrected field name
+            basicSalary: req.body.basicSalary,
             totalSalary: req.body.TotalSalary,
         };
 
