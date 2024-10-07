@@ -53,11 +53,11 @@ const employeeSalarySchema = mongoose.Schema({
         type:Number
     
     },
-    // status:{
-    //     type:String,
-    //     enum:['pending','approved','declined'],
-    //     default: 'pending',
-    // }
+    status:{
+        type:String,
+        enum:['pending','approved','declined'],
+        default: 'pending',
+    }
 });
 
 export const EmployeeSalary = mongoose.model('EmployeeSalary',employeeSalarySchema)
