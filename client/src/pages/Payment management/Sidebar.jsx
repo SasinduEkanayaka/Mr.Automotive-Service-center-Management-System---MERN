@@ -46,6 +46,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       icon: <FaClipboardList />,
     },
     {
+      name: "Manage Employee Salary",
+      path: "/payment-management/manage-EmployeeSalarypayment",
+      icon: <FaClipboardList />,
+    },
+    {
       name: "Generate Reports",
       path: "/payment-management/payment-report",
       icon: <FaTags />,

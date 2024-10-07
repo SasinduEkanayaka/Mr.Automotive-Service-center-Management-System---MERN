@@ -9,6 +9,7 @@ import DashboardOverview from "./DashboardOverview";
 import AddPaymentPage from "./AddPaymentPage";
 import ManagePayment from "./ManagePayment";
 import PaymentReport from "./PaymentReport";
+import ManageEmployeeSal from "./ManageEmployeeSal";
 
 const contentVariants = {
   open: { marginLeft: 250, transition: { type: "spring", stiffness: 50 } },
@@ -48,6 +49,10 @@ export default function DashboardLayouSt() {
           <Route
             path="/manage-payment"
             element={<ManagePayment />}
+          />
+           <Route
+            path="/manage-EmployeeSalarypayment"
+            element={<ManageEmployeeSal />}
           />
           <Route path="/payment-report" element={<PaymentReport />} />
         </Routes>
