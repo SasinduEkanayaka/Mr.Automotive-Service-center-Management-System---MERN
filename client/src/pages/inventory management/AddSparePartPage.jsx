@@ -18,6 +18,7 @@ const AddSparePartPage = () => {
   ]);
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState("");
+  const [units, setUnits] = useState("Pack Of");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -123,6 +124,7 @@ const AddSparePartPage = () => {
         description,
         features,
         imageUrl,
+        units,
       });
 
       Swal.fire({
@@ -210,6 +212,18 @@ const AddSparePartPage = () => {
               <option value="original">Original</option>
               <option value="duplicate">Duplicate</option>
               <option value="used">Used</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-dark block mb-2">Units</label>
+            <select
+              className="w-full p-2 border border-dark rounded"
+              value={units}
+              onChange={(e) => setUnits(e.target.value)}
+            >
+              <option value="Pack Of">Pack Of</option>
+              <option value="Bottle Of">Bottle Of</option>
+              <option value="Pair Of">Pair Of</option>
             </select>
           </div>
           <div className="mb-4">
