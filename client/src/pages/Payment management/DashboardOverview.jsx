@@ -8,6 +8,40 @@ const ShowPayment = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [EmployeeSalary, setemployeesal] = useState([]);
+
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get('http://localhost:3000/EmployeeSalary')
+      .then((response) => {
+        setemployeesal(response.data.data || []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError("Error fetching salary");
+        setLoading(false);
+      });
+  }, []);
+
+
+  const handleStatusChange = async (salID, newStatus) => {
+    try {
+      await axios.put(`http://localhost:3000/EmployeeSalary/${salID}/status`, {
+        status: newStatus
+      });
+
+      setemployeesal((prevItems) =>
+        prevItems.map((EmployeeSalary) =>
+          EmployeeSalary._id === salID ? { ...EmployeeSalary, status: newStatus } : EmployeeSalary
+        )
+      );
+    } catch (error) {
+      setError("Error updating request EmployeeSalary status");
+    }
+  };
+
 
   useEffect(() => {
     setLoading(true);
@@ -40,11 +74,11 @@ const ShowPayment = () => {
           Payment Dashboard
         </h1>
         <div className="flex items-center space-x-4">
-        <Link to="/payment-management/payment-report">
-          <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
-            Generate Payment Report
-          </button>
-        </Link>
+          <Link to="/payment-management/payment-report">
+            <button className="bg-DarkColor text-white px-4 py-2 rounded-md shadow hover:bg-ExtraDarkColor transition-colors duration-300">
+              Generate Payment Report
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -62,7 +96,7 @@ const ShowPayment = () => {
               Total Payments
             </h2>
             <p className="text-2xl font-semibold text-DarkColor">
-              Rs. {totalPayments.toFixed(2)} 
+              Rs. {totalPayments.toFixed(2)}
             </p>
           </div>
         </motion.div>
@@ -146,6 +180,73 @@ const ShowPayment = () => {
                 </tbody>
               </table>
             </div>
+            <div className="mt-12 bg-SecondaryColor p-6 rounded-lg shadow-lg">
+              <h2 className="text-xl font-bold text-ExtraDarkColor mb-6">
+                Salary Details
+              </h2>
+              <div className="max-h-96 overflow-y-auto">
+                <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                  <thead className="bg-DarkColor text-white">
+                    <tr>
+                      <th>Employee Name</th>
+                      <th>NIC</th>
+                      <th>From Date</th>
+                      <th>To Date</th>
+                      <th>Total OT Hours</th>
+                      <th>Total OT Pay</th>
+                      <th>Basic Salary</th>
+                      <th>Total Salary</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {EmployeeSalary.map((sal) => (
+                      <tr
+                        key={sal._id}
+                        className="border-b hover:bg-PrimaryColor transition-colors duration-300"
+                      >
+                        <td className="py-3 px-5 text-ExtraDarkColor">
+                          {sal.employeeName}
+                        </td>
+                        <td className="py-3 px-5 text-ExtraDarkColor">
+                          {sal.NIC}
+                        </td>
+                        <td className="py-3 px-5 text-ExtraDarkColor">
+                          {sal.formDate}
+                        </td>
+                        <td className="py-3 px-5 text-ExtraDarkColor">
+                          {sal.toDate}
+                        </td>
+                        <td className="py-3 px-5 text-ExtraDarkColor">
+                          {sal.totalOtHours}
+                        </td>
+                        <td className="py-3 px-5 text-ExtraDarkColor">
+                          {sal.totalOtAmount}
+                        </td>
+                        <td className="py-3 px-5 text-ExtraDarkColor">
+                          {sal.basicSalary}
+                        </td>
+                        <td className="py-3 px-5 text-ExtraDarkColor">
+                          {sal.totalSalary}
+                        </td>
+                        <td className="py-3 px-5 text-ExtraDarkColor">
+                          <select
+                            className="bg-gray-200 text-black px-3 py-1 rounded-md mr-2"
+                            onChange={(e) => handleStatusChange(sal._id, e.target.value)}  // Send selected value on change
+                            value={sal.status}  // Set the current status as the selected value
+                          >
+                            <option value="pending">Pending</option>  {/* Pending status */}
+                            <option value="approved">Completed</option>  {/* Approved status */}
+                            <option value="declined">Failed</option>  {/* Declined status */}
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
           </div>
         </>
       )}

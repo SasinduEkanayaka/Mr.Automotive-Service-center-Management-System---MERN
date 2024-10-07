@@ -6,17 +6,19 @@ const rout = express.Router();
 //Add the Employee Salary For System
 rout.post('/', async (req, res) => {
     try {
-        console.log(req.body);
-        if (!req.body.employeeName ||
-            !req.body.NIC ||
-            !req.body.formDate ||
-            !req.body.toDate ||
-            !req.body.basicSalary // Added validation for BasicSalary
-        ) {
-            return res.status(400).send({
-                message: "Please fill all the fields",
-            });
-        }
+
+        // console.log(req.body);
+        // if (!req.body.employeeName ||
+        //     !req.body.NIC ||
+        //     !req.body.formDate ||
+        //     !req.body.toDate ||
+        //     !req.body.BasicSalary // Added validation for BasicSalary
+        // ) {
+        //     return res.status(400).send({
+        //         message: "Please fill all the fields",
+        //     });
+        // }
+
 
         console.log(req.body)
         const AddEmployeeSalary = {
@@ -26,8 +28,12 @@ rout.post('/', async (req, res) => {
             toDate: req.body.toDate,
             totalOtHours: req.body.totalOThours,
             totalOtAmount: req.body.totalOTpay,
-            basicSalary: req.body.basicSalary,
-            totalSalary: req.body.TotalSalary,
+
+            basicSalary: req.body.basicSalary, // Corrected field name
+            totalSalary: req.body.totalSalary,
+            
+            status: req.body.status, // Added validation for status
+
         };
 
         console.log(AddEmployeeSalary)
@@ -83,7 +89,8 @@ rout.put('/:id', async (request, response) => {
         totalOtHours,
         totalOtAmount,
         basicSalary,
-        totalSalary
+        totalSalary,
+        
       } = request.body;
   
       if (
@@ -133,5 +140,37 @@ rout.delete('/:id', async (req, res) => {
       res.status(500).send({ message: error.message });
     }
   });
+ // Update Employee Salary Status
+rout.put('/:id/status', async (req, res) => {
+  try {
+      const { id } = req.params; // EmployeeSalary ID from the URL parameters
+      const { status } = req.body; // New status from the request body
+
+      // Validate the status field
+      const validStatuses = ['pending', 'approved', 'declined'];
+      if (!validStatuses.includes(status)) {
+          return res.status(400).send({ message: 'Invalid status value. Allowed values: pending, approved, declined.' });
+      }
+
+      // Find and update the employee's salary status
+      const updatedEmployeeSalary = await EmployeeSalary.findByIdAndUpdate(
+          id,
+          { status }, // Update only the status field
+          { new: true } // Return the updated document
+      );
+
+      if (!updatedEmployeeSalary) {
+          return res.status(404).send({ message: 'EmployeeSalary not found' });
+      }
+
+      return res.status(200).send({
+          message: `EmployeeSalary status updated to ${status}`,
+          employeeSalary: updatedEmployeeSalary
+      });
+  } catch (error) {
+      console.error(error.message);
+      return res.status(500).send({ message: 'Server error' });
+  }
+});
 
 export default rout;
