@@ -10,7 +10,7 @@ import Car from "../../assets/carbg2.png";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { DesktopTimePicker } from "@mui/x-date-pickers";
-
+import Switch from "@mui/material/Switch";
 import { useParams, useNavigate } from "react-router-dom";
 
 const CreateBooking = () => {
@@ -22,6 +22,7 @@ const CreateBooking = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(dayjs("2022-04-17T15:30")); // Set default time to 8 AM
   const [formErrors, setFormErrors] = useState({});
+  const [checked, setChecked] = React.useState(false);
   const [bookingData, setBookingData] = useState({
     package: {
       pkgName: "",
@@ -151,6 +152,16 @@ const CreateBooking = () => {
     }
   };
 
+  const handleChangee = (event) => {
+    setChecked(event.target.checked);
+
+    if (checked) {
+      bookingData.vehNum = "";
+    } else {
+      bookingData.vehNum = "ශ්‍රී - ";
+    }
+  };
+
   const shouldDisableDate = (date) => {
     return disabledDates.some((disabledDate) =>
       dayjs(date).isSame(disabledDate, "day")
@@ -255,6 +266,14 @@ const CreateBooking = () => {
                     />
                   </div>
                   <div className="flex flex-col w-1/4">
+                    <div className="flex">
+                      <label>SRI Format: </label>
+                      <Switch
+                        checked={checked}
+                        onChange={handleChangee}
+                        inputProps={{ "aria-label": "controlled" }}
+                      />
+                    </div>
                     <label className="block text-gray-700 required">
                       Vehicle No:
                     </label>
@@ -266,11 +285,22 @@ const CreateBooking = () => {
                       onChange={handleBookingChange}
                       required
                     />
-                    {formErrors.vehNum && (
-                      <span className="text-red-500 text-sm">
-                        {formErrors.vehNum}
-                      </span>
-                    )}
+
+                    {checked
+                      ? !/ශ්‍රී - \d{4}$/.test(bookingData.vehNum) &&
+                        bookingData.vehNum && (
+                          <p className="text-red-500 text-xs mt-1">
+                            Please enter a valid vehicle number (ශ්‍රී - 4444)
+                          </p>
+                        )
+                      : !/^(?:[A-Z]{3}-\d{4}|[A-Z]{2}-\d{4})$/.test(
+                          bookingData.vehNum
+                        ) &&
+                        bookingData.vehNum && (
+                          <p className="text-red-500 text-xs mt-1">
+                            Please enter a valid vehicle number
+                          </p>
+                        )}
                   </div>
                   <div className="flex flex-col w-1/6">
                     <label className="block text-gray-700 required">
