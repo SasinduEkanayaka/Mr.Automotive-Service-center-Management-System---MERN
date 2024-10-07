@@ -44,9 +44,10 @@ export default function DashboardLayout() {
 
         {/* Routes for Dashboard Components */}
         <Routes>
-          <Route path="/" element={<DashboardOverview />} />
+          <Route path="/" element={<ManageParts />} />
+
           <Route path="/add-parts" element={<AddSparePartPage />} />
-          <Route path="/manage-parts" element={<ManageParts />} />
+
           <Route path="/inventory-report" element={<InventoryReport />} />
           <Route path="/reorder" element={<ReorderSpareParts />} />
           <Route path="/requested-parts" element={<RequestedParts />} />

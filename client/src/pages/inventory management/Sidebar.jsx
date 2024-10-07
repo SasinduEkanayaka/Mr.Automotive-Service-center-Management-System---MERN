@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  FaUsers,
-  FaBox,
-  FaClipboardList,
-  FaTags,
-  FaChartLine,
-  FaUserCircle,
-} from "react-icons/fa";
+  Package,
+  ClipboardList,
+  FileText,
+  RefreshCw,
+  ShoppingCart,
+  LogOut,
+  ChevronRight,
+  ChevronLeft,
+} from "lucide-react";
 import { IoIosLogOut } from "react-icons/io";
 
 const sidebarVariants = {
@@ -35,29 +37,31 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   // Menu items configuration
   const menuItems = [
     {
+      name: "Manage Parts",
+      path: "/inventory-management",
+      icon: <ClipboardList size={20} />,
+    },
+
+    {
       name: "Add Spare Parts",
       path: "/inventory-management/add-parts",
-      icon: <FaBox />,
+      icon: <Package size={20} />,
     },
+
     {
-      name: "Manage Spare Parts",
-      path: "/inventory-management/manage-parts",
-      icon: <FaClipboardList />,
-    },
-    {
-      name: "Generate Reports",
+      name: "Reports",
       path: "/inventory-management/inventory-report",
-      icon: <FaTags />,
+      icon: <FileText size={20} />,
     },
     {
-      name: "Item Re-Odering",
+      name: "Re-Ordering",
       path: "/inventory-management/reorder",
-      icon: <FaTags />,
+      icon: <RefreshCw size={20} />,
     },
     {
-      name: "Requested Item",
+      name: "Requested Items",
       path: "/inventory-management/requested-parts",
-      icon: <FaTags />,
+      icon: <ShoppingCart size={20} />,
     },
   ];
 
@@ -101,7 +105,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
               onClick={() => navigate("/")} // Use navigate function to handle logout
             >
               <span className="mr-3">
-                <IoIosLogOut />
+                <LogOut />
               </span>
               LogOut
             </button>
