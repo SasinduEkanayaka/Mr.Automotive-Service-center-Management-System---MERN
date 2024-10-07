@@ -70,3 +70,17 @@ export const updateModificationPkg = async (req, res) => {
     res.status(500).json({ message: "Error Updating Maintance Log", error });
   }
 };
+
+export const updateStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const response = await ModiificationModel.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

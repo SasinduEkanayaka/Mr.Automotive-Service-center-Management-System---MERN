@@ -43,12 +43,15 @@ const BookingManagement = () => {
 
   useEffect(() => {
     const filtered = bookings.filter((item) => {
+      // Check if cusName exists and is a string before applying toLowerCase()
+      const customerName = item?.cusName || "";
       const bookingDate = dayjs(item.date);
       const matchesDateRange =
         (!startDate || bookingDate.isAfter(startDate, "day")) &&
         (!endDate || bookingDate.isBefore(endDate, "day"));
+
       return (
-        item.cusName.toLowerCase().includes(searchValue.toLowerCase()) &&
+        customerName.toLowerCase().includes(searchValue.toLowerCase()) &&
         matchesDateRange
       );
     });

@@ -29,6 +29,10 @@ const modificationPkgSchema = new mongoose.Schema(
     date: {
       type: String,
     },
+    status: {
+      type: String,
+      default: "Pending",
+    },
   },
   {
     timestamps: true,

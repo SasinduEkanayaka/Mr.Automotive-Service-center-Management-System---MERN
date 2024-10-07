@@ -20,6 +20,7 @@ import Payment_Route from "./routes/Payment_Route.js";
 import Customer_Route from "./routes/Customer_Route.js";
 
 import reorderRout from "./routes/reorderRoutes.js";
+import spareReqRoute from "./routes/SpareReq.route.js";
 
 //Employee routes filess...
 import employeeRoute from './routes/Employee.js';
@@ -66,6 +67,8 @@ app.use("/payments", Payment_Route);
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+
+app.use("/api/spreq", spareReqRoute);
 
 app.listen(3000, () => {
   console.log("Server listening on port 3000!!!");

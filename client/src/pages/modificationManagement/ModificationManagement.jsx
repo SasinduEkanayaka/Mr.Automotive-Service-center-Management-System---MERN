@@ -9,6 +9,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import Modal from "react-modal";
 import TextField from "@mui/material/TextField";
 
 const ModificationManagement = () => {
@@ -18,6 +19,12 @@ const ModificationManagement = () => {
   const [filteredMods, setFilteredMods] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [item, setItem] = useState({
+    name: "",
+    quantity: "",
+  });
+  const [pickList, setPickList] = useState([]);
 
   const handleUpdateClick = (id) => {
     navigate(`/modification-management/update/${id}`);
@@ -48,9 +55,11 @@ const ModificationManagement = () => {
       const matchesDateRange =
         (!startDate || modificationDate.isAfter(startDate, "day")) &&
         (!endDate || modificationDate.isBefore(endDate, "day"));
+
       return (
-        item.customerName.toLowerCase().includes(searchValue.toLowerCase()) &&
-        matchesDateRange
+        (item.customerName?.toLowerCase() || "").includes(
+          searchValue.toLowerCase()
+        ) && matchesDateRange
       );
     });
     setFilteredMods(filtered);
@@ -83,6 +92,82 @@ const ModificationManagement = () => {
     }
   };
 
+  const handleStatusChange = (order, id, newStatus) => {
+    Swal.fire({
+      title: "Do you want to save the changes?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      denyButtonText: `Don't save`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.put(
+            `http://localhost:3000/api/mod/status/${id}`,
+            { status: newStatus }
+          );
+
+          Swal.fire("Saved!", "", "success");
+          window.location.reload();
+        } catch (error) {
+          console.log(error);
+          Swal.fire("Error saving changes", "", "error");
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+  };
+
+  const openCard = (order) => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setItem((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const calculateSubtotal = () => {
+    return pickList
+      .reduce(
+        (total, item) =>
+          total + parseFloat(item.unitPrice * item.quantity || 0),
+        0
+      )
+      .toFixed(2);
+  };
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setPickList((preList) => [...preList, item]);
+      setItem({ name: "", quantity: "" });
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  const handleRequest = async () => {
+    try {
+      const response = axios.post("http://localhost:3000/api/spreq/add", {
+        item: pickList,
+      });
+      console.log(pickList);
+      Swal.fire("Request Sent Sucessfully!", "", "success");
+      window.location.reload();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="p-8">
       {/* Dashboard Header */}
@@ -121,13 +206,11 @@ const ModificationManagement = () => {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div className="flex space-x-4">
             <DatePicker
-              label="Start Date"
               value={startDate}
               onChange={(newValue) => setStartDate(newValue)}
               renderInput={(params) => <TextField {...params} />}
             />
             <DatePicker
-              label="End Date"
               value={endDate}
               onChange={(newValue) => setEndDate(newValue)}
               renderInput={(params) => <TextField {...params} />}
@@ -222,10 +305,130 @@ const ModificationManagement = () => {
                     Delete
                   </button>
                 </td>
+                <td className="py-3 px-2 text-ExtraDarkColor">
+                  <button
+                    className="bg-green-600 text-white mt-1 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md"
+                    onClick={(e) => openCard(item)}
+                  >
+                    Request Parts
+                  </button>
+                </td>
+                <td className="p-4">
+                  <select
+                    className="p-2 bg-PrimaryColor rounded"
+                    value={item.status}
+                    onChange={(e) =>
+                      handleStatusChange(item, item._id, e.target.value)
+                    }
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Compleated">Compleated</option>
+                  </select>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+        <Modal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          className="text-center bg-white p-10 h-fit w-3/4 max-w-4xl rounded-xl ml-20 "
+          overlayClassName="fixed inset-0 flex justify-center items-center bg-black bg-opacity-64 rounded-xl"
+        >
+          <div className="">
+            <form onSubmit={handleOnSubmit}>
+              <div className=" bg-slate-200 p-6 text-black rounded-2xl shadow-sm">
+                <h1 className="text-3xl font-bold mb-4">Spare Part Request</h1>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex flex-col mb-4 w-1/2">
+                    <label className="block text-gray-700 required">
+                      Item Name:
+                    </label>
+                    <input
+                      type="text"
+                      className="border border-gray-300 text-black rounded-md p-2"
+                      placeholder="Item Name"
+                      name="name"
+                      value={item.name}
+                      onChange={handleOnChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="flex flex-col mb-4">
+                    <label className="block text-gray-700 required">
+                      Quantity:
+                    </label>
+                    <input
+                      type="number"
+                      className="border border-gray-300 text-black rounded-md p-2 w-2/3"
+                      placeholder="Quantity"
+                      name="quantity"
+                      value={item.quantity}
+                      onChange={handleOnChange}
+                      required
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-black text-white px-4 py-2 rounded-md"
+                >
+                  Add To List
+                </button>
+              </div>
+            </form>
+
+            {/* Picklist Table */}
+            <div className="mt-4">
+              {pickList.length <= 0 ? (
+                <p>No items added yet</p>
+              ) : (
+                <table className="min-w-full text-black bg-white border border-gray-300">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="py-2 px-4 border-b">Name</th>
+                      <th className="py-2 px-4 border-b">Unit Price</th>
+                      <th className="py-2 px-4 border-b">Quantity</th>
+                      <th className="py-2 px-4 border-b">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pickList.map((item, index) => (
+                      <tr key={index} className="border-b text-center">
+                        <td className="py-2 px-4">{item.name}</td>
+                        <td className="py-2 px-4">{item.unitPrice}</td>
+                        <td className="py-2 px-4">{item.quantity}</td>
+                        <td className="py-2 px-4">
+                          {(item.quantity * item.unitPrice).toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr className="bg-gray-100">
+                      <td
+                        colSpan="3"
+                        className="py-2 px-4 text-center font-bold"
+                      >
+                        Subtotal:
+                      </td>
+                      <td className="py-2 px-4 font-bold">
+                        {calculateSubtotal()}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              )}
+
+              <button
+                className="bg-pink-600 text-white mt-10 ml-2 inline-block px-8 py-2.5 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md"
+                onClick={handleRequest}
+              >
+                Send Request
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   );
