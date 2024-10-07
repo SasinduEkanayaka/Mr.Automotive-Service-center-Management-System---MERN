@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-// import Spinner from '../../Components/Spinner';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Spinner from './Spinner';
+import emailjs from 'emailjs-com';
 import './../../assets/css/Dashboard.css';
 
 const AddEmployee = () => {
@@ -19,80 +18,114 @@ const AddEmployee = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const sendEmailEmployee = (employee) => {
+    const emailConfig = {
+        serviceID: "service_3p901v6",
+        templateID: "template_cwl7ahv",
+        userID: "-r5ctVwHjzozvGIfg",
+    };
+    
+    emailjs
+      .send(
+        emailConfig.serviceID,
+        emailConfig.templateID,
+        {
+          to_email: employee.Email, 
+          subject: `Welcome to the Team, ${employee.employeeName}!`,
+          message: `
+          Dear ${employee.employeeName},
 
-  
-  const handleAddEmployee = () => {
+          Welcome to Mr. Automotive Service Center!
 
-    if(!employeeName || !DOB || !NIC || !Address || !BasicSalary || !ContactNo || !Email || !Designation){
+          Here are your details:
+          - Name: ${employee.employeeName}
+          - Designation: ${employee.Designation}
+          - Basic Salary: ${employee.BasicSalary}
+          - Contact Number: ${employee.ContactNo}
+
+          We're excited to have you onboard!
+
+          Best regards,
+          Mr. Automotive Team
+        `,
+        },
+        emailConfig.userID
+      )
+      .then(() => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Email sent successfully!",
+          showConfirmButton: true,
+          timer: 2000,
+        });
+      })
+      .catch((error) => {
+        console.error("Error sending email:", error);
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error sending email!",
+          showConfirmButton: true,
+          timer: 2000,
+        });
+      });
+  };
+
+  const handleAddEmployee = async () => {
+    if (!employeeName || !DOB || !NIC || !Address || !BasicSalary || !ContactNo || !Email || !Designation) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill in all required fields.',
-    });
-    return;
+      });
+      return;
     }
 
-        // Validating employeeName
-        // const namePattern = e.target.value.replace(/[^a-zA-Z\s]/g, '');
-        // if (!namePattern.test(employeeName)) {
-        //   Swal.fire({
-        //     type:'text',
-        //     icon: 'error',
-        //     title: 'Oops...',
-        //     text: 'Employee Name should only contain letters.',
-        //   });
-        //   return;
-        // }
+    // Validating NIC
+    const NICPatternOld = /^[0-9]{9}[vVxX]*$/i;
+    const NICPatternNew = /^[0-9]{12}$/;
+    if (!NICPatternOld.test(NIC) && !NICPatternNew.test(NIC)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'NIC should be in the format XXXXXXXXXV (old) or XXXXXXXXXXXX (new)',
+      });
+      return;
+    }
 
-        // Validating NIC
-        const NICPatternOld = /^[0-9]{9}[vVxX]*$/i;  
-        const NICPatternNew = /^[0-9]{12}$/;       
+    // Validating Email
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(Email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please enter a valid Email.',
+      });
+      return;
+    }
 
-          if (!NICPatternOld.test(NIC) && !NICPatternNew.test(NIC)) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'NIC should be in the format XXXXXXXXXV (old) or XXXXXXXXXXXX (new)',
-            });
-            return;
-          }
+    // Validating Contact Number
+    const contactNumberPattern = /^[0-9]{10}$/;
+    if (!contactNumberPattern.test(ContactNo)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Contact Number should be in the format XXXXXXXXXX.',
+      });
+      return;
+    }
 
-        // Validating Email
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(Email)) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Please enter a valid Email.',
-          });
-          return;
-        }
-
-        // Validating Contact Number
-        const contactNumberPattern = /^[0-9]{10}$/;
-        if (!contactNumberPattern.test(ContactNo)) {
-          Swal.fire({
-            icon: 'error',
-            type:"number",
-            title: 'Oops...',
-            text: 'Contact Number should be in the format XXXXXXXXXX.',
-            });
-            return;
-            }
-
-        //Basic Salary Validation
-        const basicSalaryPattern = /^[1-9][0-9]*(\.\d+)?$/; // Pattern to validate positive numbers greater than 0
-
-            if (!basicSalaryPattern.test(BasicSalary)) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Basic Salary must be a positive number greater than 0.',
-              });
-              return;
-            }
-
-        
+    // Basic Salary Validation
+    const basicSalaryPattern = /^[1-9][0-9]*(\.\d+)?$/;
+    if (!basicSalaryPattern.test(BasicSalary)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Basic Salary must be a positive number greater than 0.',
+      });
+      return;
+    }
 
     const data = {
       employeeName,
@@ -105,33 +138,43 @@ const AddEmployee = () => {
       Designation,
     };
 
-    console.log("Data to be sent:", data); // Debugging
+    try {
+      setLoading(true); // Set loading before starting the API call
+      await axios.post('http://localhost:3000/Employee', data);
 
-    setLoading(true);
-    axios
-      .post('http://localhost:3000/Employee', data)
-      .then(() => {
-        setLoading(false);
-        Swal.fire({
-          title: 'Add Employee Success..',
-          text: 'You have successfully Add in',
-          icon: 'success',
-          confirmButtonText: 'OK',
-          //cancelButtonAriaLabel: 'cancel',
-          showCancelButton: false,
-          timer:4000,
-          })
-        navigate('/employee-management/');
-        return;
-        // alert('Details Update Sussces.')
-        
-      })
-      .catch((error) => {
-        setLoading(false);
-        alert("An error happened. Please check the console.");
-        console.log(error);
+      Swal.fire({
+        title: 'Add Employee Success!',
+        text: 'Employee successfully added.',
+        icon: 'success',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Send Confirmation Email?",
+            text: "Do you want to send a confirmation email to the employee?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Yes, send it",
+            cancelButtonText: "No, skip",
+          }).then((emailResult) => {
+            if (emailResult.isConfirmed) {
+              sendEmailEmployee(data); // Correct email sending function
+            }
+          });
+        }
       });
-  };
+
+      navigate('/employee-management/');
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to add employee.",
+        icon: "error",
+      });
+      console.error(error);
+    } finally {
+      setLoading(false); // Ensure loading is stopped after everything completes
+    }
+  };                 
 
   return (
     <div className='form-container'>
@@ -174,7 +217,6 @@ const AddEmployee = () => {
                 });
                 return;
               }
-
               // If valid, set the DOB state
               setDOB(e.target.value);
             }}

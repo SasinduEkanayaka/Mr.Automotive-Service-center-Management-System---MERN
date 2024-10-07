@@ -73,7 +73,8 @@ function DeleteEmployeeDashboard() {
                     onClick={() => handleDelete(employee._id)} >
                     Delete
                   </button>
-                </td> Add delete button */}
+                </td> */}
+                 {/* Add delete button */}
               </tr>
             ))}
           </tbody>
