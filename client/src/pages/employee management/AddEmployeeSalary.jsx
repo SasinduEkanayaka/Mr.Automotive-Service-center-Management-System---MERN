@@ -16,7 +16,7 @@ const AddEmployeeSalary = () => {
     const [totalOThours, settotalOThours] = useState('');
     const [totalOTpay, settotalOTpay] = useState('');
     const [BasicSalary, setBasicSalary] = useState('');
-    const [TotalSalary, setTotalSalary] = useState('');
+    const [totalSalary, setTotalSalary] = useState('');
     const [employees, setEmployees] = useState([]);
     const [employeesAttendance, setEmployeesAttendance] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -176,7 +176,7 @@ const AddEmployeeSalary = () => {
             totalOThours,
             totalOTpay,
             basicSalary: BasicSalary,
-            TotalSalary,
+            totalSalary,
         };
 
         console.log("Data Send", data);
@@ -309,7 +309,7 @@ const AddEmployeeSalary = () => {
                 <input
                     type="text"
                     className="form-control"
-                    value={TotalSalary}
+                    value={totalSalary}
                     readOnly
                 />
                <button 

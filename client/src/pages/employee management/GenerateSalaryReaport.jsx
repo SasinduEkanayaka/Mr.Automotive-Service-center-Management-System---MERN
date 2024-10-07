@@ -174,9 +174,9 @@ const GenerateReports = () => {
                     <td className="py-2 px-4">{salary.formDate}</td>
                     <td className="py-2 px-4">{salary.toDate}</td>
                     <td className="py-2 px-4">{salary.totalOtHours} Hours</td>
-                    <td className="py-2 px-4">Rs:{salary.totalOtAmount.toFixed(2)}</td>
-                    <td className="py-2 px-4">Rs:{salary.basicSalary.toFixed(2)}</td>
-                    <td className="py-2 px-4">Rs:{salary.totalSalary.toFixed(2)}</td>
+                    <td className="py-2 px-4">Rs:{salary.totalOtAmount}</td>
+                    <td className="py-2 px-4">Rs:{salary.basicSalary}</td>
+                    <td className="py-2 px-4">Rs:{salary.totalSalary}</td>
                   </tr>
                 ))}
               </tbody>
