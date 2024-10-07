@@ -12,6 +12,7 @@ export const createSparePart = async (req, res) => {
       description,
       features,
       imageUrl,
+      units,
     } = req.body;
 
     const sparePart = new SparePart({
@@ -24,6 +25,7 @@ export const createSparePart = async (req, res) => {
       description,
       features,
       imageUrl,
+      units,
     });
 
     await sparePart.save();
