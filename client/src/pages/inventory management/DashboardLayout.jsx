@@ -9,6 +9,7 @@ import DashboardOverview from "./DashboardOverview";
 import AddSparePartPage from "./AddSparePartPage";
 import InventoryReport from "./InventoryReport";
 import ReorderSpareParts from "./ReorderSpareParts";
+import RequestedParts from "./RequestedParts";
 
 const contentVariants = {
   open: { marginLeft: 250, transition: { type: "spring", stiffness: 50 } },
@@ -48,6 +49,7 @@ export default function DashboardLayout() {
           <Route path="/manage-parts" element={<ManageParts />} />
           <Route path="/inventory-report" element={<InventoryReport />} />
           <Route path="/reorder" element={<ReorderSpareParts />} />
+          <Route path="/requested-parts" element={<RequestedParts />} />
         </Routes>
       </motion.main>
     </div>
