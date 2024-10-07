@@ -53,9 +53,14 @@ const CreateBooking = () => {
 
         setMaintancePkg(pkgs.data);
 
-        const bookedDates = bookings.data.map((bk) => dayjs(bk.date));
-        setDisabledDates(bookedDates);
-        console.log(disabledDates);
+        // Create a map that stores the count of bookings for each date
+        const bookedDates = bookings.data.reduce((acc, bk) => {
+          const date = dayjs(bk.date).format("YYYY-MM-DD");
+          acc[date] = acc[date] ? acc[date] + 1 : 1;
+          return acc;
+        }, {});
+
+        setDisabledDates(bookedDates); // Store the map
       } catch (error) {
         console.error("Error fetching repair estimates:", error);
       }
@@ -163,9 +168,8 @@ const CreateBooking = () => {
   };
 
   const shouldDisableDate = (date) => {
-    return disabledDates.some((disabledDate) =>
-      dayjs(date).isSame(disabledDate, "day")
-    );
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+    return disabledDates[formattedDate] >= 4; // Disable the date if it has 4 or more bookings
   };
 
   const minTime = dayjs().hour(8).minute(0);
