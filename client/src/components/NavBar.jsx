@@ -23,12 +23,19 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-black text-white px-8 py-4 flex justify-between items-center fixed min-w-full">
+    <nav className="bg-black text-white px-8 py-4 flex justify-between items-center fixed min-w-full z-50">
       <div className="flex items-center">
         <h1 className="text-xl font-bold">Mr.Automotive</h1>
       </div>
       <ul className="flex space-x-6">
-        {["Home", "Booking", "Service", "Product", "FAQ","Reg As Supplier"].map((item) => (
+        {[
+          "Home",
+          "Booking",
+          "Service",
+          "Product",
+          "FAQ",
+          "Reg As Supplier",
+        ].map((item) => (
           <li key={item} className="hover:text-yellow-400">
             <a href={`/${item}`}>{item}</a>
           </li>

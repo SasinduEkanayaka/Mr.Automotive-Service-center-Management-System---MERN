@@ -17,6 +17,13 @@ const maintancePkgSchema = new mongoose.Schema(
     pkgPrice: {
       type: Number,
     },
+    pkgExp: {
+      type: String,
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
     pkgServ: [
       {
         key: String,

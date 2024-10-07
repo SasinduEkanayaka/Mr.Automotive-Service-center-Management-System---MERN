@@ -22,6 +22,8 @@ import Customer_Route from "./routes/Customer_Route.js";
 import reorderRout from "./routes/reorderRoutes.js";
 import spareReqRoute from "./routes/SpareReq.route.js";
 
+import "./scheduler.js";
+
 dotenv.config();
 
 mongoose
