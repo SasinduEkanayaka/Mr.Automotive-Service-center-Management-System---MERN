@@ -73,6 +73,12 @@ function SalaryDashboard() {
     );
   });
 
+  const parseFloat = (str, value) => {
+    str = str.toString();
+    str = str.slice(0, (str.indexOf('.')) + value + 1)
+    return Number(str);
+  }
+
   return (
     <div className='container'>
     
@@ -127,7 +133,7 @@ function SalaryDashboard() {
                 <td>{salary.totalOtHours} Hours</td>
                 <td>Rs: {salary.totalOtAmount}</td>
                 <td>Rs: {salary.basicSalary}</td>
-                <td>Rs: {salary.totalSalary}</td>
+                <td>Rs: {Number(salary.totalSalary).toFixed(2)}</td>
                 <td>
                   <div className='action-icons'>
                     <Link to={`/employee/salary/show/${salary._id}`}>

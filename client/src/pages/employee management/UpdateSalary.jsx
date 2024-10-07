@@ -1,109 +1,79 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from "./Spinner";
 
 const UpdateSalary = () => {
-    const { id } = useParams(); // Assuming you're using React Router to get the employee ID from the URL
+    const { id } = useParams(); // Get the salary record ID from the URL
     const [employeeName, setEmployeeName] = useState('');
     const [NIC, setNIC] = useState('');
     const [formDate, setFormDate] = useState('');
     const [toDate, setToDate] = useState('');
-    const [totalOThours, setTotalOThours] = useState(0);
-    const [totalOTpay, setTotalOTpay] = useState(0);
-    const [basicSalary, setBasicSalary] = useState(0);
-    const [totalSalary, setTotalSalary] = useState(0);
+    const [totalOThours, setTotalOThours] = useState('');
+    const [totalOTpay, setTotalOTpay] = useState('');
+    const [BasicSalary, setBasicSalary] = useState('');
+    const [totalSalary, setTotalSalary] = useState('');
     const [employees, setEmployees] = useState([]);
-    const [employeesAttendance, setEmployeesAttendance] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [includeEPF, setIncludeEPF] = useState(false);
     const [selectEmployee, setSelectEmployee] = useState({
         employeeID: '',
         NIC: '',
         employeeName: '',
     });
-    const [loading, setLoading] = useState(false);
-    const [includeEPF, setIncludeEPF] = useState(false);
     const navigate = useNavigate();
 
-    // Get the employee data when the component mounts
+    // Fetch employee list for NIC and name selection
     useEffect(() => {
         setLoading(true);
         axios
-            .get(`http://localhost:3000/EmployeeSalary/${id}`)
-            .then((res) => {
-                setEmployees(res.data.data);
-                setEmployeeName(res.data.employeeName);
-                setNIC(res.data.NIC);
-                setFormDate(res.data.formDate);
-                setToDate(res.data.toDate);
-                setTotalOThours(res.data.totalOThours);
-                setTotalOTpay(res.data.totalOTpay);
-                setBasicSalary(res.data.BasicSalary);
-                setTotalSalary(res.data.TotalSalary);
-
-                console.log(setTotalOThours);
+            .get('http://localhost:3000/Employee')
+            .then((response) => {
+                setEmployees(response.data.data);
+                setLoading(false);
             })
             .catch((error) => {
+                console.error('Error fetching employees:', error);
+                setEmployees([]);
                 setLoading(false);
-                console.error(error);
             });
-    }, [id]);
+    }, []);
 
-    // // Get employee data
-    // useEffect(() => {
-    //     axios.get('http://localhost:3000/employees')
-    //         .then((res) => {
-    //             setEmployees(res.data);
-    //         })
-    //         .catch((error) => console.error(error));
-    // }, []);
-
-
-    
-
-    // Handle employee selection based on NIC
+    // Handle NIC change and update selected employee details
     const handleNIC = (e) => {
         const selectedNIC = e.target.value;
-        const selectedEmployee = employees.find(emp => emp.NIC === selectedNIC);
-        if (selectedEmployee) {
-            setSelectEmployee({
-                ...selectEmployee,
-                NIC: selectedNIC,
-                employeeName: selectedEmployee.employeeName,
-                employeeID: selectedEmployee._id,
-            });
-            setBasicSalary(selectedEmployee.BasicSalary);
-        }
+        const selectemployee = employees.find((emp) => emp.NIC === selectedNIC);
+        setSelectEmployee({
+            ...selectEmployee,
+            NIC: selectedNIC,
+            employeeName: selectemployee.employeeName,
+            employeeID: selectemployee._id,
+        });
+        setBasicSalary(selectemployee.BasicSalary);
     };
 
-    // Handle employee selection based on name
+    // Handle employee name change and update selected employee details
     const handleEmployeeName = (e) => {
         const selectedEmployeeName = e.target.value;
-        const selectedEmployee = employees.find(emp => emp.employeeName === selectedEmployeeName);
-        if (selectedEmployee) {
-            setSelectEmployee({
-                ...selectEmployee,
-                NIC: selectedEmployee.NIC,
-                employeeName: selectedEmployeeName,
-                employeeID: selectedEmployee._id,
-            });
-            setBasicSalary(selectedEmployee.BasicSalary);
-        }
-    };
-
-    // Calculate total overtime hours
-    const calculateTotalOtHour = () => {
-        const filteredAttendance = employeesAttendance.filter(attendance =>
-            attendance.NIC === selectEmployee.NIC &&
-            new Date(attendance.date) >= new Date(formDate) &&
-            new Date(attendance.date) <= new Date(toDate)
+        const selectemployee = employees.find(
+            (emp) => emp.employeeName === selectedEmployeeName
         );
-
-        const totalOtHour = filteredAttendance.reduce((total, attendance) => total + attendance.OTHour, 0);
-        setTotalOThours(totalOtHour);
+        setSelectEmployee({
+            ...selectEmployee,
+            NIC: selectemployee.NIC || '',
+            employeeName: selectedEmployeeName,
+        });
+        setBasicSalary(selectemployee.BasicSalary);
     };
 
-    // Calculate total overtime pay
+    // Calculate total OT hours based on NIC
+    const calculateTotalOtHour = () => {
+        // Logic to calculate total OT hours (similar to AddEmployeeSalary)
+        // You can reuse the same logic here
+    };
+
+    // Calculate OT pay
     const calculateTotalOTpay = () => {
         const calculatedTotalOTpay = totalOThours * 585;
         setTotalOTpay(calculatedTotalOTpay);
@@ -111,18 +81,17 @@ const UpdateSalary = () => {
 
     // Calculate total salary
     const calculateTotalSalary = () => {
-        let totalSalary = totalOTpay + parseFloat(basicSalary);
-
+        let totalSalary = totalOTpay + parseFloat(BasicSalary);
         if (includeEPF) {
-            const amount = totalSalary * 0.08;
-            totalSalary -= amount;
+            const epfAmount = totalSalary * 0.08;
+            totalSalary -= epfAmount;
         }
         setTotalSalary(totalSalary);
     };
 
-    // Handle salary submission
-    const handleAddEmployeeSalary = async () => {
-        if (!selectEmployee.NIC || !selectEmployee.employeeName || !formDate || !toDate || !basicSalary) {
+    // Handle salary update
+    const handleUpdateEmployeeSalary = async () => {
+        if (!selectEmployee.NIC || !selectEmployee.employeeName || !formDate || !toDate || !BasicSalary) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -131,24 +100,19 @@ const UpdateSalary = () => {
             return;
         }
 
-        // Sequentially calculate OT hours, OT pay, and total salary
+        calculateTotalOTpay();
         calculateTotalOtHour();
-        setTimeout(() => {
-            calculateTotalOTpay();
-            setTimeout(() => {
-                calculateTotalSalary();
-            }, 100);
-        }, 100);
+        calculateTotalSalary();
 
         const data = {
             NIC: selectEmployee.NIC,
             employeeName: selectEmployee.employeeName,
             formDate,
             toDate,
-            totalOThours: totalOThours,
+            totalOThours,
             totalOTpay,
-            BasicSalary: basicSalary,
-            TotalSalary: totalSalary,
+            basicSalary: BasicSalary,
+            totalSalary,
         };
 
         setLoading(true);
@@ -158,7 +122,7 @@ const UpdateSalary = () => {
                 setLoading(false);
                 Swal.fire({
                     title: 'Update Success',
-                    text: 'You have successfully updated the salary.',
+                    text: 'Salary details have been updated successfully',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 4000,
@@ -167,38 +131,54 @@ const UpdateSalary = () => {
             })
             .catch((error) => {
                 setLoading(false);
-                console.error(error);
+                console.error('Error updating salary details:', error);
             });
     };
 
     return (
         <div className="attendance-container">
-            <h2 className="attendance-title">Update {employeeName} Employee Salary</h2>
+            <h2 className="attendance-title">Update Employee Salary</h2>
 
+            {/* Spinner */}
             {loading && <Spinner />}
 
             <div className="form-group">
                 <label htmlFor="NIC" className="form-label">Employee NIC</label>
-                <input 
+                <select
                     id="NIC"
-                    className="form-select" 
+                    className="form-select"
                     value={NIC}
-                    onChange={(e) => setNIC(e.target.value)}
-                    readOnly />
+                    onChange={handleNIC}
+                >
+                    <option value=''>Select NIC</option>
+                    {employees.map((Employee) => (
+                        <option key={Employee._id} value={Employee.NIC}>
+                            {Employee.NIC}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             <div className="form-group">
                 <label htmlFor="employeeName" className="form-label">Employee Name</label>
-                <input 
+                <select
                     id="employeeName"
-                    className="form-select" 
+                    className="form-select"
                     value={employeeName}
-                    onChange={(e) => setEmployeeName(e.target.value)}
-                    readOnly />
+                    onChange={handleEmployeeName}
+                >
+                    <option value=''>Select Employee Name</option>
+                    {employees.map((Employee) => (
+                        <option key={Employee._id} value={Employee.employeeName}>
+                            {Employee.employeeName}
+                        </option>
+                    ))}
+                </select>
             </div>
 
+            {/* Date inputs */}
             <div className="form-group">
-                <label htmlFor="date" className="form-label">From Date</label>
+                <label htmlFor="formDate" className="form-label">From Date</label>
                 <input
                     type="date"
                     className="form-control"
@@ -217,33 +197,15 @@ const UpdateSalary = () => {
                 />
             </div>
 
+            {/* Total OT Hours and OT Pay */}
             <div className="form-group">
                 <label htmlFor="totalOThours" className="form-label">Total OT Hours</label>
                 <input
                     type="text"
                     className="form-control"
                     value={totalOThours}
-                    onChange={(e) => setTotalOThours(e.target.value)}
                     readOnly
                 />
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="basicSalary" className="form-label">Basic Salary</label>
-                <input
-                    className="form-control"
-                    type='number'
-                    value={basicSalary}
-                    onChange={(e) => setBasicSalary(e.target.value)}
-                    readOnly
-                />
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="EPF" className="form-label">Include EPF</label>
-                <button onClick={() => setIncludeEPF(!includeEPF)}>
-                    {includeEPF ? 'Yes' : 'No'}
-                </button>
             </div>
 
             <div className="form-group">
@@ -252,42 +214,40 @@ const UpdateSalary = () => {
                     type="text"
                     className="form-control"
                     value={totalOTpay}
-                    onChange={(e) => setTotalOTpay(e.target.value)}
                     readOnly
                 />
             </div>
 
+            {/* Basic Salary */}
+            <div className="form-group">
+                <label htmlFor="BasicSalary" className="form-label">Basic Salary</label>
+                <input
+                    type="number"
+                    className="form-control"
+                    value={BasicSalary}
+                    readOnly
+                />
+            </div>
+
+            {/* Total Salary */}
             <div className="form-group">
                 <label htmlFor="totalSalary" className="form-label">Total Salary</label>
                 <input
                     type="text"
                     className="form-control"
                     value={totalSalary}
-                    onChange={(e) => setTotalSalary(e.target.value)}
                     readOnly
                 />
-                <button 
-                    onClick={calculateTotalSalary} 
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                >
-                    Calculate Total Salary
-                </button>
             </div>
 
-            <div className="form-group">
-                <button 
-                    onClick={handleAddEmployeeSalary} 
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                >
+            {/* Submit button */}
+            <div className="form-buttons">
+                <button className="btn-primary" onClick={handleUpdateEmployeeSalary}>
                     Update Salary
                 </button>
-                <Link to="/employee-management/salary">
-                    <button 
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                    >
-                        Cancel
-                    </button>
-                </Link>
+                <button onClick={() => navigate('/employee-management/salary')} className="btn-secondary">
+                    Cancel
+                </button>
             </div>
         </div>
     );
