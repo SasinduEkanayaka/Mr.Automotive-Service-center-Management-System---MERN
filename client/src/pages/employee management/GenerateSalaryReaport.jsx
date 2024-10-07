@@ -69,7 +69,7 @@ const GenerateReports = () => {
     }
 
     doc.setFontSize(18);
-    doc.text(selectedReport === "salary" ? "Employee Salary Report" : "Employee Attendance Report", 70, 50);
+    doc.text(selectedReport === "salary" ? "Employee Salary Report" : "Employee Attendance Report", 75, 50);
 
     const data = selectedReport === "salary" ? salaryReportData : attendanceReportData;
 
@@ -77,11 +77,11 @@ const GenerateReports = () => {
     doc.text(`Total Employees: ${data.length}`, 10, 70);
 
     const head = selectedReport === "salary"
-      ? [["Employee Name", "NIC", "From Date", "To Date", "OT Hours", "OT Amount", "Basic Salary", "Total Salary"]]
+      ? [["Employee Name", "NIC", "From Date", "To Date", "OT Hours","EPF Amount", "OT Amount", "Basic Salary", "Total Salary"]]
       : [["Employee Name", "NIC", "Date", "Check-In", "Check-Out","Workin Hours", "Total Hours"]];
 
     const body = data.map((item) => selectedReport === "salary"
-      ? [item.employeeName, item.NIC, item.formDate, item.toDate, item.totalOtHours, `Rs:${item.totalOtAmount.toFixed(2)}`, `Rs:${item.basicSalary.toFixed(2)}`, `Rs:${item.totalSalary.toFixed(2)}`]
+      ? [item.employeeName, item.NIC, item.formDate, item.toDate, item.totalOtHours,`Rs:${item.epfAmount.toFixed(2)}`, `Rs:${item.totalOtAmount.toFixed(2)}`, `Rs:${item.basicSalary.toFixed(2)}`, `Rs:${item.totalSalary.toFixed(2)}`]
       : [item.employeeName, item.NIC, item.date, item.InTime, item.OutTime, item.WorkingHours,item.OTHour]);
 
     doc.autoTable({ head, body, startY: 100 });
@@ -96,8 +96,8 @@ const GenerateReports = () => {
     const data = selectedReport === "salary" ? salaryReportData : attendanceReportData;
 
     const csvData = selectedReport === "salary"
-      ? [["Employee Name", "NIC", "From Date", "To Date", "OT Hours", "OT Amount", "Basic Salary", "Total Salary"],
-          ...data.map((item) => [item.employeeName, item.NIC, item.formDate, item.toDate, item.totalOtHours, item.totalOtAmount.toFixed(2), item.basicSalary.toFixed(2), item.totalSalary.toFixed(2)])]
+      ? [["Employee Name", "NIC", "From Date", "To Date", "OT Hours","EPF Amount", "OT Amount", "Basic Salary", "Total Salary"],
+          ...data.map((item) => [item.employeeName, item.NIC, item.formDate, item.toDate, item.totalOtHours,item.epfAmount.toFixed(2), item.totalOtAmount.toFixed(2), item.basicSalary.toFixed(2), item.totalSalary.toFixed(2)])]
       : [["Employee Name", "NIC", "Date", "Check-In", "Check-Out", "Working Hours", "Total Hours"],
           ...data.map((item) => [item.employeeName, item.NIC, item.date, item.InTime, item.OutTime,item.WorkingHours, item.OTHour])];
 
@@ -161,6 +161,7 @@ const GenerateReports = () => {
                   <th className="py-2 px-4">From Date</th>
                   <th className="py-2 px-4">To Date</th>
                   <th className="py-2 px-4">OT Hours</th>
+                  <th className="py-2 px-4">EPF Amount</th>
                   <th className="py-2 px-4">OT Amount</th>
                   <th className="py-2 px-4">Basic Salary</th>
                   <th className="py-2 px-4">Total Salary</th>
@@ -174,6 +175,7 @@ const GenerateReports = () => {
                     <td className="py-2 px-4">{salary.formDate}</td>
                     <td className="py-2 px-4">{salary.toDate}</td>
                     <td className="py-2 px-4">{salary.totalOtHours} Hours</td>
+                    <td className="py-2 px-4">Rs:{salary.epfAmount}</td>
                     <td className="py-2 px-4">Rs:{salary.totalOtAmount}</td>
                     <td className="py-2 px-4">Rs:{salary.basicSalary}</td>
                     <td className="py-2 px-4">Rs:{salary.totalSalary}</td>

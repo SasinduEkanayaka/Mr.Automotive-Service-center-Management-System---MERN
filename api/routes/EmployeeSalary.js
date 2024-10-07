@@ -31,7 +31,7 @@ rout.post('/', async (req, res) => {
 
             basicSalary: req.body.basicSalary, // Corrected field name
             totalSalary: req.body.totalSalary,
-            
+            epfAmount: req.body.epfAmount,
             status: req.body.status, // Added validation for status
 
         };
