@@ -11,7 +11,7 @@ const CreatePackage = () => {
   const [pkgDes, setPkgDes] = useState("");
   const [pkgPrice, setPkgPrice] = useState("");
   const [pkgImg, setPkgImg] = useState(null);
-
+  const [pkgExp, setPkgExp] = useState("");
   const [pkgServ, setPkgServ] = useState([
     {
       id: uuidv4(),
@@ -110,6 +110,7 @@ const CreatePackage = () => {
         pkgName,
         pkgDes,
         pkgPrice,
+        pkgExp,
         imageURL: imageUrl,
         pkgServ,
       });
@@ -131,7 +132,7 @@ const CreatePackage = () => {
   };
 
   return (
-    <div className="bg-primary min-h-screen flex justify-center items-center p-4">
+    <div className="bg-PrimaryColor min-h-screen flex justify-center items-center p-4">
       <div className="bg-secondary p-8 rounded-lg shadow-lg max-w-2xl w-full">
         <h2 className="text-dark text-2xl font-bold mb-6">
           Create Maintenance Package
@@ -174,6 +175,19 @@ const CreatePackage = () => {
             <p className="text-sm text-red-500">
               {descriptionWordCount} words remaining
             </p>
+          </div>
+          <div className="mb-4">
+            <label className="text-dark block mb-2">Expire Date</label>
+            <input
+              type="date"
+              className={classNames("w-full p-2 border rounded")}
+              value={pkgExp}
+              onChange={(e) => setPkgExp(e.target.value)}
+              required
+            />
+            {formErrors.pkgName && (
+              <span className="text-red-500 text-sm">{formErrors.pkgName}</span>
+            )}
           </div>
           <div className="flex space-x-4 mb-4">
             <div className="w-1/2">
