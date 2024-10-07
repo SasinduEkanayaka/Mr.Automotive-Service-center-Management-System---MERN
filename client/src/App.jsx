@@ -39,6 +39,21 @@ import ProductPage from "./pages/inventory management/ProductPage";
 import SinglePartPage from "./pages/inventory management/SinglePartPage";
 
 import AdminDashboard from "./components/AdminDashboard/DashboardLayout";
+
+//Employee Files Call
+import DashboardLayoutEmp from "./pages/employee management/DashboardLayoutEmp";
+import AddEmployee from "./pages/employee management/AddEmployee";
+import ShowEmployee from "./pages/employee management/ShowEmployee";
+import UpdateEmployee from "./pages/employee management/UpdateEmployee";
+import DeleteEmployee from "./pages/employee management/DeleteEmployee";
+import AddAttendence from "./pages/employee management/AddAttendence";
+import UpdateAttendence from "./pages/employee management/UpdateAttendence";
+import DeleteAttendence from "./pages/employee management/DeleteAttendence";
+import AddEmployeeSalary from "./pages/employee management/AddEmployeeSalary";
+import ShowSalary from "./pages/employee management/ShowSalary";
+import UpdateSalary from "./pages/employee management/UpdateSalary";
+import DeleteSalary from "./pages/employee management/DeleteSalary";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -48,6 +63,21 @@ export default function App() {
         <Route path="/inventory-management/*" element={<DashboardLayout />} />
         <Route path="/Booking" element={<BookingPage />} />
         <Route path="/book/add/:id" element={<CreateBooking />} />
+
+        {/* Employee Files */}
+        <Route path="/employee-management/*" element={<DashboardLayoutEmp/>}/>
+        <Route path="/employee/creat" element={<AddEmployee/>}/>
+        <Route path="/employee/show/:id" element={<ShowEmployee/>}/>
+        <Route path="/employee/update/:id" element={<UpdateEmployee/>}/>
+        <Route path="/employee/delete/:id" element={<DeleteEmployee/>}/>
+        <Route path="/employee/attendance" element={<AddAttendence/>} />
+        <Route path="/employee/attendance/update/:id" element={<UpdateAttendence />} />
+        <Route path="/employee/attendance/delete/:id" element={<DeleteAttendence />} />
+        <Route path="/employee/salary/create" element={<AddEmployeeSalary />} />
+        <Route path="/employee/salary/show/:id" element={<ShowSalary />} />
+        <Route path="/employee/salary/update/:id" element={<UpdateSalary />} />
+        <Route path="/employee/salary/delete/:id" element={<DeleteSalary />} />
+
 
         <Route path="/pkg" element={<ShowAllPackages />} />
 
