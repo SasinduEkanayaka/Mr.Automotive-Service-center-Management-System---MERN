@@ -145,7 +145,7 @@ const ModificationManagement = () => {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    const selectedName = e.target.value;
+
     setItem((prev) => ({
       ...prev,
       [name]: value,
@@ -380,7 +380,12 @@ const ModificationManagement = () => {
                       className="border border-gray-300 text-black rounded-md p-2"
                       name="name"
                       value={item.name}
-                      onChange={handleOnChange}
+                      onChange={(e) => {
+                        const selectedPart = sparePart.find(
+                          (part) => part.name === e.target.value
+                        );
+                        handleOnChange(e, selectedPart);
+                      }}
                       required
                     >
                       {sparePart.map((part) => (
@@ -424,33 +429,18 @@ const ModificationManagement = () => {
                   <thead>
                     <tr className="bg-gray-100">
                       <th className="py-2 px-4 border-b">Name</th>
-                      <th className="py-2 px-4 border-b">Unit Price</th>
+
                       <th className="py-2 px-4 border-b">Quantity</th>
-                      <th className="py-2 px-4 border-b">Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {pickList.map((item, index) => (
                       <tr key={index} className="border-b text-center">
                         <td className="py-2 px-4">{item.name}</td>
-                        <td className="py-2 px-4">{item.unitPrice}</td>
+
                         <td className="py-2 px-4">{item.quantity}</td>
-                        <td className="py-2 px-4">
-                          {(item.quantity * item.unitPrice).toFixed(2)}
-                        </td>
                       </tr>
                     ))}
-                    <tr className="bg-gray-100">
-                      <td
-                        colSpan="3"
-                        className="py-2 px-4 text-center font-bold"
-                      >
-                        Subtotal:
-                      </td>
-                      <td className="py-2 px-4 font-bold">
-                        {calculateSubtotal()}
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               )}

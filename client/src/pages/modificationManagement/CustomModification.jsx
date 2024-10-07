@@ -12,8 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import dayjs from "dayjs";
-import { getTodayDate } from "@mui/x-date-pickers/internals";
+import Switch from "@mui/material/Switch";
 
 const validationSchema = yup.object({
   customerName: yup.string().required("Customer Name is required"),
@@ -22,13 +21,7 @@ const validationSchema = yup.object({
     .email("Invalid email format")
     .required("Customer Email is required"),
   vehicleModel: yup.string().required("Vehicle Model is required"),
-  vehicleNumber: yup
-    .string()
-    .required("Vehicle Number is required")
-    .matches(
-      /^(?:[A-Z]{2,3}-\d{4})$/,
-      "Vehicle Number must be in the format ABC-1234 or AB-1234"
-    ),
+  vehicleNumber: yup.string().required("Vehicle Number is required"),
   modificationType: yup
     .string()
     .oneOf(["engine", "exhaust", "suspension"])
@@ -42,6 +35,7 @@ const CustomModification = () => {
   const name = localStorage.getItem("name");
   const email = localStorage.getItem("email");
   const uid = localStorage.getItem("uid");
+  const [checked, setChecked] = React.useState(true);
 
   const formik = useFormik({
     initialValues: {
@@ -87,6 +81,16 @@ const CustomModification = () => {
       }
     },
   });
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+
+    if (checked) {
+      formik.values.vehicleNumber = "";
+    } else {
+      formik.values.vehicleNumber = "ශ්‍රී - ";
+    }
+  };
 
   return (
     <div>
@@ -358,7 +362,19 @@ const CustomModification = () => {
             <form onSubmit={formik.handleSubmit} className="space-y-4">
               {/* Row 1 */}
               <div className="flex flex-wrap -mx-2 mb-4">
-                <div className="w-full sm:w-1/2 px-2 mb-4 sm:mb-0">
+                <div className="w-full sm:w-1/3 px-2 mb-4 sm:mb-0">
+                  <label className="text-gray-700">Customer ID</label>
+                  <input
+                    type="text"
+                    name="customerId"
+                    value={formik.values.customerId}
+                    onChange={formik.handleChange}
+                    className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    required
+                    readOnly
+                  />
+                </div>
+                <div className="w-full sm:w-1/3 px-2 mb-4 sm:mb-0">
                   <label className="text-gray-700">Customer Name</label>
                   <input
                     type="text"
@@ -373,7 +389,7 @@ const CustomModification = () => {
                     </div>
                   )}
                 </div>
-                <div className="w-full sm:w-1/2 px-2">
+                <div className="w-full sm:w-1/3 px-2">
                   <label className="text-gray-700">Customer Email</label>
                   <input
                     type="email"
@@ -409,6 +425,12 @@ const CustomModification = () => {
                   )}
                 </div>
                 <div className="w-full sm:w-1/2 px-2">
+                  <Switch
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+
                   <label className="text-gray-700">Vehicle Number</label>
                   <input
                     type="text"
@@ -423,6 +445,21 @@ const CustomModification = () => {
                       {formik.errors.vehicleNumber}
                     </div>
                   )}
+                  {checked
+                    ? !/ශ්‍රී - \d{4}$/.test(formik.values.vehicleNumber) &&
+                      formik.values.vehicleNumber && (
+                        <p className="text-red-500 text-xs mt-1">
+                          Please enter a valid vehicle number (ශ්‍රී - 4444)
+                        </p>
+                      )
+                    : !/^(?:[A-Z]{3}-\d{4}|[A-Z]{2}-\d{4})$/.test(
+                        formik.values.vehicleNumber
+                      ) &&
+                      formik.values.vehicleNumber && (
+                        <p className="text-red-500 text-xs mt-1">
+                          Please enter a valid vehicle number
+                        </p>
+                      )}
                 </div>
               </div>
               {/* Row 3 */}
