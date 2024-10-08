@@ -15,6 +15,7 @@ const AddEmployeeSalary = () => {
     const [toDate, settoDate] = useState('');
     const [totalOThours, settotalOThours] = useState('');
     const [totalOTpay, settotalOTpay] = useState('');
+    const [epfAmount, setEpfAmount] = useState('');
     const [BasicSalary, setBasicSalary] = useState('');
     const [totalSalary, setTotalSalary] = useState('');
     const [employees, setEmployees] = useState([]);
@@ -122,27 +123,33 @@ const AddEmployeeSalary = () => {
     // Calculate total salary including EPF if selected
     const calculateTotalSalary = () => {
         let totalSalary = totalOTpay + parseFloat(BasicSalary);
+        let epfAmount = 0;
+    
+        // Fetch employee attendance by NIC and date range
         axios.get(`http://localhost:3000/EmployeeAttendence/date_range/${selectEmployee.NIC}`, {
             params: {
                 formDate,
                 toDate
             }
         }).then((e) => {
-           const attendanceRecords = e.data
-           const totalOTHours = attendanceRecords.reduce((sum, record) => {
-            return sum + (parseFloat(record.OTHour) || 0);
-        }, 0);
-        settotalOThours(totalOTHours)
-        calculateTotalOTpay()
-        })
-
-
+            const attendanceRecords = e.data;
+            const totalOTHours = attendanceRecords.reduce((sum, record) => {
+                return sum + (parseFloat(record.OTHour) || 0);
+            }, 0);
+            settotalOThours(totalOTHours);
+            calculateTotalOTpay();
+        });
+    
+        // If EPF is included, calculate EPF amount
         if (includeEPF) {
-          const amout = totalSalary * 0.08;
-          totalSalary -=  amout;
+            epfAmount = totalSalary * 0.08;
+            totalSalary -= epfAmount;
         }
-        setTotalSalary(totalSalary);
+    
+        setTotalSalary(totalSalary);  // Update total salary
+        setEpfAmount(epfAmount);  // Update EPF amount for the report
     };
+    
 
     // Validate and handle the salary submission
     const handleAddEmployeeSalary = async () => {
@@ -175,11 +182,11 @@ const AddEmployeeSalary = () => {
             toDate,
             totalOThours,
             totalOTpay,
+            epfAmount: epfAmount,
             basicSalary: BasicSalary,
             totalSalary,
         };
 
-        console.log("Data Send", data);
         setLoading(true);
         axios
             .post('http://localhost:3000/EmployeeSalary', data)

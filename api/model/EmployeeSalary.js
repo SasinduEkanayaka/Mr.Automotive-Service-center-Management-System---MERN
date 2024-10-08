@@ -53,6 +53,10 @@ const employeeSalarySchema = mongoose.Schema({
         type:Number
     
     },
+    epfAmount:{
+        type:Number
+    },
+    
     status:{
         type:String,
         enum:['pending','approved','declined'],
