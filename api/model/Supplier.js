@@ -10,6 +10,10 @@ const supplierSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        Companyname: {
+            type: String,
+            required: true,
+        },
         ItemNo: {
             type: String,
            
