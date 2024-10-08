@@ -99,7 +99,7 @@ const ManageRequestItem = () => {
     filteredItems.forEach((item, index) => {
       const data = [
         index + 1,
-        item.requestID,
+        // item.requestID,
         item.supplierName,
         item.itemName,
         item.brand || '-',
@@ -193,7 +193,7 @@ const ManageRequestItem = () => {
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-800 text-white">
             <tr>
-              <th className="py-3 px-5 text-left">Request ID</th>
+              {/* <th className="py-3 px-5 text-left">Request ID</th> */}
               <th className="py-3 px-5 text-left">Supplier Name</th>
               <th className="py-3 px-5 text-left">Item Name</th>
               <th className="py-3 px-5 text-left">Brand</th>
@@ -210,7 +210,7 @@ const ManageRequestItem = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <td className="py-3 px-5">{item.requestID}</td>
+                {/* <td className="py-3 px-5">{item.requestID}</td> */}
                 <td className="py-3 px-5">{item.supplierName}</td>
                 <td className="py-3 px-5">{item.itemName}</td>
                 <td className="py-3 px-5">{item.brand}</td>

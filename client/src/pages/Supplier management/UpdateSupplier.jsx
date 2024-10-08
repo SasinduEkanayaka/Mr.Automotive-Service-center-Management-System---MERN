@@ -4,6 +4,7 @@ import axios from "axios";
 
 const UpdateSupplier = ({ isOpen, onClose, supplierData }) => {
   const [supplierName, setSupplierName] = useState(supplierData?.SupplierName || "");
+  const [Companyname, setCompanyname] = useState(supplierData?.Companyname || "");
   const [itemNo, setItemNo] = useState(supplierData?.ItemNo || "");
   const [itemName, setItemName] = useState(supplierData?.ItemName || "");
   const [contactNo, setContactNo] = useState(supplierData?.ContactNo || "");
@@ -32,6 +33,7 @@ const UpdateSupplier = ({ isOpen, onClose, supplierData }) => {
   useEffect(() => {
     if (supplierData) {
       setSupplierName(supplierData.SupplierName || "");
+      setCompanyname(supplierData.Companyname || "");
       setItemNo(supplierData.ItemNo || "");
       setItemName(supplierData.ItemName || "");
       setContactNo(supplierData.ContactNo || "");
@@ -48,6 +50,7 @@ const UpdateSupplier = ({ isOpen, onClose, supplierData }) => {
     try {
       await axios.put(`http://localhost:3000/suppliers/${currentId}`, {
         SupplierName: supplierName,
+        Companyname,
         ItemNo: itemNo,
         ItemName: itemName,
         ContactNo: contactNo,
@@ -86,6 +89,16 @@ const UpdateSupplier = ({ isOpen, onClose, supplierData }) => {
                 className="w-full p-2 border border-dark rounded"
                 value={supplierName}
                 onChange={(e) => setSupplierName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="text-dark block mb-2">Company Name</label>
+              <input
+                type="text"
+                className="w-full p-2 border border-dark rounded"
+                value={Companyname}
+                onChange={(e) => setCompanyname(e.target.value)}
                 required
               />
             </div>

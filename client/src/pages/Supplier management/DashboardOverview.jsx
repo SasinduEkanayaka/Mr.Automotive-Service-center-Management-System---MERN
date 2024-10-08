@@ -268,7 +268,7 @@ const ShowSupplier = () => {
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
               <thead className="bg-DarkColor text-white">
                 <tr>
-                  <th className="py-3 px-5 text-left">Request ID</th>
+                  {/* <th className="py-3 px-5 text-left">Request ID</th> */}
                   <th className="py-3 px-5 text-left">Supplier Name</th>
                   <th className="py-3 px-5 text-left">Item Name</th>
                   <th className="py-3 px-5 text-left">Brand</th>
@@ -282,9 +282,9 @@ const ShowSupplier = () => {
                     key={item._id}
                     className="border-b hover:bg-PrimaryColor transition-colors duration-300"
                   >
-                    <td className="py-3 px-5 text-ExtraDarkColor">
+                    {/* <td className="py-3 px-5 text-ExtraDarkColor">
                       {item.requestID}
-                    </td>
+                    </td> */}
                     <td className="py-3 px-5 text-ExtraDarkColor">
                       {item.supplierName}
                     </td>

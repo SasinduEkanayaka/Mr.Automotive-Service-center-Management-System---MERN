@@ -6,6 +6,7 @@ import { Navigate } from "react-router-dom";
 
 const AddSupplierPage = () => {
   const [supplierName, setSupplierName] = useState("");
+  const [Companyname, setCompanyname] = useState("");
   const [itemNo, setItemNo] = useState("");
   const [itemName, setItemName] = useState("");
   const [contactNo, setContactNo] = useState("");
@@ -67,6 +68,7 @@ const AddSupplierPage = () => {
         ContactNo: contactNo,
         Email: email,
         Address: address,
+        Companyname
       });
 
       Swal.fire({
@@ -119,6 +121,19 @@ const AddSupplierPage = () => {
               required
             />
           </div>
+          <div className="mb-4">
+            <label className="text-dark block mb-2">Supplier Name</label>
+            <input
+              type="text"
+              className="w-full p-2 border border-dark rounded"
+              value={Companyname}
+              onChange={(e) => {
+                setCompanyname(e.target.value)
+
+              }}
+              required
+            />
+          </div>
 
           <div className="mb-4">
             <label className="text-dark block mb-2">Item Name</label>
@@ -146,7 +161,7 @@ const AddSupplierPage = () => {
               value={contactNo}
               onChange={(e) => setContactNo(e.target.value)}
               maxLength={10} // Set max length to 10 digits
-              
+
               required
             />
 

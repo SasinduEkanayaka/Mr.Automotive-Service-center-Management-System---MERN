@@ -9,7 +9,7 @@ const RequestItemReport = ({ filteredRequestItems }) => {
         const doc = new jsPDF();
         const tableColumn = [
             "No",
-            "Request ID",
+            // "Request ID",
             "Supplier Name",
             "Item Name",
             "Quantity",
@@ -21,7 +21,7 @@ const RequestItemReport = ({ filteredRequestItems }) => {
         filteredRequestItems.forEach((item, index) => {
             const data = [
                 index + 1,
-                item.requestID,
+                // item.requestID,
                 item.supplierName,
                 item.itemName,
                 item.quantity,

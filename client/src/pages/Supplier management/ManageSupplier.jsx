@@ -48,6 +48,7 @@ const ManageSupplier = () => {
   // Filter suppliers based on the search term
   const filteredSuppliers = suppliers.filter((supplier) =>
     supplier.SupplierName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    supplier.Companyname.toLowerCase().includes(searchTerm.toLowerCase()) ||
     supplier.ItemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     supplier.ContactNo.includes(searchTerm)
   );
@@ -93,6 +94,7 @@ const ManageSupplier = () => {
             <tr>
               <th className="py-3 px-4 text-left w-1/6">Supplier ID</th>
               <th className="py-3 px-4 text-left w-1/4">Supplier Name</th>
+              <th className="py-3 px-4 text-left w-1/4">Supplier Companyname</th>
               <th className="py-3 px-4 text-left w-1/6">Supply items</th>
               <th className="py-3 px-4 text-left w-1/6">Contact number</th>
               <th className="py-3 px-4 text-left w-1/6">Email</th>
@@ -111,6 +113,7 @@ const ManageSupplier = () => {
                 >
                   <td className="py-2 px-4">{supplier.SupplierID}</td>
                   <td className="py-2 px-4">{supplier.SupplierName}</td>
+                  <td className="py-2 px-4">{supplier.Companyname}</td>
                   <td className="py-2 px-4">{supplier.ItemName}</td>
                   <td className="py-2 px-4">{supplier.ContactNo}</td>
                   <td className="py-2 px-4">{supplier.Email}</td>

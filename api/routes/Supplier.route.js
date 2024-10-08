@@ -6,7 +6,7 @@ const router = express.Router();
 // Route for Save a new Supplier
 router.post('/', async (req, res) => {
   try {
-    const { SupplierName, ItemNo, ItemName, ContactNo, Email, Address } = req.body;
+    const { SupplierName, ItemNo, ItemName, ContactNo, Email, Address ,Companyname} = req.body;
     
     if (!SupplierName  || !ItemName || !ContactNo || !Email || !Address) {
       return res.status(400).send({
@@ -21,6 +21,8 @@ router.post('/', async (req, res) => {
       ContactNo,
       Email,
       Address,
+      Companyname,
+      
     };
 
     const supplier = await Supplier.create(newSupplier);
@@ -66,7 +68,7 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { SupplierName, ItemNo, ItemName, ContactNo, Email, Address } = req.body;
+    const { SupplierName, ItemNo, ItemName, ContactNo, Email, Address,Companyname } = req.body;
 
     // Check if all fields are provided
     if (!SupplierName || !ItemName || !ContactNo || !Email || !Address) {
@@ -76,7 +78,7 @@ router.put('/:id', async (req, res) => {
     // Find and update the supplier
     const updatedSupplier = await Supplier.findByIdAndUpdate(
       id,
-      { SupplierName, ItemNo, ItemName, ContactNo, Email, Address },
+      { SupplierName, ItemNo, ItemName, ContactNo, Email, Address,Companyname },
       { new: true } // Return the updated document
     );
 
