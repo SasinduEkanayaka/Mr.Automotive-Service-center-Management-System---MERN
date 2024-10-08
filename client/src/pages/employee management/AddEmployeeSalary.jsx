@@ -187,7 +187,6 @@ const AddEmployeeSalary = () => {
             totalSalary,
         };
 
-        console.log("Data Send", data);
         setLoading(true);
         axios
             .post('http://localhost:3000/EmployeeSalary', data)
